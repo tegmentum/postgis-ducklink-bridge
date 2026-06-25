@@ -10837,15 +10837,15 @@ impl VScalar for U32U32ToBlobScalar {
 // Deferred shapes (Phase 3 target):
 //      3  [binary,float64,binary] -> binary
 //      2  [float64,int32,int32,binary] -> binary
-//      1  [binary,float64,float64,boolean] -> binary
-//      1  [binary,int32,int32,int32,boolean] -> binary
+//      1  [binary,binary,boolean] -> text
 //      1  [binary,float64,text] -> binary
+//      1  [binary,binary,boolean] -> binary
+//      1  [binary,int32,int32,int32] -> binary
+//      1  [binary,text,float64,float64] -> binary
+//      1  [binary,binary,int32] -> binary
+//      1  [binary,int32,int32,int32,boolean] -> binary
 //      1  [binary,int32,int32,int32,boolean,boolean] -> binary
 //      1  [binary,binary,binary,binary] -> float64
-//      1  [binary,binary,boolean] -> binary
-//      1  [binary,binary,int32] -> binary
-//      1  [binary,int32,int32,int32] -> binary
-//      1  [uint32,uint32,float64,float64,float64,float64,float64,float64,int32] -> binary
-//      1  [binary,text,float64,float64] -> binary
 //      1  [binary,float64,int32,int32] -> binary
-//      1  [binary,binary,boolean] -> text
+//      1  [binary,float64,float64,boolean] -> binary
+//      1  [uint32,uint32,float64,float64,float64,float64,float64,float64,int32] -> binary

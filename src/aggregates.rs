@@ -58,44 +58,44 @@ struct AggExtraInfo {
 /// `conn` must be a valid `duckdb_connection` for the duration
 /// of this call.
 pub unsafe fn register_all(conn: duckdb_connection) {
-    register_aggregate(conn, "st_3dextent");
-    register_aggregate(conn, "st_3d_extent"); // alias of st_3dextent
-    register_aggregate(conn, "st_clusterdbscan");
-    register_aggregate(conn, "st_cluster_dbscan"); // alias of st_clusterdbscan
-    register_aggregate(conn, "st_clusterintersecting");
-    register_aggregate(conn, "st_cluster_intersecting"); // alias of st_clusterintersecting
-    register_aggregate(conn, "st_cluster_intersecting_aggregate"); // alias of st_clusterintersecting
-    register_aggregate(conn, "st_clusterintersectingaggregate"); // alias of st_clusterintersecting
-    register_aggregate(conn, "st_clusterwithin");
-    register_aggregate(conn, "st_cluster_within"); // alias of st_clusterwithin
-    register_aggregate(conn, "st_cluster_within_aggregate"); // alias of st_clusterwithin
-    register_aggregate(conn, "st_clusterwithinaggregate"); // alias of st_clusterwithin
-    register_aggregate(conn, "st_collect");
-    register_aggregate(conn, "st_coverageunion");
-    register_aggregate(conn, "st_coverage_union"); // alias of st_coverageunion
-    register_aggregate(conn, "st_extent");
-    register_aggregate(conn, "st_makeline");
-    register_aggregate(conn, "st_make_line"); // alias of st_makeline
-    register_aggregate(conn, "st_make_line_aggregate"); // alias of st_makeline
-    register_aggregate(conn, "st_makelineagg"); // alias of st_makeline
-    register_aggregate(conn, "st_makelineaggregate"); // alias of st_makeline
-    register_aggregate(conn, "st_polygonize");
-    register_aggregate(conn, "st_polygonize_aggregate"); // alias of st_polygonize
-    register_aggregate(conn, "st_polygonizeagg"); // alias of st_polygonize
-    register_aggregate(conn, "st_polygonizeaggregate"); // alias of st_polygonize
-    register_aggregate(conn, "st_rast_union");
-    register_aggregate(conn, "st_rast_union_aggregate"); // alias of st_rast_union
-    register_aggregate(conn, "st_raster_union"); // alias of st_rast_union
-    register_aggregate(conn, "st_union");
-    register_aggregate(conn, "st_mem_union"); // alias of st_union
-    register_aggregate(conn, "st_memunion"); // alias of st_union
-    register_aggregate(conn, "st_union_aggregate"); // alias of st_union
-    register_aggregate(conn, "st_unionagg"); // alias of st_union
-    register_aggregate(conn, "st_unionaggregate"); // alias of st_union
-                                                   // Phase 3c: 11 canonical + 23 alias names registered.
+    register_aggregate(conn, "st_3dextent", "binary");
+    register_aggregate(conn, "st_3d_extent", "binary"); // alias of st_3dextent
+    register_aggregate(conn, "st_clusterdbscan", "binary");
+    register_aggregate(conn, "st_cluster_dbscan", "binary"); // alias of st_clusterdbscan
+    register_aggregate(conn, "st_clusterintersecting", "binary");
+    register_aggregate(conn, "st_cluster_intersecting", "binary"); // alias of st_clusterintersecting
+    register_aggregate(conn, "st_cluster_intersecting_aggregate", "binary"); // alias of st_clusterintersecting
+    register_aggregate(conn, "st_clusterintersectingaggregate", "binary"); // alias of st_clusterintersecting
+    register_aggregate(conn, "st_clusterwithin", "binary");
+    register_aggregate(conn, "st_cluster_within", "binary"); // alias of st_clusterwithin
+    register_aggregate(conn, "st_cluster_within_aggregate", "binary"); // alias of st_clusterwithin
+    register_aggregate(conn, "st_clusterwithinaggregate", "binary"); // alias of st_clusterwithin
+    register_aggregate(conn, "st_collect", "binary");
+    register_aggregate(conn, "st_coverageunion", "binary");
+    register_aggregate(conn, "st_coverage_union", "binary"); // alias of st_coverageunion
+    register_aggregate(conn, "st_extent", "binary");
+    register_aggregate(conn, "st_makeline", "binary");
+    register_aggregate(conn, "st_make_line", "binary"); // alias of st_makeline
+    register_aggregate(conn, "st_make_line_aggregate", "binary"); // alias of st_makeline
+    register_aggregate(conn, "st_makelineagg", "binary"); // alias of st_makeline
+    register_aggregate(conn, "st_makelineaggregate", "binary"); // alias of st_makeline
+    register_aggregate(conn, "st_polygonize", "binary");
+    register_aggregate(conn, "st_polygonize_aggregate", "binary"); // alias of st_polygonize
+    register_aggregate(conn, "st_polygonizeagg", "binary"); // alias of st_polygonize
+    register_aggregate(conn, "st_polygonizeaggregate", "binary"); // alias of st_polygonize
+    register_aggregate(conn, "st_rast_union", "binary");
+    register_aggregate(conn, "st_rast_union_aggregate", "binary"); // alias of st_rast_union
+    register_aggregate(conn, "st_raster_union", "binary"); // alias of st_rast_union
+    register_aggregate(conn, "st_union", "binary");
+    register_aggregate(conn, "st_mem_union", "binary"); // alias of st_union
+    register_aggregate(conn, "st_memunion", "binary"); // alias of st_union
+    register_aggregate(conn, "st_union_aggregate", "binary"); // alias of st_union
+    register_aggregate(conn, "st_unionagg", "binary"); // alias of st_union
+    register_aggregate(conn, "st_unionaggregate", "binary"); // alias of st_union
+                                                             // Phase 3c: 11 canonical + 23 alias names registered.
 }
 
-unsafe fn register_aggregate(conn: duckdb_connection, sql_name: &str) {
+unsafe fn register_aggregate(conn: duckdb_connection, sql_name: &str, input_ty: &str) {
     let def = match registry::lookup_aggregate(sql_name) {
         Some(d) => d,
         None => {
@@ -115,19 +115,35 @@ unsafe fn register_aggregate(conn: duckdb_connection, sql_name: &str) {
     };
     duckdb_aggregate_function_set_name(agg, name_cs.as_ptr());
 
-    // PostGIS aggregates are unary (ST_Union, ST_Extent,
-    // ST_Collect — all take one geometry blob). For multi-arg
-    // future aggregates, walk def.param_types() and call
-    // add_parameter per type. Today's flat BLOB signature is
-    // shape-correct for every shim aggregate observed.
-    let blob = ffi::duckdb_create_logical_type(ffi::DUCKDB_TYPE_DUCKDB_TYPE_BLOB);
-    duckdb_aggregate_function_add_parameter(agg, blob);
-    duckdb_aggregate_function_set_return_type(agg, blob);
+    // Input type from the shim's recorded param signature; most
+    // postgis aggregates are unary blob (ST_Union, ST_Extent, ...)
+    // but the mobilitydb F64 aggregates (tfloat_max_agg / etc.)
+    // take a scalar f64. Return type stays BLOB by default — the
+    // dispatch path converts every scalar result to bytes; users
+    // who want the typed value can wrap with `tfloat_to_text` or
+    // similar.
+    let in_id = match input_ty {
+        "float64" => ffi::DUCKDB_TYPE_DUCKDB_TYPE_DOUBLE,
+        "float32" => ffi::DUCKDB_TYPE_DUCKDB_TYPE_FLOAT,
+        "int64" => ffi::DUCKDB_TYPE_DUCKDB_TYPE_BIGINT,
+        "int32" => ffi::DUCKDB_TYPE_DUCKDB_TYPE_INTEGER,
+        "uint64" => ffi::DUCKDB_TYPE_DUCKDB_TYPE_UBIGINT,
+        "uint32" => ffi::DUCKDB_TYPE_DUCKDB_TYPE_UINTEGER,
+        "boolean" => ffi::DUCKDB_TYPE_DUCKDB_TYPE_BOOLEAN,
+        "text" => ffi::DUCKDB_TYPE_DUCKDB_TYPE_VARCHAR,
+        _ => ffi::DUCKDB_TYPE_DUCKDB_TYPE_BLOB,
+    };
+    let in_lt = ffi::duckdb_create_logical_type(in_id);
+    duckdb_aggregate_function_add_parameter(agg, in_lt);
+    let ret_lt = ffi::duckdb_create_logical_type(ffi::DUCKDB_TYPE_DUCKDB_TYPE_BLOB);
+    duckdb_aggregate_function_set_return_type(agg, ret_lt);
     // Both add_parameter and set_return_type take the type by
     // value and DuckDB clones it internally, so we still own
-    // `blob` and have to destroy it after use.
-    let mut blob_to_destroy = blob;
-    ffi::duckdb_destroy_logical_type(&mut blob_to_destroy);
+    // the handles and must destroy them after use.
+    let mut in_to_destroy = in_lt;
+    ffi::duckdb_destroy_logical_type(&mut in_to_destroy);
+    let mut ret_to_destroy = ret_lt;
+    ffi::duckdb_destroy_logical_type(&mut ret_to_destroy);
 
     // Wire the callbacks (state_size + state_init + update +
     // combine + finalize). state_destroy goes through the
@@ -224,27 +240,81 @@ unsafe extern "C" fn update_callback(
 }
 
 unsafe fn update_inner(
-    _info: duckdb_function_info,
+    info: duckdb_function_info,
     input: duckdb_data_chunk,
     states: *mut duckdb_aggregate_state,
 ) -> std::result::Result<(), String> {
+    use datafission_functions::DataType;
     let n = ffi::duckdb_data_chunk_get_size(input) as usize;
     let v0 = ffi::duckdb_data_chunk_get_vector(input, 0);
-    let data = ffi::duckdb_vector_get_data(v0) as *const duckdb_string_t;
     let validity = ffi::duckdb_vector_get_validity(v0);
 
-    for i in 0..n {
-        if !validity.is_null() && !ffi::duckdb_validity_row_is_valid(validity, i as idx_t) {
-            // SQL aggregates skip NULLs unless they're COUNT(*) —
-            // PostGIS aggregates all skip NULL.
-            continue;
+    // Dispatch on the recorded input type. The aggregate's
+    // ExtraInfo wraps `Arc<dyn AggregateFunctionDef>`; we read
+    // its first parameter type to decide how to interpret the
+    // vector's raw memory.
+    let extra = extra_info_typed(info);
+    let in_ty = extra
+        .def
+        .param_types()
+        .first()
+        .and_then(|sig| sig.first().cloned())
+        .unwrap_or(DataType::Binary);
+
+    macro_rules! prim_loop {
+        ($ty:ty, $variant:ident) => {{
+            let data = ffi::duckdb_vector_get_data(v0) as *const $ty;
+            for i in 0..n {
+                if !validity.is_null() && !ffi::duckdb_validity_row_is_valid(validity, i as idx_t) {
+                    continue;
+                }
+                let val = std::ptr::read(data.add(i));
+                let acc_ptr = read_state(states, i);
+                let acc = &mut *acc_ptr;
+                acc.accumulate(&FunctionValue::$variant(val))
+                    .map_err(|e| format!("{e:?}"))?;
+            }
+        }};
+    }
+
+    match in_ty {
+        DataType::Float64 => prim_loop!(f64, Float64),
+        DataType::Float32 => prim_loop!(f32, Float32),
+        DataType::Int64 => prim_loop!(i64, Int64),
+        DataType::Int32 => prim_loop!(i32, Int32),
+        DataType::UInt64 => prim_loop!(u64, UInt64),
+        DataType::UInt32 => prim_loop!(u32, UInt32),
+        DataType::Boolean => prim_loop!(bool, Boolean),
+        DataType::Text => {
+            let data = ffi::duckdb_vector_get_data(v0) as *const duckdb_string_t;
+            for i in 0..n {
+                if !validity.is_null() && !ffi::duckdb_validity_row_is_valid(validity, i as idx_t) {
+                    continue;
+                }
+                let mut s_raw: duckdb_string_t = std::ptr::read(data.add(i));
+                let bytes = read_string_t_bytes(&mut s_raw);
+                let s = String::from_utf8_lossy(&bytes).into_owned();
+                let acc_ptr = read_state(states, i);
+                let acc = &mut *acc_ptr;
+                acc.accumulate(&FunctionValue::String(s))
+                    .map_err(|e| format!("{e:?}"))?;
+            }
         }
-        let mut s_raw: duckdb_string_t = std::ptr::read(data.add(i));
-        let bytes = read_string_t_bytes(&mut s_raw);
-        let acc_ptr = read_state(states, i);
-        let acc = &mut *acc_ptr;
-        acc.accumulate(&FunctionValue::Binary(bytes))
-            .map_err(|e| format!("{e:?}"))?;
+        _ => {
+            // Default: Binary/Blob — original path.
+            let data = ffi::duckdb_vector_get_data(v0) as *const duckdb_string_t;
+            for i in 0..n {
+                if !validity.is_null() && !ffi::duckdb_validity_row_is_valid(validity, i as idx_t) {
+                    continue;
+                }
+                let mut s_raw: duckdb_string_t = std::ptr::read(data.add(i));
+                let bytes = read_string_t_bytes(&mut s_raw);
+                let acc_ptr = read_state(states, i);
+                let acc = &mut *acc_ptr;
+                acc.accumulate(&FunctionValue::Binary(bytes))
+                    .map_err(|e| format!("{e:?}"))?;
+            }
+        }
     }
     Ok(())
 }
@@ -318,9 +388,21 @@ unsafe fn finalize_inner(
         }
         let acc = &**acc_ptr;
         let value = acc.finalize().map_err(|e| format!("{e:?}"))?;
+        // Output type is BLOB by construction (aggregates_rs sets the
+        // return type to LogicalTypeId::Blob unconditionally). Encode
+        // primitives as their little-endian bytes — callers that want
+        // the typed value can apply `octet_length()` to confirm width
+        // or unhex back to a primitive via DuckDB's bit ops.
         match value {
             FunctionValue::Binary(b) => vector_assign_bytes(result, dst, &b),
             FunctionValue::String(s) => vector_assign_bytes(result, dst, s.as_bytes()),
+            FunctionValue::Float64(v) => vector_assign_bytes(result, dst, &v.to_le_bytes()),
+            FunctionValue::Float32(v) => vector_assign_bytes(result, dst, &v.to_le_bytes()),
+            FunctionValue::Int64(v) => vector_assign_bytes(result, dst, &v.to_le_bytes()),
+            FunctionValue::Int32(v) => vector_assign_bytes(result, dst, &v.to_le_bytes()),
+            FunctionValue::UInt64(v) => vector_assign_bytes(result, dst, &v.to_le_bytes()),
+            FunctionValue::UInt32(v) => vector_assign_bytes(result, dst, &v.to_le_bytes()),
+            FunctionValue::Boolean(v) => vector_assign_bytes(result, dst, &[v as u8]),
             FunctionValue::Null => vector_set_null(result, dst),
             other => {
                 return Err(format!(
