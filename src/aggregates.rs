@@ -58,41 +58,36 @@ struct AggExtraInfo {
 /// `conn` must be a valid `duckdb_connection` for the duration
 /// of this call.
 pub unsafe fn register_all(conn: duckdb_connection) {
+    register_aggregate(conn, "st_3d_extent", "binary");
     register_aggregate(conn, "st_3dextent", "binary");
-    register_aggregate(conn, "st_3d_extent", "binary"); // alias of st_3dextent
-    register_aggregate(conn, "st_clusterdbscan", "binary");
-    register_aggregate(conn, "st_cluster_dbscan", "binary"); // alias of st_clusterdbscan
+    register_aggregate(conn, "st_approx_count_agg", "binary");
     register_aggregate(conn, "st_clusterintersecting", "binary");
-    register_aggregate(conn, "st_cluster_intersecting", "binary"); // alias of st_clusterintersecting
-    register_aggregate(conn, "st_cluster_intersecting_aggregate", "binary"); // alias of st_clusterintersecting
-    register_aggregate(conn, "st_clusterintersectingaggregate", "binary"); // alias of st_clusterintersecting
+    register_aggregate(conn, "st_clusterintersectingaggregate", "binary");
     register_aggregate(conn, "st_clusterwithin", "binary");
-    register_aggregate(conn, "st_cluster_within", "binary"); // alias of st_clusterwithin
-    register_aggregate(conn, "st_cluster_within_aggregate", "binary"); // alias of st_clusterwithin
-    register_aggregate(conn, "st_clusterwithinaggregate", "binary"); // alias of st_clusterwithin
-    register_aggregate(conn, "st_collect", "binary");
-    register_aggregate(conn, "st_coverageunion", "binary");
-    register_aggregate(conn, "st_coverage_union", "binary"); // alias of st_coverageunion
+    register_aggregate(conn, "st_clusterwithinaggregate", "binary");
+    register_aggregate(conn, "st_collect_aggregate", "binary");
+    register_aggregate(conn, "st_count_agg", "binary");
+    register_aggregate(conn, "st_coverage_union_aggregate", "binary");
+    register_aggregate(conn, "st_envelope_aggregate", "binary");
     register_aggregate(conn, "st_extent", "binary");
+    register_aggregate(conn, "st_extent_threed", "binary");
+    register_aggregate(conn, "st_make_line_aggregate", "binary");
     register_aggregate(conn, "st_makeline", "binary");
-    register_aggregate(conn, "st_make_line", "binary"); // alias of st_makeline
-    register_aggregate(conn, "st_make_line_aggregate", "binary"); // alias of st_makeline
-    register_aggregate(conn, "st_makelineagg", "binary"); // alias of st_makeline
-    register_aggregate(conn, "st_makelineaggregate", "binary"); // alias of st_makeline
-    register_aggregate(conn, "st_polygonize", "binary");
-    register_aggregate(conn, "st_polygonize_aggregate", "binary"); // alias of st_polygonize
-    register_aggregate(conn, "st_polygonizeagg", "binary"); // alias of st_polygonize
-    register_aggregate(conn, "st_polygonizeaggregate", "binary"); // alias of st_polygonize
+    register_aggregate(conn, "st_makelineagg", "binary");
+    register_aggregate(conn, "st_makelineaggregate", "binary");
+    register_aggregate(conn, "st_mem_union_aggregate", "binary");
+    register_aggregate(conn, "st_memunion", "binary");
+    register_aggregate(conn, "st_polygonize_aggregate", "binary");
+    register_aggregate(conn, "st_polygonizeagg", "binary");
+    register_aggregate(conn, "st_polygonizeaggregate", "binary");
     register_aggregate(conn, "st_rast_union", "binary");
-    register_aggregate(conn, "st_rast_union_aggregate", "binary"); // alias of st_rast_union
-    register_aggregate(conn, "st_raster_union", "binary"); // alias of st_rast_union
-    register_aggregate(conn, "st_union", "binary");
-    register_aggregate(conn, "st_mem_union", "binary"); // alias of st_union
-    register_aggregate(conn, "st_memunion", "binary"); // alias of st_union
-    register_aggregate(conn, "st_union_aggregate", "binary"); // alias of st_union
-    register_aggregate(conn, "st_unionagg", "binary"); // alias of st_union
-    register_aggregate(conn, "st_unionaggregate", "binary"); // alias of st_union
-                                                             // Phase 3c: 11 canonical + 23 alias names registered.
+    register_aggregate(conn, "st_rast_union_aggregate", "binary");
+    register_aggregate(conn, "st_raster_union", "binary");
+    register_aggregate(conn, "st_summary_stats_agg", "binary");
+    register_aggregate(conn, "st_union_aggregate", "binary");
+    register_aggregate(conn, "st_unionagg", "binary");
+    register_aggregate(conn, "st_unionaggregate", "binary");
+    // Phase 3c: 29 canonical + 0 alias names registered.
 }
 
 unsafe fn register_aggregate(conn: duckdb_connection, sql_name: &str, input_ty: &str) {
@@ -168,17 +163,18 @@ unsafe fn register_aggregate(conn: duckdb_connection, sql_name: &str, input_ty: 
     let rc = duckdb_register_aggregate_function(conn, agg);
     duckdb_destroy_aggregate_function(&mut { agg });
     if rc != DuckDBSuccess {
-        // 5 PostGIS aggregate names clash with scalar variants
-        // (st_collect, st_union, st_clusterwithin,
-        // st_clusterdbscan, st_clusterintersecting). DuckDB
-        // rejects the registration in that case. Swallow the
-        // error so the non-clashing aggregates still register —
-        // the clashing ones fall back to the already-registered
-        // scalar form, which has the semantics the user probably
-        // wanted anyway.
+        // Scalar/aggregate name clashes (st_collect, st_union,
+        // st_clusterwithin, st_clusterdbscan,
+        // st_clusterintersecting, tfloat_sum, tint_sum, …) are
+        // resolved in favour of the AGGREGATE: scalars.rs skips
+        // any name also published as an aggregate, so this
+        // registration normally succeeds. A non-success rc here
+        // therefore means a genuine catalog conflict (e.g. a
+        // built-in DuckDB aggregate of the same name) — log and
+        // continue so the rest still register.
         eprintln!(
-            "postgis-duckdb-bridge: skipping aggregate `{sql_name}` \
-             (name already in use by a scalar; rc={rc})"
+            "[shim-aggregates] could not register aggregate `{sql_name}` (rc={rc}); \
+             a built-in of the same name may already exist"
         );
     }
 }

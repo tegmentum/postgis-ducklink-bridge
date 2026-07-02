@@ -8,7 +8,7 @@ Produced by [`ducklink-shim-codegen`](https://github.com/zacharywhitley/ducklink
 
 | Extension | Version | Scalars | Aggregates | UDTFs | Windows | Types | Operators | Casts | Preprocessors | Catalog | Indexes |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| postgis | 0.1.0 | 402 | 11 | 7 | 4 | 7 | 23 | 4 | 1 | 0 | 9 |
+| postgis | 0.1.0 | 1218 | 29 | 12 | 17 | 29 | 43 | 25 | 5 | 0 | 3 |
 
 ## Build
 

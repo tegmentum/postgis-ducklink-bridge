@@ -32,6 +32,7 @@ struct ShimRegistry {
     _ext: RuntimeWasmExtension, // keep the wasm Store alive
     scalars: RwLock<HashMap<String, Arc<dyn ScalarFunctionDef>>>,
     aggregates: RwLock<HashMap<String, Arc<dyn AggregateFunctionDef>>>,
+    tables: RwLock<HashMap<String, Arc<dyn TableFunctionDef>>>,
 }
 
 pub fn load_shim() -> Result<()> {
@@ -47,6 +48,7 @@ pub fn load_shim() -> Result<()> {
     let mut capture = CapturingTarget {
         scalars: Vec::new(),
         aggregates: Vec::new(),
+        tables: Vec::new(),
     };
     ext.register(&mut capture)
         .map_err(|e| anyhow::anyhow!("shim register: {e}"))?;
@@ -67,11 +69,20 @@ pub fn load_shim() -> Result<()> {
         }
         aggregates.insert(canonical, def);
     }
+    let mut tables = HashMap::with_capacity(capture.tables.len() * 2);
+    for def in capture.tables {
+        let canonical = def.name().to_string();
+        for alias in def.aliases() {
+            tables.insert(alias.to_string(), Arc::clone(&def));
+        }
+        tables.insert(canonical, def);
+    }
 
     SHIM.set(ShimRegistry {
         _ext: ext,
         scalars: RwLock::new(scalars),
         aggregates: RwLock::new(aggregates),
+        tables: RwLock::new(tables),
     })
     .map_err(|_| anyhow::anyhow!("ShimRegistry already initialised"))?;
 
@@ -88,12 +99,18 @@ pub fn lookup_aggregate(name: &str) -> Option<Arc<dyn AggregateFunctionDef>> {
     r.aggregates.read().get(name).cloned()
 }
 
-/// ExtensionTarget that captures every scalar and aggregate the
-/// shim registers. UDTFs / windows / types / etc. are accepted
-/// as no-ops until later phases.
+pub fn lookup_table(name: &str) -> Option<Arc<dyn TableFunctionDef>> {
+    let r = SHIM.get()?;
+    r.tables.read().get(name).cloned()
+}
+
+/// ExtensionTarget that captures every scalar, aggregate, and
+/// table function the shim registers. Windows / types / etc. are
+/// accepted as no-ops until later phases.
 struct CapturingTarget {
     scalars: Vec<Arc<dyn ScalarFunctionDef>>,
     aggregates: Vec<Arc<dyn AggregateFunctionDef>>,
+    tables: Vec<Arc<dyn TableFunctionDef>>,
 }
 
 impl ExtensionTarget for CapturingTarget {
@@ -116,8 +133,9 @@ impl ExtensionTarget for CapturingTarget {
     fn register_table_function(
         &mut self,
         _namespace: &str,
-        _def: Arc<dyn TableFunctionDef>,
+        def: Arc<dyn TableFunctionDef>,
     ) -> std::result::Result<(), ExtensionError> {
+        self.tables.push(def);
         Ok(())
     }
     fn register_window_function(

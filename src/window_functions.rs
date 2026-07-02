@@ -6,9 +6,22 @@
 //! DuckDB exposes window functions as a special aggregate
 //! variant with extra hooks for partition + frame state.
 
+// window `st_cluster_dbscan`
+// window `st_cluster_dbscan_aggregate`
+// window `st_cluster_intersecting`
+// window `st_cluster_intersecting_aggregate`
+// window `st_cluster_intersecting_win`
+// window `st_cluster_kmeans`
+// window `st_cluster_kmeans_aggregate`
+// window `st_cluster_kmeans_max_radius`
+// window `st_cluster_within`
+// window `st_cluster_within_aggregate`
+// window `st_cluster_within_win`
 // window `st_clusterdbscan`
+// window `st_clusterintersecting_win`
 // window `st_clusterintersectingwin`
 // window `st_clusterkmeans`
+// window `st_clusterwithin_win`
 // window `st_clusterwithinwin`
 
 // TODO: wire window-capable aggregates.

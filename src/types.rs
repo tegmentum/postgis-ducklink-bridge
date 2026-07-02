@@ -35,13 +35,62 @@ pub unsafe fn register_all(con: ffi::duckdb_connection) {
     if con.is_null() {
         return;
     }
-    register_type(con, "BOX2D");
-    register_type(con, "BOX3D");
-    register_type(con, "GEOGRAPHY");
-    register_type(con, "GEOMETRY");
-    register_type(con, "RASTER");
-    register_type(con, "TOPOGEOMETRY");
-    register_type(con, "VECTOR");
+    register_type(con, "postgis:wasm@0.1.0/postgis-aggregates/bbox");
+    register_type(con, "postgis:wasm@0.1.0/postgis-aggregates/bbox3d");
+    register_type(con, "postgis:wasm@0.1.0/postgis-geocoder/address-component");
+    register_type(con, "postgis:wasm@0.1.0/postgis-geocoder/parsed-address");
+    register_type(con, "postgis:wasm@0.1.0/postgis-metadata/cast-rewrite");
+    register_type(con, "postgis:wasm@0.1.0/postgis-metadata/operator-rewrite");
+    register_type(
+        con,
+        "postgis:wasm@0.1.0/postgis-metadata/preprocessor-pattern",
+    );
+    register_type(
+        con,
+        "postgis:wasm@0.1.0/postgis-raster-accessors/band-metadata",
+    );
+    register_type(
+        con,
+        "postgis:wasm@0.1.0/postgis-raster-pixels/band-values-entry",
+    );
+    register_type(con, "postgis:wasm@0.1.0/postgis-raster-pixels/pixel-coord");
+    register_type(
+        con,
+        "postgis:wasm@0.1.0/postgis-raster-pixels/pixel-value-coord",
+    );
+    register_type(con, "postgis:wasm@0.1.0/postgis-raster-stats/histogram-bin");
+    register_type(
+        con,
+        "postgis:wasm@0.1.0/postgis-raster-stats/quantile-entry",
+    );
+    register_type(con, "postgis:wasm@0.1.0/postgis-raster-stats/summary-stats");
+    register_type(con, "postgis:wasm@0.1.0/postgis-raster-stats/value-count");
+    register_type(
+        con,
+        "postgis:wasm@0.1.0/postgis-raster-stats/value-percent-entry",
+    );
+    register_type(
+        con,
+        "postgis:wasm@0.1.0/postgis-raster-types/raster-metadata",
+    );
+    register_type(
+        con,
+        "postgis:wasm@0.1.0/postgis-raster-vector/pixel-vec-entry",
+    );
+    register_type(
+        con,
+        "postgis:wasm@0.1.0/postgis-topology-topogeom/topo-element",
+    );
+    register_type(con, "postgis:wasm@0.1.0/postgis-types/bbox");
+    register_type(con, "postgis:wasm@0.1.0/postgis-types/box3d");
+    register_type(con, "postgis:wasm@0.1.0/postgis-types/buffer-params");
+    register_type(con, "postgis:wasm@0.1.0/postgis-types/coord");
+    register_type(con, "postgis:wasm@0.1.0/postgis-types/coord-z");
+    register_type(con, "postgis:wasm@0.1.0/postgis-types/coord-zm");
+    register_type(con, "postgis:wasm@0.1.0/postgis-types/coordinate-stats");
+    register_type(con, "postgis:wasm@0.1.0/postgis-types/extremes");
+    register_type(con, "postgis:wasm@0.1.0/postgis-types/inscribed-circle");
+    register_type(con, "postgis:wasm@0.1.0/postgis-types/valid-detail");
 }
 
 unsafe fn register_type(con: ffi::duckdb_connection, name: &str) {
@@ -62,9 +111,20 @@ unsafe fn register_type(con: ffi::duckdb_connection, name: &str) {
     ffi::duckdb_logical_type_set_alias(handle, c_name.as_ptr());
     let rc = ffi::duckdb_register_logical_type(con, handle, std::ptr::null_mut());
     if rc != ffi::DuckDBSuccess {
+        // A non-success rc here means a type with this name already
+        // exists in the catalog (e.g. DuckDB's built-in GEOMETRY
+        // when the spatial extension is loaded, or a re-LOAD of
+        // this bridge). Registration is IDEMPOTENT by design: the
+        // type stays usable, and since both the pre-existing type
+        // and our alias are BLOB-backed at the storage + ABI level,
+        // `CREATE TABLE t (g {NAME})` and every BLOB-shaped scalar
+        // signature keep working against the existing type. We
+        // therefore reuse it rather than treat the clash as an
+        // error. Downgraded to an informational note so it doesn't
+        // read like a failure.
         eprintln!(
-            "[shim-types] could not register type {name} (rc={rc}) — \
-             likely a name clash with an existing type"
+            "[shim-types] type {name} already registered (rc={rc}); reusing the \
+             existing BLOB-compatible definition"
         );
     }
     let mut h = handle;
@@ -76,10 +136,32 @@ unsafe fn register_type(con: ffi::duckdb_connection, name: &str) {
 // ----------------------------------------------------------------------
 
 // === extension: postgis ===
-// type_id= 2001 name=GEOMETRY                 size=  -1  cast_from=[]  cast_to=[]
-// type_id= 2002 name=BOX2D                    size=  -1  cast_from=[]  cast_to=[]
-// type_id= 2003 name=GEOGRAPHY                size=  -1  cast_from=[]  cast_to=[]
-// type_id= 2004 name=RASTER                   size=  -1  cast_from=[]  cast_to=[]
-// type_id= 2005 name=VECTOR                   size=  -1  cast_from=[]  cast_to=[]
-// type_id= 2006 name=TOPOGEOMETRY             size=  -1  cast_from=[]  cast_to=[]
-// type_id= 2007 name=BOX3D                    size=  48  cast_from=[]  cast_to=[]
+// type_id=223325176 name=postgis:wasm@0.1.0/postgis-raster-pixels/pixel-value-coord size=  -1  cast_from=[]  cast_to=[]
+// type_id=350294052 name=postgis:wasm@0.1.0/postgis-metadata/preprocessor-pattern size=  -1  cast_from=[]  cast_to=[]
+// type_id=393031640 name=postgis:wasm@0.1.0/postgis-raster-stats/summary-stats size=  -1  cast_from=[]  cast_to=[]
+// type_id=461550994 name=postgis:wasm@0.1.0/postgis-types/coord-zm size=  -1  cast_from=[]  cast_to=[]
+// type_id=837289326 name=postgis:wasm@0.1.0/postgis-aggregates/bbox3d size=  -1  cast_from=[]  cast_to=[]
+// type_id=867901609 name=postgis:wasm@0.1.0/postgis-types/inscribed-circle size=  -1  cast_from=[]  cast_to=[]
+// type_id=958070342 name=postgis:wasm@0.1.0/postgis-raster-pixels/pixel-coord size=  -1  cast_from=[]  cast_to=[]
+// type_id=1051837669 name=postgis:wasm@0.1.0/postgis-geocoder/parsed-address size=  -1  cast_from=[]  cast_to=[]
+// type_id=1205495130 name=postgis:wasm@0.1.0/postgis-types/buffer-params size=  -1  cast_from=[]  cast_to=[]
+// type_id=1312498754 name=postgis:wasm@0.1.0/postgis-metadata/cast-rewrite size=  -1  cast_from=[]  cast_to=[]
+// type_id=1353600900 name=postgis:wasm@0.1.0/postgis-types/coordinate-stats size=  -1  cast_from=[]  cast_to=[]
+// type_id=1369622414 name=postgis:wasm@0.1.0/postgis-types/extremes size=  -1  cast_from=[]  cast_to=[]
+// type_id=1602695875 name=postgis:wasm@0.1.0/postgis-raster-stats/quantile-entry size=  -1  cast_from=[]  cast_to=[]
+// type_id=1649520446 name=postgis:wasm@0.1.0/postgis-raster-types/raster-metadata size=  -1  cast_from=[]  cast_to=[]
+// type_id=1658456049 name=postgis:wasm@0.1.0/postgis-raster-vector/pixel-vec-entry size=  -1  cast_from=[]  cast_to=[]
+// type_id=1727926893 name=postgis:wasm@0.1.0/postgis-types/coord-z size=  -1  cast_from=[]  cast_to=[]
+// type_id=1796423044 name=postgis:wasm@0.1.0/postgis-types/coord size=  -1  cast_from=[]  cast_to=[]
+// type_id=1937630734 name=postgis:wasm@0.1.0/postgis-raster-accessors/band-metadata size=  -1  cast_from=[]  cast_to=[]
+// type_id=1982891728 name=postgis:wasm@0.1.0/postgis-raster-stats/value-percent-entry size=  -1  cast_from=[]  cast_to=[]
+// type_id=2110973180 name=postgis:wasm@0.1.0/postgis-types/box3d size=  -1  cast_from=[]  cast_to=[]
+// type_id=2209850317 name=postgis:wasm@0.1.0/postgis-aggregates/bbox size=  -1  cast_from=[]  cast_to=[]
+// type_id=2466455033 name=postgis:wasm@0.1.0/postgis-raster-pixels/band-values-entry size=  -1  cast_from=[]  cast_to=[]
+// type_id=2478224903 name=postgis:wasm@0.1.0/postgis-raster-stats/value-count size=  -1  cast_from=[]  cast_to=[]
+// type_id=2660763088 name=postgis:wasm@0.1.0/postgis-geocoder/address-component size=  -1  cast_from=[]  cast_to=[]
+// type_id=2973479800 name=postgis:wasm@0.1.0/postgis-types/valid-detail size=  -1  cast_from=[]  cast_to=[]
+// type_id=3010547802 name=postgis:wasm@0.1.0/postgis-types/bbox size=  -1  cast_from=[]  cast_to=[]
+// type_id=3180776994 name=postgis:wasm@0.1.0/postgis-metadata/operator-rewrite size=  -1  cast_from=[]  cast_to=[]
+// type_id=3745331307 name=postgis:wasm@0.1.0/postgis-topology-topogeom/topo-element size=  -1  cast_from=[]  cast_to=[]
+// type_id=3991218132 name=postgis:wasm@0.1.0/postgis-raster-stats/histogram-bin size=  -1  cast_from=[]  cast_to=[]

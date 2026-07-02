@@ -52,13 +52,62 @@ pub unsafe fn register_all(con: duckdb_connection) {
     if con.is_null() {
         return;
     }
-    register_identity_cast(con, "BOX2D");
-    register_identity_cast(con, "BOX3D");
-    register_identity_cast(con, "GEOGRAPHY");
-    register_identity_cast(con, "GEOMETRY");
-    register_identity_cast(con, "RASTER");
-    register_identity_cast(con, "TOPOGEOMETRY");
-    register_identity_cast(con, "VECTOR");
+    register_identity_cast(con, "postgis:wasm@0.1.0/postgis-aggregates/bbox");
+    register_identity_cast(con, "postgis:wasm@0.1.0/postgis-aggregates/bbox3d");
+    register_identity_cast(con, "postgis:wasm@0.1.0/postgis-geocoder/address-component");
+    register_identity_cast(con, "postgis:wasm@0.1.0/postgis-geocoder/parsed-address");
+    register_identity_cast(con, "postgis:wasm@0.1.0/postgis-metadata/cast-rewrite");
+    register_identity_cast(con, "postgis:wasm@0.1.0/postgis-metadata/operator-rewrite");
+    register_identity_cast(
+        con,
+        "postgis:wasm@0.1.0/postgis-metadata/preprocessor-pattern",
+    );
+    register_identity_cast(
+        con,
+        "postgis:wasm@0.1.0/postgis-raster-accessors/band-metadata",
+    );
+    register_identity_cast(
+        con,
+        "postgis:wasm@0.1.0/postgis-raster-pixels/band-values-entry",
+    );
+    register_identity_cast(con, "postgis:wasm@0.1.0/postgis-raster-pixels/pixel-coord");
+    register_identity_cast(
+        con,
+        "postgis:wasm@0.1.0/postgis-raster-pixels/pixel-value-coord",
+    );
+    register_identity_cast(con, "postgis:wasm@0.1.0/postgis-raster-stats/histogram-bin");
+    register_identity_cast(
+        con,
+        "postgis:wasm@0.1.0/postgis-raster-stats/quantile-entry",
+    );
+    register_identity_cast(con, "postgis:wasm@0.1.0/postgis-raster-stats/summary-stats");
+    register_identity_cast(con, "postgis:wasm@0.1.0/postgis-raster-stats/value-count");
+    register_identity_cast(
+        con,
+        "postgis:wasm@0.1.0/postgis-raster-stats/value-percent-entry",
+    );
+    register_identity_cast(
+        con,
+        "postgis:wasm@0.1.0/postgis-raster-types/raster-metadata",
+    );
+    register_identity_cast(
+        con,
+        "postgis:wasm@0.1.0/postgis-raster-vector/pixel-vec-entry",
+    );
+    register_identity_cast(
+        con,
+        "postgis:wasm@0.1.0/postgis-topology-topogeom/topo-element",
+    );
+    register_identity_cast(con, "postgis:wasm@0.1.0/postgis-types/bbox");
+    register_identity_cast(con, "postgis:wasm@0.1.0/postgis-types/box3d");
+    register_identity_cast(con, "postgis:wasm@0.1.0/postgis-types/buffer-params");
+    register_identity_cast(con, "postgis:wasm@0.1.0/postgis-types/coord");
+    register_identity_cast(con, "postgis:wasm@0.1.0/postgis-types/coord-z");
+    register_identity_cast(con, "postgis:wasm@0.1.0/postgis-types/coord-zm");
+    register_identity_cast(con, "postgis:wasm@0.1.0/postgis-types/coordinate-stats");
+    register_identity_cast(con, "postgis:wasm@0.1.0/postgis-types/extremes");
+    register_identity_cast(con, "postgis:wasm@0.1.0/postgis-types/inscribed-circle");
+    register_identity_cast(con, "postgis:wasm@0.1.0/postgis-types/valid-detail");
 }
 
 unsafe fn register_identity_cast(con: duckdb_connection, alias: &str) {
@@ -169,7 +218,28 @@ unsafe extern "C" fn identity_cast_callback(
 // ----------------------------------------------------------------------
 
 // === extension: postgis ===
-// CAST(<castsourcekind::any> AS box2d) → st_envelope (hint: )
+// CAST(<castsourcekind::any> AS bigint[]) → topoelement (hint: )
+// CAST(<castsourcekind::any> AS box) → box (hint: )
+// CAST(<castsourcekind::any> AS box2d) → box2d (hint: )
+// CAST(<castsourcekind::any> AS box3d) → box3d (hint: )
+// CAST(<castsourcekind::any> AS bytea) → st_asbinary (hint: )
+// CAST(<castsourcekind::any> AS ewkt) → st_asewkt (hint: )
+// CAST(<castsourcekind::any> AS geography) → st_geogfromwkb (hint: )
 // CAST(<castsourcekind::stringliteral> AS geography) → st_geogfromtext (hint: )
-// CAST(<castsourcekind::geographycolumn> AS geometry) → st_geogtogeom (hint: )
+// CAST(<castsourcekind::any> AS geometry) → st_geomfromwkb (hint: )
+// CAST(<castsourcekind::any> AS geometry) → geometry (hint: st_makebox2d)
+// CAST(<castsourcekind::any> AS geometry) → geometry (hint: st_makebox3d)
+// CAST(<castsourcekind::geographycolumn> AS geometry) → geometry (hint: )
 // CAST(<castsourcekind::stringliteral> AS geometry) → st_geomfromtext (hint: )
+// CAST(<castsourcekind::any> AS gml) → st_asgml (hint: )
+// CAST(<castsourcekind::any> AS json) → st_asgeojson (hint: )
+// CAST(<castsourcekind::any> AS jsonb) → st_asgeojson (hint: )
+// CAST(<castsourcekind::any> AS kml) → st_askml (hint: )
+// CAST(<castsourcekind::any> AS mvt) → st_asmvt (hint: )
+// CAST(<castsourcekind::any> AS path) → path (hint: )
+// CAST(<castsourcekind::any> AS point) → point (hint: )
+// CAST(<castsourcekind::any> AS polygon) → polygon (hint: )
+// CAST(<castsourcekind::any> AS svg) → st_assvg (hint: )
+// CAST(<castsourcekind::any> AS text) → st_astext (hint: )
+// CAST(<castsourcekind::any> AS text) → st_asgeojson (hint: st_asgeojson)
+// CAST(<castsourcekind::any> AS topogeom) → topogeom (hint: )

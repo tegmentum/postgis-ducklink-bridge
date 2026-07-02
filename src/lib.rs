@@ -29,7 +29,6 @@ pub mod window_functions;
 use std::error::Error;
 use std::ffi::CString;
 
-use duckdb::Connection;
 use libduckdb_sys as ffi;
 
 /// DuckDB extension entry point. We hand-roll the C-ABI symbol
@@ -115,25 +114,34 @@ unsafe fn entrypoint_inner(
     // Step 5 — load the wasm shim.
     registry::load_shim().map_err(|e| -> Box<dyn Error> { format!("shim load: {e:#}").into() })?;
 
-    // Step 6 — scalars route through duckdb-rs's `VScalar`
-    // trait, which needs a `Connection`. Wrap the raw connection
-    // we already opened. Connection::open_from_raw opens
-    // another connection internally; we accept that — both go
-    // to the same database, registrations are catalog-scoped.
-    let conn = Connection::open_from_raw(db.cast())
-        .map_err(|e| -> Box<dyn Error> { format!("open_from_raw: {e}").into() })?;
-    scalars::register_all(&conn)
-        .map_err(|e| -> Box<dyn Error> { format!("scalar registration: {e}").into() })?;
+    // Step 6 — scalars via raw libduckdb-sys. Each scalar is
+    // registered as a function SET (one entry per parameter-list
+    // overload) through the C scalar-function API, with a single
+    // GENERIC dispatcher that reads each argument by its declared
+    // DataType and writes the return by its declared type. This
+    // subsumes every (param-types -> return) shape the shim
+    // publishes — no enumerated shape table, no BLOB fallback.
+    scalars::register_all(raw_con);
 
     // Step 7 — aggregates via raw libduckdb-sys.
     aggregates::register_all(raw_con);
 
-    // Step 8 — UDTFs still go through duckdb-rs (vtab trait).
-    table_functions::register_all(&conn)
-        .map_err(|e| -> Box<dyn Error> { format!("table function registration: {e}").into() })?;
+    // Step 8 — UDTFs via raw libduckdb-sys (DuckDB's VTab
+    // bind/init hooks are static, so we dispatch dynamically by
+    // name through the C table-function API — same pattern as
+    // aggregates).
+    table_functions::register_all(raw_con);
+
+    // Step 9 — spatial indexes. The loadable C API can't register
+    // a custom INDEX access method (no duckdb_register_index_type),
+    // so `CREATE INDEX … USING <name>` remains unsupported (a
+    // documented limitation). Instead the shim's tested
+    // spatial-index build + query path is exposed as a build
+    // AGGREGATE plus query TABLE FUNCTIONS — see spatial_indexes.rs.
+    spatial_indexes::register_all(raw_con);
 
     Ok(true)
 }
 // Extensions loaded by this bridge:
 //
-//   - postgis v0.1.0  (402 scalars, 11 agg, 7 udtf, 4 window, 7 types, 23 ops, 4 casts, 1 preps, 0 catalog, 9 indexes)
+//   - postgis v0.1.0  (1218 scalars, 29 agg, 12 udtf, 17 window, 29 types, 43 ops, 25 casts, 5 preps, 0 catalog, 3 indexes)

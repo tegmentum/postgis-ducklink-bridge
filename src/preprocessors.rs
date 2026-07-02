@@ -16,4 +16,8 @@ pub fn register_all(_conn: &Connection) -> Result<()> {
 // ----------------------------------------------------------------------
 
 // === extension: postgis ===
-// token `~` → __pg_contains__
+// token `<#>` → st_bboxdistance
+// token `<->` → st_knndistance
+// token `<<->>` → st_distancecentroidnd
+// token `|=|` → st_distancecpa
+// token `~==` → st_samend
