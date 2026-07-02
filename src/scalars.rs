@@ -34,12 +34,17 @@
 //! ### Scalar/aggregate name clash
 //!
 //! DuckDB's loadable C API forbids a scalar and an aggregate
-//! sharing a name in the same catalog. The aggregate form is the
-//! one users want for the clashing names (st_collect, st_union,
-//! …), so this emit SKIPS any canonical name also published as an
-//! aggregate, leaving the field clear for `aggregates.rs`. The set
-//! is computed from the plan, so a future shim's clashes resolve
-//! automatically.
+//! sharing a name in the same catalog. Rather than drop the
+//! scalar capability entirely, this emit registers the scalar
+//! under a `_scalar`-suffixed name (e.g. `st_extent` aggregate
+//! stays as `st_extent`; the scalar form becomes
+//! `st_extent_scalar`). The suffix lets callers still invoke the
+//! scalar shape explicitly, while the bare name resolves to the
+//! aggregate the way users typically expect at the SQL surface.
+//! The dispatcher still routes through the SHIM's original name
+//! (`sc.canonical_name`), so no registry changes are needed.
+//! The clash set is computed from the plan, so a future shim's
+//! clashes resolve automatically.
 //!
 //! Dispatch goes through `registry::lookup_scalar(name)` ->
 //! `Arc<dyn ScalarFunctionDef>` + `execute` (unchanged); only the
@@ -86,10 +91,12 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "add_edge",
+        "add_edge",
         &[(&[DataType::Binary, DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "add_edge_mod_face",
         "add_edge_mod_face",
         &[(
             &[
@@ -104,6 +111,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "add_edge_new_faces",
+        "add_edge_new_faces",
         &[(
             &[
                 DataType::Binary,
@@ -117,6 +125,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "add_face",
+        "add_face",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Boolean],
             DataType::Int64,
@@ -124,6 +133,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "add_iso_edge",
         "add_iso_edge",
         &[(
             &[
@@ -138,6 +148,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "add_iso_node",
+        "add_iso_node",
         &[(
             &[DataType::Binary, DataType::Text, DataType::Binary],
             DataType::Int64,
@@ -146,6 +157,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "add_node",
+        "add_node",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
             DataType::Int64,
@@ -153,6 +165,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "add_topogeom_column",
         "add_topogeom_column",
         &[(
             &[
@@ -167,6 +180,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "as_gml",
+        "as_gml",
         &[(
             &[DataType::Binary, DataType::Text, DataType::Int64],
             DataType::Text,
@@ -175,26 +189,36 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "as_topojson",
+        "as_topojson",
         &[(&[DataType::Binary], DataType::Text)],
     );
     register_scalar(
         conn,
         "as_topojson_with_edge_map",
+        "as_topojson_with_edge_map",
         &[(&[DataType::Binary, DataType::Boolean], DataType::Text)],
     );
-    register_scalar(conn, "build", &[(&[DataType::Int64], DataType::Boolean)]);
     register_scalar(
         conn,
+        "build",
+        "build",
+        &[(&[DataType::Int64], DataType::Boolean)],
+    );
+    register_scalar(
+        conn,
+        "cg_constrained_delaunay_triangles",
         "cg_constrained_delaunay_triangles",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "cg_polygon_repair",
+        "cg_polygon_repair",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "cg_threed_alpha_wrapping",
         "cg_threed_alpha_wrapping",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Float64],
@@ -204,6 +228,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "change_edge_geom",
+        "change_edge_geom",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Binary],
             DataType::Binary,
@@ -212,17 +237,30 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "copy_topology",
+        "copy_topology",
         &[(&[DataType::Binary, DataType::Text], DataType::Binary)],
     );
-    register_scalar(conn, "count_words", &[(&[DataType::Text], DataType::Int64)]);
+    register_scalar(
+        conn,
+        "count_words",
+        "count_words",
+        &[(&[DataType::Text], DataType::Int64)],
+    );
     register_scalar(
         conn,
         "create_index",
+        "create_index",
         &[(&[DataType::Int64], DataType::Int64)],
     );
-    register_scalar(conn, "create_raster", &[(&[], DataType::Binary)]);
     register_scalar(
         conn,
+        "create_raster",
+        "create_raster",
+        &[(&[], DataType::Binary)],
+    );
+    register_scalar(
+        conn,
+        "create_topo_geom",
         "create_topo_geom",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Text],
@@ -232,19 +270,27 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "create_topology",
+        "create_topology",
         &[(
             &[DataType::Text, DataType::Int64, DataType::Float64],
             DataType::Binary,
         )],
     );
-    register_scalar(conn, "cull_null", &[(&[DataType::Text], DataType::Text)]);
     register_scalar(
         conn,
+        "cull_null",
+        "cull_null",
+        &[(&[DataType::Text], DataType::Text)],
+    );
+    register_scalar(
+        conn,
+        "destroy_index",
         "destroy_index",
         &[(&[DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "drop_topogeom_column",
         "drop_topogeom_column",
         &[(
             &[DataType::Binary, DataType::Text, DataType::Text],
@@ -254,20 +300,24 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "drop_topology",
+        "drop_topology",
         &[(&[DataType::Binary], DataType::Text)],
     );
     register_scalar(
         conn,
+        "from_binary",
         "from_binary",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "from_bytes",
+        "from_bytes",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "get_edge_by_point",
         "get_edge_by_point",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
@@ -277,10 +327,12 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "get_edge_geometry",
+        "get_edge_geometry",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "get_face_by_point",
         "get_face_by_point",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
@@ -290,20 +342,24 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "get_face_containing_point",
+        "get_face_containing_point",
         &[(&[DataType::Binary, DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "get_face_edges",
         "get_face_edges",
         &[(&[DataType::Binary, DataType::Int64], DataType::Int64)],
     );
     register_scalar(
         conn,
         "get_face_geometry",
+        "get_face_geometry",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "get_node_by_point",
         "get_node_by_point",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
@@ -313,60 +369,81 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "get_node_edges",
+        "get_node_edges",
         &[(&[DataType::Binary, DataType::Int64], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "get_node_geometry",
         "get_node_geometry",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "get_ring_edges",
+        "get_ring_edges",
         &[(&[DataType::Binary, DataType::Int64], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "get_topology_id",
         "get_topology_id",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
         "get_topology_name",
+        "get_topology_name",
         &[(&[DataType::Binary], DataType::Text)],
     );
     register_scalar(
         conn,
+        "get_topology_srid",
         "get_topology_srid",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
         "insert_wkb",
+        "insert_wkb",
         &[(
             &[DataType::Int64, DataType::Binary, DataType::Int64],
             DataType::Boolean,
         )],
     );
-    register_scalar(conn, "list_cast_rewrites", &[(&[], DataType::Binary)]);
-    register_scalar(conn, "list_operator_rewrites", &[(&[], DataType::Binary)]);
     register_scalar(
         conn,
+        "list_cast_rewrites",
+        "list_cast_rewrites",
+        &[(&[], DataType::Binary)],
+    );
+    register_scalar(
+        conn,
+        "list_operator_rewrites",
+        "list_operator_rewrites",
+        &[(&[], DataType::Binary)],
+    );
+    register_scalar(
+        conn,
+        "list_preprocessor_patterns",
         "list_preprocessor_patterns",
         &[(&[], DataType::Binary)],
     );
     register_scalar(
         conn,
         "make_topo_element",
+        "make_topo_element",
         &[(&[DataType::Int64, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "make_topology_precise",
+        "make_topology_precise",
         &[(&[DataType::Binary, DataType::Float64], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "mod_edge_heal",
         "mod_edge_heal",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Int64],
@@ -376,6 +453,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "mod_edge_split",
+        "mod_edge_split",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Binary],
             DataType::Int64,
@@ -383,6 +461,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "move_iso_node",
         "move_iso_node",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Binary],
@@ -392,10 +471,12 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "nearest",
+        "nearest",
         &[(&[DataType::Int64, DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "new_edge_heal",
         "new_edge_heal",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Int64],
@@ -405,6 +486,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "new_edges_split",
+        "new_edges_split",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Binary],
             DataType::Int64,
@@ -413,123 +495,219 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "normalize_address",
+        "normalize_address",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "op_bbox_distance",
         "op_bbox_distance",
         &[(&[DataType::Binary, DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "op_bbox_intersects_nd",
+        "op_bbox_intersects_nd",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "op_bbox_intersects_twod",
         "op_bbox_intersects_twod",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
         "op_equals_spatially",
+        "op_equals_spatially",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "op_knn_distance",
         "op_knn_distance",
         &[(&[DataType::Binary, DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "pagc_normalize_address",
+        "pagc_normalize_address",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "parse_address",
         "parse_address",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
         "polygonize",
+        "polygonize",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "postgis_addbbox",
         "postgis_addbbox",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "postgis_dropbbox",
+        "postgis_dropbbox",
         &[(&[DataType::Binary], DataType::Binary)],
     );
-    register_scalar(conn, "postgis_full_version", &[(&[], DataType::Text)]);
     register_scalar(
         conn,
+        "postgis_full_version",
+        "postgis_full_version",
+        &[(&[], DataType::Text)],
+    );
+    register_scalar(
+        conn,
+        "postgis_geos_compiled_version",
         "postgis_geos_compiled_version",
         &[(&[], DataType::Text)],
     );
     register_scalar(
         conn,
         "postgis_geos_noop",
+        "postgis_geos_noop",
         &[(&[DataType::Binary], DataType::Binary)],
     );
-    register_scalar(conn, "postgis_geos_version", &[(&[], DataType::Text)]);
     register_scalar(
         conn,
+        "postgis_geos_version",
+        "postgis_geos_version",
+        &[(&[], DataType::Text)],
+    );
+    register_scalar(
+        conn,
+        "postgis_getbbox",
         "postgis_getbbox",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "postgis_hasbbox",
+        "postgis_hasbbox",
         &[(&[DataType::Binary], DataType::Boolean)],
     );
-    register_scalar(conn, "postgis_lib_build_date", &[(&[], DataType::Text)]);
-    register_scalar(conn, "postgis_lib_revision", &[(&[], DataType::Text)]);
-    register_scalar(conn, "postgis_lib_version", &[(&[], DataType::Text)]);
-    register_scalar(conn, "postgis_libjson_version", &[(&[], DataType::Text)]);
-    register_scalar(conn, "postgis_liblwgeom_version", &[(&[], DataType::Text)]);
+    register_scalar(
+        conn,
+        "postgis_lib_build_date",
+        "postgis_lib_build_date",
+        &[(&[], DataType::Text)],
+    );
+    register_scalar(
+        conn,
+        "postgis_lib_revision",
+        "postgis_lib_revision",
+        &[(&[], DataType::Text)],
+    );
+    register_scalar(
+        conn,
+        "postgis_lib_version",
+        "postgis_lib_version",
+        &[(&[], DataType::Text)],
+    );
+    register_scalar(
+        conn,
+        "postgis_libjson_version",
+        "postgis_libjson_version",
+        &[(&[], DataType::Text)],
+    );
+    register_scalar(
+        conn,
+        "postgis_liblwgeom_version",
+        "postgis_liblwgeom_version",
+        &[(&[], DataType::Text)],
+    );
     register_scalar(
         conn,
         "postgis_libprotobuf_version",
+        "postgis_libprotobuf_version",
         &[(&[], DataType::Text)],
     );
-    register_scalar(conn, "postgis_libxml_version", &[(&[], DataType::Text)]);
     register_scalar(
         conn,
+        "postgis_libxml_version",
+        "postgis_libxml_version",
+        &[(&[], DataType::Text)],
+    );
+    register_scalar(
+        conn,
+        "postgis_noop",
         "postgis_noop",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "postgis_proj_compiled_version",
+        "postgis_proj_compiled_version",
         &[(&[], DataType::Text)],
     );
-    register_scalar(conn, "postgis_proj_version", &[(&[], DataType::Text)]);
-    register_scalar(conn, "postgis_scripts_build_date", &[(&[], DataType::Text)]);
-    register_scalar(conn, "postgis_scripts_installed", &[(&[], DataType::Text)]);
-    register_scalar(conn, "postgis_scripts_released", &[(&[], DataType::Text)]);
-    register_scalar(conn, "postgis_svn_version", &[(&[], DataType::Text)]);
     register_scalar(
         conn,
+        "postgis_proj_version",
+        "postgis_proj_version",
+        &[(&[], DataType::Text)],
+    );
+    register_scalar(
+        conn,
+        "postgis_scripts_build_date",
+        "postgis_scripts_build_date",
+        &[(&[], DataType::Text)],
+    );
+    register_scalar(
+        conn,
+        "postgis_scripts_installed",
+        "postgis_scripts_installed",
+        &[(&[], DataType::Text)],
+    );
+    register_scalar(
+        conn,
+        "postgis_scripts_released",
+        "postgis_scripts_released",
+        &[(&[], DataType::Text)],
+    );
+    register_scalar(
+        conn,
+        "postgis_svn_version",
+        "postgis_svn_version",
+        &[(&[], DataType::Text)],
+    );
+    register_scalar(
+        conn,
+        "postgis_topology_scripts_installed",
         "postgis_topology_scripts_installed",
         &[(&[], DataType::Text)],
     );
     register_scalar(
         conn,
         "postgis_type_name",
+        "postgis_type_name",
         &[(
             &[DataType::Int64, DataType::Int64, DataType::Boolean],
             DataType::Text,
         )],
     );
-    register_scalar(conn, "postgis_version", &[(&[], DataType::Text)]);
-    register_scalar(conn, "postgis_wagyu_version", &[(&[], DataType::Text)]);
     register_scalar(
         conn,
+        "postgis_version",
+        "postgis_version",
+        &[(&[], DataType::Text)],
+    );
+    register_scalar(
+        conn,
+        "postgis_wagyu_version",
+        "postgis_wagyu_version",
+        &[(&[], DataType::Text)],
+    );
+    register_scalar(
+        conn,
+        "query_envelope",
         "query_envelope",
         &[(
             &[
@@ -545,6 +723,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "query_knn",
+        "query_knn",
         &[(
             &[DataType::Int64, DataType::Binary, DataType::Int64],
             DataType::Int64,
@@ -552,6 +731,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "query_within_distance",
         "query_within_distance",
         &[(
             &[DataType::Int64, DataType::Binary, DataType::Float64],
@@ -561,60 +741,72 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "rast_dfer_all_batch",
+        "rast_dfer_all_batch",
         &[(&[DataType::Text], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "rast_metadata_all_batch",
         "rast_metadata_all_batch",
         &[(&[DataType::Text], DataType::Boolean)],
     );
     register_scalar(
         conn,
         "rem_edge_mod_face",
+        "rem_edge_mod_face",
         &[(&[DataType::Binary, DataType::Int64], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "rem_edge_new_face",
         "rem_edge_new_face",
         &[(&[DataType::Binary, DataType::Int64], DataType::Int64)],
     );
     register_scalar(
         conn,
         "remove_face",
+        "remove_face",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "remove_iso_edge",
         "remove_iso_edge",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "remove_iso_node",
+        "remove_iso_node",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "remove_unused_primitives",
         "remove_unused_primitives",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
         "rename_topology",
+        "rename_topology",
         &[(&[DataType::Binary, DataType::Text], DataType::Text)],
     );
     register_scalar(
         conn,
+        "st_3d_closest_point",
         "st_3d_closest_point",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_3d_contains",
+        "st_3d_contains",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_3d_d_within",
         "st_3d_d_within",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
@@ -624,6 +816,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_3d_dwithin",
+        "st_3d_dwithin",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
             DataType::Boolean,
@@ -632,75 +825,90 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_3d_intersects",
+        "st_3d_intersects",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_3d_line_interpolate_point",
         "st_3d_line_interpolate_point",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_3d_longest_line",
+        "st_3d_longest_line",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_3d_make_box",
         "st_3d_make_box",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_3d_max_distance",
+        "st_3d_max_distance",
         &[(&[DataType::Binary, DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_3d_shortest_line",
         "st_3d_shortest_line",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_3darea",
+        "st_3darea",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_3dboundary",
         "st_3dboundary",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_3dcentroid",
+        "st_3dcentroid",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_3dclosestpoint",
         "st_3dclosestpoint",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_3dcontains",
+        "st_3dcontains",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_3dconvexhull",
         "st_3dconvexhull",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_3ddifference",
+        "st_3ddifference",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_3ddistance",
+        "st_3ddistance",
         &[(&[DataType::Binary, DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_3ddwithin",
         "st_3ddwithin",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
@@ -710,55 +918,66 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_3denvelope",
+        "st_3denvelope",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_3dintersection",
         "st_3dintersection",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_3dintersects",
+        "st_3dintersects",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_3dlength",
         "st_3dlength",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_3dlineinterpolatepoint",
+        "st_3dlineinterpolatepoint",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_3dlongestline",
         "st_3dlongestline",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_3dmakebox",
+        "st_3dmakebox",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_3dmaxdistance",
         "st_3dmaxdistance",
         &[(&[DataType::Binary, DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_3dperimeter",
+        "st_3dperimeter",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_3dreverse",
+        "st_3dreverse",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_3drotate",
         "st_3drotate",
         &[(
             &[
@@ -774,6 +993,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_3dscale",
+        "st_3dscale",
         &[(
             &[
                 DataType::Binary,
@@ -787,10 +1007,12 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_3dshortestline",
+        "st_3dshortestline",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_3dtranslate",
         "st_3dtranslate",
         &[(
             &[
@@ -805,10 +1027,12 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_3dunion",
+        "st_3dunion",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_add_band",
         "st_add_band",
         &[(
             &[
@@ -823,6 +1047,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_add_face",
+        "st_add_face",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Boolean],
             DataType::Int64,
@@ -830,6 +1055,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_add_iso_edge",
         "st_add_iso_edge",
         &[(
             &[
@@ -844,6 +1070,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_add_iso_node",
+        "st_add_iso_node",
         &[(
             &[DataType::Binary, DataType::Text, DataType::Binary],
             DataType::Int64,
@@ -851,6 +1078,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_add_measure",
         "st_add_measure",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Float64],
@@ -860,6 +1088,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_add_point",
+        "st_add_point",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Text],
             DataType::Binary,
@@ -867,6 +1096,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_addband",
         "st_addband",
         &[(
             &[
@@ -881,6 +1111,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_addface",
+        "st_addface",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Boolean],
             DataType::Int64,
@@ -888,6 +1119,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_addisoedge",
         "st_addisoedge",
         &[(
             &[
@@ -902,6 +1134,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_addisonode",
+        "st_addisonode",
         &[(
             &[DataType::Binary, DataType::Text, DataType::Binary],
             DataType::Int64,
@@ -909,6 +1142,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_addmeasure",
         "st_addmeasure",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Float64],
@@ -918,6 +1152,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_addpoint",
+        "st_addpoint",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Text],
             DataType::Binary,
@@ -925,6 +1160,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_affine",
         "st_affine",
         &[(
             &[
@@ -942,10 +1178,12 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_alpha_shape",
+        "st_alpha_shape",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_angle",
         "st_angle",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Binary],
@@ -955,10 +1193,12 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_approx_convex_partition",
+        "st_approx_convex_partition",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_approx_histogram",
         "st_approx_histogram",
         &[(
             &[
@@ -973,6 +1213,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_approx_quantile",
+        "st_approx_quantile",
         &[(
             &[
                 DataType::Binary,
@@ -985,6 +1226,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_approx_quantiles",
         "st_approx_quantiles",
         &[(
             &[
@@ -999,6 +1241,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_approx_summary_stats",
+        "st_approx_summary_stats",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Float64],
             DataType::Binary,
@@ -1006,6 +1249,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_approx_value_count",
         "st_approx_value_count",
         &[(
             &[
@@ -1019,6 +1263,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_approx_value_counts",
         "st_approx_value_counts",
         &[(
             &[
@@ -1034,6 +1279,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_approx_value_percent",
+        "st_approx_value_percent",
         &[(
             &[
                 DataType::Binary,
@@ -1046,6 +1292,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_approx_value_percents",
         "st_approx_value_percents",
         &[(
             &[
@@ -1061,67 +1308,90 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_approximate_medial_axis",
+        "st_approximate_medial_axis",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_approximatemedialaxis",
+        "st_approximatemedialaxis",
         &[(&[DataType::Binary], DataType::Binary)],
     );
-    register_scalar(conn, "st_area", &[(&[DataType::Binary], DataType::Float64)]);
     register_scalar(
         conn,
+        "st_area",
+        "st_area",
+        &[(&[DataType::Binary], DataType::Float64)],
+    );
+    register_scalar(
+        conn,
+        "st_area_batch",
         "st_area_batch",
         &[(&[DataType::Text], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_area_threed",
+        "st_area_threed",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_area_twod",
         "st_area_twod",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_areathreed",
+        "st_areathreed",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_as_binary",
         "st_as_binary",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_as_encoded_polyline",
+        "st_as_encoded_polyline",
         &[(&[DataType::Binary, DataType::Text], DataType::Text)],
     );
     register_scalar(
         conn,
         "st_as_ewkb",
+        "st_as_ewkb",
         &[(&[DataType::Binary], DataType::Binary)],
     );
-    register_scalar(conn, "st_as_ewkt", &[(&[DataType::Binary], DataType::Text)]);
     register_scalar(
         conn,
+        "st_as_ewkt",
+        "st_as_ewkt",
+        &[(&[DataType::Binary], DataType::Text)],
+    );
+    register_scalar(
+        conn,
+        "st_as_ewkt_precision",
         "st_as_ewkt_precision",
         &[(&[DataType::Binary, DataType::Int64], DataType::Text)],
     );
     register_scalar(
         conn,
         "st_as_gdal_raster",
+        "st_as_gdal_raster",
         &[(&[DataType::Binary, DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_as_geojson",
+        "st_as_geojson",
         &[(&[DataType::Binary], DataType::Text)],
     );
     register_scalar(
         conn,
+        "st_as_geojson_full",
         "st_as_geojson_full",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Int64],
@@ -1131,6 +1401,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_as_gml",
+        "st_as_gml",
         &[(
             &[DataType::Binary, DataType::Text, DataType::Text],
             DataType::Text,
@@ -1138,6 +1409,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_as_gml_full",
         "st_as_gml_full",
         &[(
             &[
@@ -1154,16 +1426,24 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_as_hexewkb",
+        "st_as_hexewkb",
         &[(&[DataType::Binary], DataType::Text)],
     );
     register_scalar(
         conn,
         "st_as_jpeg",
+        "st_as_jpeg",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
-    register_scalar(conn, "st_as_kml", &[(&[DataType::Binary], DataType::Text)]);
     register_scalar(
         conn,
+        "st_as_kml",
+        "st_as_kml",
+        &[(&[DataType::Binary], DataType::Text)],
+    );
+    register_scalar(
+        conn,
+        "st_as_kml_full",
         "st_as_kml_full",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Text],
@@ -1173,20 +1453,24 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_as_lat_lon_text",
+        "st_as_lat_lon_text",
         &[(&[DataType::Binary, DataType::Text], DataType::Text)],
     );
     register_scalar(
         conn,
+        "st_as_marc21",
         "st_as_marc21",
         &[(&[DataType::Binary], DataType::Text)],
     );
     register_scalar(
         conn,
         "st_as_marc21_fmt",
+        "st_as_marc21_fmt",
         &[(&[DataType::Binary, DataType::Text], DataType::Text)],
     );
     register_scalar(
         conn,
+        "st_as_mvt_geom",
         "st_as_mvt_geom",
         &[(
             &[
@@ -1205,41 +1489,63 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_as_png",
+        "st_as_png",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
-    register_scalar(conn, "st_as_svg", &[(&[DataType::Binary], DataType::Text)]);
     register_scalar(
         conn,
+        "st_as_svg",
+        "st_as_svg",
+        &[(&[DataType::Binary], DataType::Text)],
+    );
+    register_scalar(
+        conn,
+        "st_as_svg_full",
         "st_as_svg_full",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Int64],
             DataType::Text,
         )],
     );
-    register_scalar(conn, "st_as_text", &[(&[DataType::Binary], DataType::Text)]);
     register_scalar(
         conn,
+        "st_as_text",
+        "st_as_text",
+        &[(&[DataType::Binary], DataType::Text)],
+    );
+    register_scalar(
+        conn,
+        "st_as_text_precision",
         "st_as_text_precision",
         &[(&[DataType::Binary, DataType::Int64], DataType::Text)],
     );
     register_scalar(
         conn,
         "st_as_tiff",
+        "st_as_tiff",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_as_topo_json",
         "st_as_topo_json",
         &[(&[DataType::Binary], DataType::Text)],
     );
     register_scalar(
         conn,
         "st_as_twkb",
+        "st_as_twkb",
         &[(&[DataType::Binary, DataType::Text], DataType::Binary)],
     );
-    register_scalar(conn, "st_as_x3d", &[(&[DataType::Binary], DataType::Text)]);
     register_scalar(
         conn,
+        "st_as_x3d",
+        "st_as_x3d",
+        &[(&[DataType::Binary], DataType::Text)],
+    );
+    register_scalar(
+        conn,
+        "st_as_x3d_full",
         "st_as_x3d_full",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Int64],
@@ -1249,26 +1555,36 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_asbinary",
+        "st_asbinary",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_asencodedpolyline",
         "st_asencodedpolyline",
         &[(&[DataType::Binary, DataType::Text], DataType::Text)],
     );
     register_scalar(
         conn,
         "st_asewkb",
+        "st_asewkb",
         &[(&[DataType::Binary], DataType::Binary)],
     );
-    register_scalar(conn, "st_asewkt", &[(&[DataType::Binary], DataType::Text)]);
     register_scalar(
         conn,
+        "st_asewkt",
+        "st_asewkt",
+        &[(&[DataType::Binary], DataType::Text)],
+    );
+    register_scalar(
+        conn,
+        "st_asgeojson",
         "st_asgeojson",
         &[(&[DataType::Binary], DataType::Text)],
     );
     register_scalar(
         conn,
+        "st_asgml",
         "st_asgml",
         &[(
             &[DataType::Binary, DataType::Text, DataType::Text],
@@ -1278,21 +1594,30 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_ashexewkb",
+        "st_ashexewkb",
         &[(&[DataType::Binary], DataType::Text)],
     );
-    register_scalar(conn, "st_askml", &[(&[DataType::Binary], DataType::Text)]);
     register_scalar(
         conn,
+        "st_askml",
+        "st_askml",
+        &[(&[DataType::Binary], DataType::Text)],
+    );
+    register_scalar(
+        conn,
+        "st_aslatlontext",
         "st_aslatlontext",
         &[(&[DataType::Binary, DataType::Text], DataType::Text)],
     );
     register_scalar(
         conn,
         "st_asmarc21",
+        "st_asmarc21",
         &[(&[DataType::Binary], DataType::Text)],
     );
     register_scalar(
         conn,
+        "st_asmvtgeom",
         "st_asmvtgeom",
         &[(
             &[
@@ -1311,193 +1636,246 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_aspect",
+        "st_aspect",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_aspng",
+        "st_aspng",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
-    register_scalar(conn, "st_assvg", &[(&[DataType::Binary], DataType::Text)]);
-    register_scalar(conn, "st_astext", &[(&[DataType::Binary], DataType::Text)]);
     register_scalar(
         conn,
+        "st_assvg",
+        "st_assvg",
+        &[(&[DataType::Binary], DataType::Text)],
+    );
+    register_scalar(
+        conn,
+        "st_astext",
+        "st_astext",
+        &[(&[DataType::Binary], DataType::Text)],
+    );
+    register_scalar(
+        conn,
+        "st_astiff",
         "st_astiff",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_astopojson",
+        "st_astopojson",
         &[(&[DataType::Binary], DataType::Text)],
     );
     register_scalar(
         conn,
         "st_astwkb",
+        "st_astwkb",
         &[(&[DataType::Binary, DataType::Text], DataType::Binary)],
     );
-    register_scalar(conn, "st_asx3d", &[(&[DataType::Binary], DataType::Text)]);
     register_scalar(
         conn,
+        "st_asx3d",
+        "st_asx3d",
+        &[(&[DataType::Binary], DataType::Text)],
+    );
+    register_scalar(
+        conn,
+        "st_azimuth",
         "st_azimuth",
         &[(&[DataType::Binary, DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_band_count",
+        "st_band_count",
         &[(&[DataType::Binary, DataType::Int64], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "st_band_max",
         "st_band_max",
         &[(&[DataType::Binary, DataType::Int64], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_band_mean",
+        "st_band_mean",
         &[(&[DataType::Binary, DataType::Int64], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_band_metadata",
         "st_band_metadata",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_band_min",
+        "st_band_min",
         &[(&[DataType::Binary, DataType::Int64], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_band_nodata_value",
         "st_band_nodata_value",
         &[(&[DataType::Binary, DataType::Int64], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_band_pixel_type",
+        "st_band_pixel_type",
         &[(&[DataType::Binary, DataType::Int64], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "st_band_stddev",
         "st_band_stddev",
         &[(&[DataType::Binary, DataType::Int64], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_band_sum",
+        "st_band_sum",
         &[(&[DataType::Binary, DataType::Int64], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_bandnodatavalue",
         "st_bandnodatavalue",
         &[(&[DataType::Binary, DataType::Int64], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_bandpixeltype",
+        "st_bandpixeltype",
         &[(&[DataType::Binary, DataType::Int64], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "st_bands_metadata",
         "st_bands_metadata",
         &[(&[DataType::Binary, DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_bboxdistance",
+        "st_bboxdistance",
         &[(&[DataType::Binary, DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_bboxintersects",
         "st_bboxintersects",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
         "st_bboxintersectsnd",
+        "st_bboxintersectsnd",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_bd_mpoly_from_text",
         "st_bd_mpoly_from_text",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_bd_poly_from_text",
+        "st_bd_poly_from_text",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_bdmpolyfromtext",
         "st_bdmpolyfromtext",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_bdpolyfromtext",
+        "st_bdpolyfromtext",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_boundary",
         "st_boundary",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_boundary_batch",
+        "st_boundary_batch",
         &[(&[DataType::Text], DataType::Text)],
     );
     register_scalar(
         conn,
+        "st_boundary_threed",
         "st_boundary_threed",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_boundarythreed",
+        "st_boundarythreed",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_bounding_diagonal",
         "st_bounding_diagonal",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_boundingdiagonal",
+        "st_boundingdiagonal",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_box2d_from_geohash",
         "st_box2d_from_geohash",
         &[(&[DataType::Text, DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_box2dfromgeohash",
+        "st_box2dfromgeohash",
         &[(&[DataType::Text, DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_box_from_geohash",
         "st_box_from_geohash",
         &[(&[DataType::Text, DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_boxfromgeohash",
+        "st_boxfromgeohash",
         &[(&[DataType::Text, DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_buffer",
         "st_buffer",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_buffer_batch",
+        "st_buffer_batch",
         &[(&[DataType::Text, DataType::Text], DataType::Text)],
     );
     register_scalar(
         conn,
+        "st_buffer_quad_segs",
         "st_buffer_quad_segs",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Int64],
@@ -1507,6 +1885,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_buffer_threed",
+        "st_buffer_threed",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Int64],
             DataType::Binary,
@@ -1514,6 +1893,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_buffer_with_style",
         "st_buffer_with_style",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Text],
@@ -1523,45 +1903,54 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_build_area",
+        "st_build_area",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_buildarea",
         "st_buildarea",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_centroid",
+        "st_centroid",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_centroid_batch",
         "st_centroid_batch",
         &[(&[DataType::Text], DataType::Text)],
     );
     register_scalar(
         conn,
         "st_centroid_threed",
+        "st_centroid_threed",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_centroidthreed",
         "st_centroidthreed",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_chaikin_smoothing",
+        "st_chaikin_smoothing",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_chaikinsmoothing",
+        "st_chaikinsmoothing",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_clip_by_box2d",
         "st_clip_by_box2d",
         &[(
             &[
@@ -1577,6 +1966,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_clipbybox2d",
+        "st_clipbybox2d",
         &[(
             &[
                 DataType::Binary,
@@ -1591,55 +1981,66 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_closest_point",
+        "st_closest_point",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_closest_point_3d",
         "st_closest_point_3d",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_closest_point_of_approach",
+        "st_closest_point_of_approach",
         &[(&[DataType::Binary, DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_closest_point_threed",
         "st_closest_point_threed",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_closestpoint",
+        "st_closestpoint",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_collection_extract",
         "st_collection_extract",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_collection_homogenize",
+        "st_collection_homogenize",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_collectionextract",
         "st_collectionextract",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_collectionhomogenize",
+        "st_collectionhomogenize",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_concave_hull",
+        "st_concave_hull",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_concave_hull_holes",
         "st_concave_hull_holes",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Boolean],
@@ -1649,100 +2050,120 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_concavehull",
+        "st_concavehull",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_constrained_delaunay_triangles",
         "st_constrained_delaunay_triangles",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_constraineddelaunaytriangles",
+        "st_constraineddelaunaytriangles",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_constrainedelaunaytriangles",
         "st_constrainedelaunaytriangles",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_contains",
+        "st_contains",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_contains_3d",
         "st_contains_3d",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
         "st_contains_batch",
+        "st_contains_batch",
         &[(&[DataType::Text, DataType::Text], DataType::Text)],
     );
     register_scalar(
         conn,
+        "st_contains_properly",
         "st_contains_properly",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
         "st_contains_threed",
+        "st_contains_threed",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_containsproperly",
         "st_containsproperly",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
         "st_convex_hull",
+        "st_convex_hull",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_convex_hull_batch",
         "st_convex_hull_batch",
         &[(&[DataType::Text], DataType::Text)],
     );
     register_scalar(
         conn,
         "st_convex_hull_threed",
+        "st_convex_hull_threed",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_convexhull",
         "st_convexhull",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_convexhullthreed",
+        "st_convexhullthreed",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_coord_dim",
         "st_coord_dim",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
         "st_coord_dim_threed",
+        "st_coord_dim_threed",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "st_coorddim",
         "st_coorddim",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
         "st_count",
+        "st_count",
         &[(&[DataType::Binary, DataType::Int64], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "st_coverage_clean",
         "st_coverage_clean",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Float64],
@@ -1752,10 +2173,12 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_coverage_invalid_edges",
+        "st_coverage_invalid_edges",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_coverage_simplify",
         "st_coverage_simplify",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Boolean],
@@ -1765,10 +2188,12 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_coverage_union",
+        "st_coverage_union",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_coverageclean",
         "st_coverageclean",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Float64],
@@ -1778,10 +2203,12 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_coverageinvalidedges",
+        "st_coverageinvalidedges",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_coveragesimplify",
         "st_coveragesimplify",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Boolean],
@@ -1791,35 +2218,42 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_covered_by",
+        "st_covered_by",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_covered_by_batch",
         "st_covered_by_batch",
         &[(&[DataType::Text, DataType::Text], DataType::Text)],
     );
     register_scalar(
         conn,
         "st_coveredby",
+        "st_coveredby",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_covers",
         "st_covers",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
         "st_covers_batch",
+        "st_covers_batch",
         &[(&[DataType::Text, DataType::Text], DataType::Text)],
     );
     register_scalar(
         conn,
         "st_covers_threed",
+        "st_covers_threed",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_cpa_within",
         "st_cpa_within",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
@@ -1829,6 +2263,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_cpawithin",
+        "st_cpawithin",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
             DataType::Boolean,
@@ -1837,10 +2272,12 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_create_topo_geo",
+        "st_create_topo_geo",
         &[(&[DataType::Binary, DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "st_create_topology",
         "st_create_topology",
         &[(
             &[DataType::Text, DataType::Int64, DataType::Float64],
@@ -1850,6 +2287,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_createtopology",
+        "st_createtopology",
         &[(
             &[DataType::Text, DataType::Int64, DataType::Float64],
             DataType::Binary,
@@ -1858,20 +2296,24 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_crosses",
+        "st_crosses",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_crosses_batch",
         "st_crosses_batch",
         &[(&[DataType::Text, DataType::Text], DataType::Text)],
     );
     register_scalar(
         conn,
         "st_curve_n",
+        "st_curve_n",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_curve_to_line",
         "st_curve_to_line",
         &[(
             &[
@@ -1886,10 +2328,12 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_curven",
+        "st_curven",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_curvetoline",
         "st_curvetoline",
         &[(
             &[
@@ -1904,6 +2348,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_d_within",
+        "st_d_within",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
             DataType::Boolean,
@@ -1912,15 +2357,18 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_delaunay_triangles",
+        "st_delaunay_triangles",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_delaunaytriangles",
+        "st_delaunaytriangles",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_dfully_within",
         "st_dfully_within",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
@@ -1930,6 +2378,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_dfully_within_threed",
+        "st_dfully_within_threed",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
             DataType::Boolean,
@@ -1937,6 +2386,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_dfullywithin",
         "st_dfullywithin",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
@@ -1946,15 +2396,18 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_difference",
+        "st_difference",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_difference_batch",
+        "st_difference_batch",
         &[(&[DataType::Text, DataType::Text], DataType::Text)],
     );
     register_scalar(
         conn,
+        "st_difference_gridsize",
         "st_difference_gridsize",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
@@ -1964,55 +2417,66 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_difference_threed",
+        "st_difference_threed",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_differencethreed",
         "st_differencethreed",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_dimension",
+        "st_dimension",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "st_disjoint",
         "st_disjoint",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
         "st_disjoint_batch",
+        "st_disjoint_batch",
         &[(&[DataType::Text, DataType::Text], DataType::Text)],
     );
     register_scalar(
         conn,
+        "st_distance",
         "st_distance",
         &[(&[DataType::Binary, DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_distance_batch",
+        "st_distance_batch",
         &[(&[DataType::Text, DataType::Text], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_distance_cpa",
         "st_distance_cpa",
         &[(&[DataType::Binary, DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_distance_sphere",
+        "st_distance_sphere",
         &[(&[DataType::Binary, DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_distance_sphere_batch",
+        "st_distance_sphere_batch",
         &[(&[DataType::Text, DataType::Text], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_distance_sphere_radius",
         "st_distance_sphere_radius",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
@@ -2022,65 +2486,78 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_distance_spheroid",
+        "st_distance_spheroid",
         &[(&[DataType::Binary, DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_distance_spheroid_batch",
         "st_distance_spheroid_batch",
         &[(&[DataType::Text, DataType::Text], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_distance_threed",
+        "st_distance_threed",
         &[(&[DataType::Binary, DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_distancecpa",
         "st_distancecpa",
         &[(&[DataType::Binary, DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_distancesphere",
+        "st_distancesphere",
         &[(&[DataType::Binary, DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_distancespheroid",
         "st_distancespheroid",
         &[(&[DataType::Binary, DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_distancethreed",
+        "st_distancethreed",
         &[(&[DataType::Binary, DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_dump_as_polygons",
         "st_dump_as_polygons",
         &[(&[DataType::Binary, DataType::Int64], DataType::Text)],
     );
     register_scalar(
         conn,
         "st_dump_values",
+        "st_dump_values",
         &[(&[DataType::Binary, DataType::Int64], DataType::Text)],
     );
     register_scalar(
         conn,
+        "st_dump_values_multi",
         "st_dump_values_multi",
         &[(&[DataType::Binary, DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_dumpaspolygons",
+        "st_dumpaspolygons",
         &[(&[DataType::Binary, DataType::Int64], DataType::Text)],
     );
     register_scalar(
         conn,
         "st_dumpvalues",
+        "st_dumpvalues",
         &[(&[DataType::Binary, DataType::Int64], DataType::Text)],
     );
     register_scalar(
         conn,
+        "st_dwithin",
         "st_dwithin",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
@@ -2090,6 +2567,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_dwithin_3d",
+        "st_dwithin_3d",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
             DataType::Boolean,
@@ -2097,6 +2575,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_dwithin_threed",
         "st_dwithin_threed",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
@@ -2106,50 +2585,60 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_end_point",
+        "st_end_point",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_end_point_batch",
         "st_end_point_batch",
         &[(&[DataType::Text], DataType::Text)],
     );
     register_scalar(
         conn,
         "st_endpoint",
+        "st_endpoint",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_envelope",
         "st_envelope",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_envelope_batch",
+        "st_envelope_batch",
         &[(&[DataType::Text], DataType::Text)],
     );
     register_scalar(
         conn,
+        "st_envelope_threed",
         "st_envelope_threed",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_envelopethreed",
+        "st_envelopethreed",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_equals",
         "st_equals",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
         "st_equals_batch",
+        "st_equals_batch",
         &[(&[DataType::Text, DataType::Text], DataType::Text)],
     );
     register_scalar(
         conn,
+        "st_equals_exact",
         "st_equals_exact",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
@@ -2159,6 +2648,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_equalsexact",
+        "st_equalsexact",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
             DataType::Boolean,
@@ -2167,10 +2657,12 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_expand",
+        "st_expand",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_expand_xy",
         "st_expand_xy",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Float64],
@@ -2179,6 +2671,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_expand_xyz",
         "st_expand_xyz",
         &[(
             &[
@@ -2192,6 +2685,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_expand_xyzm",
         "st_expand_xyzm",
         &[(
             &[
@@ -2207,25 +2701,30 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_extent_threed_batch",
+        "st_extent_threed_batch",
         &[(&[DataType::Text], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_exterior_ring",
         "st_exterior_ring",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_exterior_ring_threed",
+        "st_exterior_ring_threed",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_exteriorring",
+        "st_exteriorring",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_extrude",
         "st_extrude",
         &[(
             &[
@@ -2240,6 +2739,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_extrude_polygon_straight_skeleton",
+        "st_extrude_polygon_straight_skeleton",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Float64],
             DataType::Binary,
@@ -2248,15 +2748,18 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_extrude_straight",
+        "st_extrude_straight",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_extrude_straight_skeleton",
+        "st_extrude_straight_skeleton",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_filter_by_m",
         "st_filter_by_m",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Text],
@@ -2266,6 +2769,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_filterbym",
+        "st_filterbym",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Text],
             DataType::Binary,
@@ -2274,240 +2778,288 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_flip_coordinates",
+        "st_flip_coordinates",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_flipcoordinates",
         "st_flipcoordinates",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_force2d",
+        "st_force2d",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_force3d",
         "st_force3d",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_force3dm",
+        "st_force3dm",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_force3dz",
         "st_force3dz",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_force4d",
+        "st_force4d",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_force_2d",
         "st_force_2d",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_force_3d",
+        "st_force_3d",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_force_3dm",
         "st_force_3dm",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_force_4d",
+        "st_force_4d",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_force_collection",
         "st_force_collection",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_force_curve",
+        "st_force_curve",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_force_fourd",
         "st_force_fourd",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_force_lhr",
+        "st_force_lhr",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_force_polygon_ccw",
         "st_force_polygon_ccw",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_force_polygon_cw",
+        "st_force_polygon_cw",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_force_rhr",
         "st_force_rhr",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_force_sfs",
+        "st_force_sfs",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_force_threed",
         "st_force_threed",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_force_threedm",
+        "st_force_threedm",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_force_threedz",
         "st_force_threedz",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_force_twod",
+        "st_force_twod",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_force_valid",
         "st_force_valid",
         &[(&[DataType::Binary, DataType::Boolean], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_forcecollection",
+        "st_forcecollection",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_forcecurve",
         "st_forcecurve",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_forcefourd",
+        "st_forcefourd",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_forcepolygonccw",
         "st_forcepolygonccw",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_forcepolygoncw",
+        "st_forcepolygoncw",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_forcerhr",
         "st_forcerhr",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_forcesfs",
+        "st_forcesfs",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_forcethreed",
         "st_forcethreed",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_forcethreedm",
+        "st_forcethreedm",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_forcethreedz",
         "st_forcethreedz",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_forcetwod",
+        "st_forcetwod",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_frechet_distance",
         "st_frechet_distance",
         &[(&[DataType::Binary, DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_frechetdistance",
+        "st_frechetdistance",
         &[(&[DataType::Binary, DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_from_flatgeobuf",
         "st_from_flatgeobuf",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_fromflatgeobuf",
+        "st_fromflatgeobuf",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_generate_points",
         "st_generate_points",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_generatepoints",
+        "st_generatepoints",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_geo_reference",
         "st_geo_reference",
         &[(&[DataType::Binary, DataType::Text], DataType::Text)],
     );
     register_scalar(
         conn,
         "st_geog_area",
+        "st_geog_area",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_geog_area_batch",
         "st_geog_area_batch",
         &[(&[DataType::Text], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_geog_azimuth",
+        "st_geog_azimuth",
         &[(&[DataType::Binary, DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_geog_azimuth_batch",
         "st_geog_azimuth_batch",
         &[(&[DataType::Text, DataType::Text], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_geog_buffer",
+        "st_geog_buffer",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_geog_buffer_with_segs",
         "st_geog_buffer_with_segs",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Int64],
@@ -2517,45 +3069,54 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_geog_centroid",
+        "st_geog_centroid",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_geog_closest_point",
         "st_geog_closest_point",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_geog_convex_hull",
+        "st_geog_convex_hull",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_geog_covered_by",
         "st_geog_covered_by",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
         "st_geog_covers",
+        "st_geog_covers",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_geog_difference",
         "st_geog_difference",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_geog_distance",
+        "st_geog_distance",
         &[(&[DataType::Binary, DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_geog_distance_batch",
+        "st_geog_distance_batch",
         &[(&[DataType::Text, DataType::Text], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_geog_dwithin",
         "st_geog_dwithin",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
@@ -2565,6 +3126,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_geog_dwithin_batch",
+        "st_geog_dwithin_batch",
         &[(
             &[DataType::Text, DataType::Text, DataType::Text],
             DataType::Text,
@@ -2573,65 +3135,78 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_geog_expand",
+        "st_geog_expand",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_geog_from_ewkt",
         "st_geog_from_ewkt",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_geog_from_text",
+        "st_geog_from_text",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_geog_from_wkb",
         "st_geog_from_wkb",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_geog_geometry_type",
+        "st_geog_geometry_type",
         &[(&[DataType::Binary], DataType::Text)],
     );
     register_scalar(
         conn,
+        "st_geog_intersection",
         "st_geog_intersection",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_geog_intersects",
+        "st_geog_intersects",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_geog_is_closed",
         "st_geog_is_closed",
         &[(&[DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
         "st_geog_is_empty",
+        "st_geog_is_empty",
         &[(&[DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_geog_is_simple",
         "st_geog_is_simple",
         &[(&[DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
         "st_geog_length",
+        "st_geog_length",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_geog_length_batch",
+        "st_geog_length_batch",
         &[(&[DataType::Text], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_geog_line_substring",
         "st_geog_line_substring",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Float64],
@@ -2641,25 +3216,30 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_geog_npoints",
+        "st_geog_npoints",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "st_geog_perimeter",
         "st_geog_perimeter",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_geog_perimeter_batch",
+        "st_geog_perimeter_batch",
         &[(&[DataType::Text], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_geog_point",
+        "st_geog_point",
         &[(&[DataType::Float64, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_geog_project",
         "st_geog_project",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Float64],
@@ -2669,6 +3249,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_geog_project_batch",
+        "st_geog_project_batch",
         &[(
             &[DataType::Text, DataType::Text, DataType::Text],
             DataType::Text,
@@ -2677,50 +3258,60 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_geog_segmentize",
+        "st_geog_segmentize",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_geog_segmentize_batch",
         "st_geog_segmentize_batch",
         &[(&[DataType::Text, DataType::Text], DataType::Text)],
     );
     register_scalar(
         conn,
         "st_geog_summary",
+        "st_geog_summary",
         &[(&[DataType::Binary], DataType::Text)],
     );
     register_scalar(
         conn,
+        "st_geog_sym_difference",
         "st_geog_sym_difference",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_geog_to_geom",
+        "st_geog_to_geom",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_geog_union",
         "st_geog_union",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_geogarea",
+        "st_geogarea",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_geogazimuth",
         "st_geogazimuth",
         &[(&[DataType::Binary, DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_geogbuffer",
+        "st_geogbuffer",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_geogbufferwithsegs",
         "st_geogbufferwithsegs",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Int64],
@@ -2730,25 +3321,30 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_geogcentroid",
+        "st_geogcentroid",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_geogcoveredby",
         "st_geogcoveredby",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
         "st_geogcovers",
+        "st_geogcovers",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
         "st_geogdistance",
+        "st_geogdistance",
         &[(&[DataType::Binary, DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_geogdwithin",
         "st_geogdwithin",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
@@ -2758,315 +3354,378 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_geogexpand",
+        "st_geogexpand",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_geogfromtext",
         "st_geogfromtext",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_geogfromwkb",
+        "st_geogfromwkb",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_geoggeometrytype",
         "st_geoggeometrytype",
         &[(&[DataType::Binary], DataType::Text)],
     );
     register_scalar(
         conn,
         "st_geogintersects",
+        "st_geogintersects",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_geogisclosed",
         "st_geogisclosed",
         &[(&[DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
         "st_geogisempty",
+        "st_geogisempty",
         &[(&[DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_geogissimple",
         "st_geogissimple",
         &[(&[DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
         "st_geoglength",
+        "st_geoglength",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_geognpoints",
         "st_geognpoints",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
         "st_geogperimeter",
+        "st_geogperimeter",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_geogpoint",
         "st_geogpoint",
         &[(&[DataType::Float64, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_geography_from_text",
+        "st_geography_from_text",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_geographyfromtext",
         "st_geographyfromtext",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_geogsummary",
+        "st_geogsummary",
         &[(&[DataType::Binary], DataType::Text)],
     );
     register_scalar(
         conn,
+        "st_geohash",
         "st_geohash",
         &[(&[DataType::Binary, DataType::Text], DataType::Text)],
     );
     register_scalar(
         conn,
         "st_geom_from_ewkb",
+        "st_geom_from_ewkb",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_geom_from_ewkt",
         "st_geom_from_ewkt",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_geom_from_geobuf",
+        "st_geom_from_geobuf",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_geom_from_geohash",
         "st_geom_from_geohash",
         &[(&[DataType::Text, DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_geom_from_geojson",
+        "st_geom_from_geojson",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_geom_from_gml",
         "st_geom_from_gml",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_geom_from_gml_srid",
+        "st_geom_from_gml_srid",
         &[(&[DataType::Text, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_geom_from_hexewkb",
         "st_geom_from_hexewkb",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_geom_from_kml",
+        "st_geom_from_kml",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_geom_from_marc21",
         "st_geom_from_marc21",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_geom_from_text",
+        "st_geom_from_text",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_geom_from_text_srid",
         "st_geom_from_text_srid",
         &[(&[DataType::Text, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_geom_from_twkb",
+        "st_geom_from_twkb",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_geom_from_wkb",
         "st_geom_from_wkb",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_geomcoll_from_text",
+        "st_geomcoll_from_text",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_geomcoll_from_text_srid",
         "st_geomcoll_from_text_srid",
         &[(&[DataType::Text, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_geomcoll_from_wkb",
+        "st_geomcoll_from_wkb",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_geomcoll_from_wkb_srid",
         "st_geomcoll_from_wkb_srid",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_geomcollfromtext",
+        "st_geomcollfromtext",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_geomcollfromwkb",
         "st_geomcollfromwkb",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_geomequal",
+        "st_geomequal",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_geometric_median",
         "st_geometric_median",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_geometricmedian",
+        "st_geometricmedian",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_geometry_from_text",
         "st_geometry_from_text",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_geometry_n",
+        "st_geometry_n",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_geometry_n_threed",
         "st_geometry_n_threed",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_geometry_type",
+        "st_geometry_type",
         &[(&[DataType::Binary], DataType::Text)],
     );
     register_scalar(
         conn,
+        "st_geometry_type_batch",
         "st_geometry_type_batch",
         &[(&[DataType::Text], DataType::Text)],
     );
     register_scalar(
         conn,
         "st_geometry_type_threed",
+        "st_geometry_type_threed",
         &[(&[DataType::Binary], DataType::Text)],
     );
     register_scalar(
         conn,
+        "st_geometryfromtext",
         "st_geometryfromtext",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_geometryn",
+        "st_geometryn",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_geometrytype",
         "st_geometrytype",
         &[(&[DataType::Binary], DataType::Text)],
     );
     register_scalar(
         conn,
         "st_geomfromewkb",
+        "st_geomfromewkb",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_geomfromewkt",
         "st_geomfromewkt",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_geomfromgeobuf",
+        "st_geomfromgeobuf",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_geomfromgeohash",
         "st_geomfromgeohash",
         &[(&[DataType::Text, DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_geomfromgeojson",
+        "st_geomfromgeojson",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_geomfromgml",
         "st_geomfromgml",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_geomfromgmlsrid",
+        "st_geomfromgmlsrid",
         &[(&[DataType::Text, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_geomfromhexewkb",
         "st_geomfromhexewkb",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_geomfromkml",
+        "st_geomfromkml",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_geomfrommarc21",
         "st_geomfrommarc21",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_geomfromtext",
+        "st_geomfromtext",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_geomfromtextsrid",
         "st_geomfromtextsrid",
         &[(&[DataType::Text, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_geomfromtwkb",
+        "st_geomfromtwkb",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_geomfromwkb",
+        "st_geomfromwkb",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_get_edge_by_point",
         "st_get_edge_by_point",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
@@ -3076,15 +3735,18 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_get_edge_geometry",
+        "st_get_edge_geometry",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_get_face_geometry",
+        "st_get_face_geometry",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_get_node_by_point",
         "st_get_node_by_point",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
@@ -3094,10 +3756,12 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_get_node_geometry",
+        "st_get_node_geometry",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_getedgebypoint",
         "st_getedgebypoint",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
@@ -3107,15 +3771,18 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_getedgegeometry",
+        "st_getedgegeometry",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_getfacegeometry",
+        "st_getfacegeometry",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_getnodebypoint",
         "st_getnodebypoint",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
@@ -3125,73 +3792,102 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_getnodegeometry",
+        "st_getnodegeometry",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_gml_to_sql",
         "st_gml_to_sql",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_gmltosql",
+        "st_gmltosql",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_greene_approx_convex_partition",
         "st_greene_approx_convex_partition",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_has_arc",
+        "st_has_arc",
         &[(&[DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_has_m",
         "st_has_m",
         &[(&[DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
         "st_has_no_band",
+        "st_has_no_band",
         &[(&[DataType::Binary, DataType::Int64], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_has_validity_flag",
         "st_has_validity_flag",
         &[(&[DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
         "st_has_z",
+        "st_has_z",
         &[(&[DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
         "st_hasarc",
+        "st_hasarc",
         &[(&[DataType::Binary], DataType::Boolean)],
     );
-    register_scalar(conn, "st_hasm", &[(&[DataType::Binary], DataType::Boolean)]);
+    register_scalar(
+        conn,
+        "st_hasm",
+        "st_hasm",
+        &[(&[DataType::Binary], DataType::Boolean)],
+    );
     register_scalar(
         conn,
         "st_hasnoband",
+        "st_hasnoband",
         &[(&[DataType::Binary, DataType::Int64], DataType::Boolean)],
     );
-    register_scalar(conn, "st_hasz", &[(&[DataType::Binary], DataType::Boolean)]);
     register_scalar(
         conn,
+        "st_hasz",
+        "st_hasz",
+        &[(&[DataType::Binary], DataType::Boolean)],
+    );
+    register_scalar(
+        conn,
+        "st_hausdorff_distance",
         "st_hausdorff_distance",
         &[(&[DataType::Binary, DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_hausdorffdistance",
+        "st_hausdorffdistance",
         &[(&[DataType::Binary, DataType::Binary], DataType::Float64)],
     );
-    register_scalar(conn, "st_height", &[(&[DataType::Binary], DataType::Int64)]);
     register_scalar(
         conn,
+        "st_height",
+        "st_height",
+        &[(&[DataType::Binary], DataType::Int64)],
+    );
+    register_scalar(
+        conn,
+        "st_hexagon",
         "st_hexagon",
         &[(
             &[
@@ -3207,6 +3903,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_hill_shade",
+        "st_hill_shade",
         &[(
             &[
                 DataType::Binary,
@@ -3219,6 +3916,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_hillshade",
         "st_hillshade",
         &[(
             &[
@@ -3233,6 +3931,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_histogram",
+        "st_histogram",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Int64],
             DataType::Binary,
@@ -3241,40 +3940,48 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_init_topo_geo",
+        "st_init_topo_geo",
         &[(&[DataType::Binary], DataType::Text)],
     );
     register_scalar(
         conn,
+        "st_interior_ring_n",
         "st_interior_ring_n",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_interior_ring_n_threed",
+        "st_interior_ring_n_threed",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_interiorringn",
         "st_interiorringn",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_interpolate_point",
+        "st_interpolate_point",
         &[(&[DataType::Binary, DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_intersection",
         "st_intersection",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_intersection_batch",
+        "st_intersection_batch",
         &[(&[DataType::Text, DataType::Text], DataType::Text)],
     );
     register_scalar(
         conn,
+        "st_intersection_gridsize",
         "st_intersection_gridsize",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
@@ -3284,295 +3991,354 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_intersection_threed",
+        "st_intersection_threed",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_intersectionthreed",
         "st_intersectionthreed",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_intersects",
+        "st_intersects",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_intersects_3d",
         "st_intersects_3d",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
         "st_intersects_batch",
+        "st_intersects_batch",
         &[(&[DataType::Text, DataType::Text], DataType::Text)],
     );
     register_scalar(
         conn,
+        "st_intersects_threed",
         "st_intersects_threed",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
         "st_inverse_transform_pipeline",
+        "st_inverse_transform_pipeline",
         &[(&[DataType::Binary, DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_inversetransformpipeline",
         "st_inversetransformpipeline",
         &[(&[DataType::Binary, DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_is_closed",
+        "st_is_closed",
         &[(&[DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_is_collection",
         "st_is_collection",
         &[(&[DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
         "st_is_empty",
+        "st_is_empty",
         &[(&[DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_is_empty_batch",
         "st_is_empty_batch",
         &[(&[DataType::Text], DataType::Text)],
     );
     register_scalar(
         conn,
         "st_is_empty_threed",
+        "st_is_empty_threed",
         &[(&[DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_is_measured",
         "st_is_measured",
         &[(&[DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
         "st_is_planar",
+        "st_is_planar",
         &[(&[DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_is_polygon_ccw",
         "st_is_polygon_ccw",
         &[(&[DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
         "st_is_polygon_cw",
+        "st_is_polygon_cw",
         &[(&[DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_is_ring",
         "st_is_ring",
         &[(&[DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
         "st_is_simple",
+        "st_is_simple",
         &[(&[DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_is_simple_batch",
         "st_is_simple_batch",
         &[(&[DataType::Text], DataType::Text)],
     );
     register_scalar(
         conn,
         "st_is_solid",
+        "st_is_solid",
         &[(&[DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_is_threed",
         "st_is_threed",
         &[(&[DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
         "st_is_valid",
+        "st_is_valid",
         &[(&[DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_is_valid_batch",
         "st_is_valid_batch",
         &[(&[DataType::Text], DataType::Text)],
     );
     register_scalar(
         conn,
         "st_is_valid_detail",
+        "st_is_valid_detail",
         &[(&[DataType::Binary], DataType::Text)],
     );
     register_scalar(
         conn,
+        "st_is_valid_detail_flags",
         "st_is_valid_detail_flags",
         &[(&[DataType::Binary, DataType::Int64], DataType::Text)],
     );
     register_scalar(
         conn,
         "st_is_valid_detail_threed",
+        "st_is_valid_detail_threed",
         &[(&[DataType::Binary], DataType::Text)],
     );
     register_scalar(
         conn,
+        "st_is_valid_flags",
         "st_is_valid_flags",
         &[(&[DataType::Binary, DataType::Int64], DataType::Boolean)],
     );
     register_scalar(
         conn,
         "st_is_valid_reason",
+        "st_is_valid_reason",
         &[(&[DataType::Binary], DataType::Text)],
     );
     register_scalar(
         conn,
+        "st_is_valid_reason_flags",
         "st_is_valid_reason_flags",
         &[(&[DataType::Binary, DataType::Int64], DataType::Text)],
     );
     register_scalar(
         conn,
         "st_is_valid_threed",
+        "st_is_valid_threed",
         &[(&[DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_is_valid_trajectory",
         "st_is_valid_trajectory",
         &[(&[DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
         "st_isclosed",
+        "st_isclosed",
         &[(&[DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_iscollection",
         "st_iscollection",
         &[(&[DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
         "st_isempty",
+        "st_isempty",
         &[(&[DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_ispolygonccw",
         "st_ispolygonccw",
         &[(&[DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
         "st_ispolygoncw",
+        "st_ispolygoncw",
         &[(&[DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_isring",
         "st_isring",
         &[(&[DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
         "st_issimple",
+        "st_issimple",
         &[(&[DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_isvalid",
         "st_isvalid",
         &[(&[DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
         "st_isvaliddetail",
+        "st_isvaliddetail",
         &[(&[DataType::Binary], DataType::Text)],
     );
     register_scalar(
         conn,
+        "st_isvalidreason",
         "st_isvalidreason",
         &[(&[DataType::Binary], DataType::Text)],
     );
     register_scalar(
         conn,
         "st_isvalidtrajectory",
+        "st_isvalidtrajectory",
         &[(&[DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_knndistance",
         "st_knndistance",
         &[(&[DataType::Binary, DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_largest_empty_circle",
+        "st_largest_empty_circle",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_largestemptycircle",
         "st_largestemptycircle",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_length",
+        "st_length",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_length2d",
         "st_length2d",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_length_2d",
+        "st_length_2d",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_length_batch",
         "st_length_batch",
         &[(&[DataType::Text], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_length_spheroid",
+        "st_length_spheroid",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_length_threed",
         "st_length_threed",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_length_twod",
+        "st_length_twod",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_length_twod_spheroid",
         "st_length_twod_spheroid",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_lengthspheroid",
+        "st_lengthspheroid",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_lengththreed",
         "st_lengththreed",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_letters",
+        "st_letters",
         &[(&[DataType::Binary, DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_line_crossing_direction",
+        "st_line_crossing_direction",
         &[(&[DataType::Binary, DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "st_line_extend",
         "st_line_extend",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Float64],
@@ -3582,50 +4348,60 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_line_from_encoded_polyline",
+        "st_line_from_encoded_polyline",
         &[(&[DataType::Text, DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_line_from_multi_point",
         "st_line_from_multi_point",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_line_from_text",
+        "st_line_from_text",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_line_from_text_srid",
         "st_line_from_text_srid",
         &[(&[DataType::Text, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_line_from_wkb",
+        "st_line_from_wkb",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_line_from_wkb_srid",
         "st_line_from_wkb_srid",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_line_interpolate_point",
+        "st_line_interpolate_point",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_line_interpolate_point_3d",
         "st_line_interpolate_point_3d",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_line_interpolate_point_threed",
+        "st_line_interpolate_point_threed",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_line_interpolate_points",
         "st_line_interpolate_points",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Boolean],
@@ -3635,20 +4411,24 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_line_locate_point",
+        "st_line_locate_point",
         &[(&[DataType::Binary, DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_line_merge",
         "st_line_merge",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_line_merge_directed",
+        "st_line_merge_directed",
         &[(&[DataType::Binary, DataType::Boolean], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_line_substring",
         "st_line_substring",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Float64],
@@ -3658,15 +4438,18 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_line_to_curve",
+        "st_line_to_curve",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_linecrossingdirection",
+        "st_linecrossingdirection",
         &[(&[DataType::Binary, DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "st_lineextend",
         "st_lineextend",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Float64],
@@ -3676,30 +4459,36 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_linefromencodedpolyline",
+        "st_linefromencodedpolyline",
         &[(&[DataType::Text, DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_linefrommultipoint",
         "st_linefrommultipoint",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_linefromtext",
+        "st_linefromtext",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_linefromwkb",
         "st_linefromwkb",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_lineinterpolatepoint",
+        "st_lineinterpolatepoint",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_lineinterpolatepoints",
         "st_lineinterpolatepoints",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Boolean],
@@ -3709,15 +4498,18 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_linelocatepoint",
+        "st_linelocatepoint",
         &[(&[DataType::Binary, DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_linemerge",
+        "st_linemerge",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_linesubstring",
         "st_linesubstring",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Float64],
@@ -3727,15 +4519,18 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_linetocurve",
+        "st_linetocurve",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_locate_along",
+        "st_locate_along",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_locate_between",
         "st_locate_between",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Float64],
@@ -3745,6 +4540,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_locate_between_elevations",
+        "st_locate_between_elevations",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Float64],
             DataType::Binary,
@@ -3753,10 +4549,12 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_locatealong",
+        "st_locatealong",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_locatebetween",
         "st_locatebetween",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Float64],
@@ -3766,6 +4564,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_locatebetweenelevations",
+        "st_locatebetweenelevations",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Float64],
             DataType::Binary,
@@ -3774,46 +4573,60 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_longest_line",
+        "st_longest_line",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_longest_line_3d",
         "st_longest_line_3d",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_longest_line_threed",
+        "st_longest_line_threed",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_longestline",
+        "st_longestline",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
-    register_scalar(conn, "st_m", &[(&[DataType::Binary], DataType::Float64)]);
     register_scalar(
         conn,
+        "st_m",
+        "st_m",
+        &[(&[DataType::Binary], DataType::Float64)],
+    );
+    register_scalar(
+        conn,
+        "st_m_batch",
         "st_m_batch",
         &[(&[DataType::Text], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_make_box2d",
+        "st_make_box2d",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_make_box3d",
         "st_make_box3d",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_make_box_threed",
+        "st_make_box_threed",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_make_empty_coverage",
         "st_make_empty_coverage",
         &[(
             &[
@@ -3835,6 +4648,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_make_empty_raster",
+        "st_make_empty_raster",
         &[(
             &[
                 DataType::Int64,
@@ -3853,6 +4667,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_make_envelope",
+        "st_make_envelope",
         &[(
             &[
                 DataType::Float64,
@@ -3865,6 +4680,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_make_envelope_srid",
         "st_make_envelope_srid",
         &[(
             &[
@@ -3880,15 +4696,18 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_make_line_two",
+        "st_make_line_two",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_make_point",
+        "st_make_point",
         &[(&[DataType::Float64, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_make_point_m",
         "st_make_point_m",
         &[(
             &[DataType::Float64, DataType::Float64, DataType::Float64],
@@ -3898,6 +4717,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_make_point_z",
+        "st_make_point_z",
         &[(
             &[DataType::Float64, DataType::Float64, DataType::Float64],
             DataType::Binary,
@@ -3905,6 +4725,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_make_point_zm",
         "st_make_point_zm",
         &[(
             &[
@@ -3919,35 +4740,42 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_make_polygon",
+        "st_make_polygon",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_make_solid",
         "st_make_solid",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_make_valid",
+        "st_make_valid",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_makebox",
         "st_makebox",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_makebox2d",
+        "st_makebox2d",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_makebox3d",
+        "st_makebox3d",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_makeemptyraster",
         "st_makeemptyraster",
         &[(
             &[
@@ -3967,6 +4795,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_makeenvelope",
+        "st_makeenvelope",
         &[(
             &[
                 DataType::Float64,
@@ -3979,6 +4808,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_makeenvelopesrid",
         "st_makeenvelopesrid",
         &[(
             &[
@@ -3994,10 +4824,12 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_makepoint",
+        "st_makepoint",
         &[(&[DataType::Float64, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_makepointm",
         "st_makepointm",
         &[(
             &[DataType::Float64, DataType::Float64, DataType::Float64],
@@ -4007,6 +4839,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_makepointz",
+        "st_makepointz",
         &[(
             &[DataType::Float64, DataType::Float64, DataType::Float64],
             DataType::Binary,
@@ -4014,6 +4847,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_makepointzm",
         "st_makepointzm",
         &[(
             &[
@@ -4028,15 +4862,18 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_makepolygon",
+        "st_makepolygon",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_makevalid",
+        "st_makevalid",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_map_algebra",
         "st_map_algebra",
         &[(
             &[
@@ -4050,6 +4887,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_map_algebra2",
         "st_map_algebra2",
         &[(
             &[
@@ -4066,6 +4904,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_mapalgebra",
+        "st_mapalgebra",
         &[(
             &[
                 DataType::Binary,
@@ -4078,6 +4917,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_mapalgebra2",
         "st_mapalgebra2",
         &[(
             &[
@@ -4094,177 +4934,222 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_max_distance",
+        "st_max_distance",
         &[(&[DataType::Binary, DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_max_distance_3d",
         "st_max_distance_3d",
         &[(&[DataType::Binary, DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_max_distance_threed",
+        "st_max_distance_threed",
         &[(&[DataType::Binary, DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_max_x",
         "st_max_x",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_max_y",
+        "st_max_y",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_maxdistance",
         "st_maxdistance",
         &[(&[DataType::Binary, DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_maximum_inscribed_circle",
+        "st_maximum_inscribed_circle",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_maximuminscribedcircle",
         "st_maximuminscribedcircle",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_mem_size",
+        "st_mem_size",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "st_mem_union",
         "st_mem_union",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_memsize",
+        "st_memsize",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "st_metadata",
         "st_metadata",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_min_convex_hull",
+        "st_min_convex_hull",
         &[(&[DataType::Binary, DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_min_x",
         "st_min_x",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_min_y",
+        "st_min_y",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_minimum_bounding_circle",
         "st_minimum_bounding_circle",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_minimum_bounding_circle_segs",
+        "st_minimum_bounding_circle_segs",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_minimum_bounding_radius",
         "st_minimum_bounding_radius",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_minimum_bounding_sphere_center",
+        "st_minimum_bounding_sphere_center",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_minimum_bounding_sphere_radius",
         "st_minimum_bounding_sphere_radius",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_minimum_clearance",
+        "st_minimum_clearance",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_minimum_clearance_line",
         "st_minimum_clearance_line",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_minimumboundingcircle",
+        "st_minimumboundingcircle",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_minimumboundingradius",
         "st_minimumboundingradius",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_minimumclearance",
+        "st_minimumclearance",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_minimumclearanceline",
         "st_minimumclearanceline",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_minkowski_sum",
+        "st_minkowski_sum",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_minkowskisum",
         "st_minkowskisum",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_mline_from_text",
+        "st_mline_from_text",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_mline_from_text_srid",
         "st_mline_from_text_srid",
         &[(&[DataType::Text, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_mline_from_wkb",
+        "st_mline_from_wkb",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_mline_from_wkb_srid",
         "st_mline_from_wkb_srid",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_mlinefromtext",
+        "st_mlinefromtext",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_mlinefromwkb",
+        "st_mlinefromwkb",
         &[(&[DataType::Binary], DataType::Binary)],
     );
-    register_scalar(conn, "st_mmax", &[(&[DataType::Binary], DataType::Float64)]);
-    register_scalar(conn, "st_mmin", &[(&[DataType::Binary], DataType::Float64)]);
     register_scalar(
         conn,
+        "st_mmax",
+        "st_mmax",
+        &[(&[DataType::Binary], DataType::Float64)],
+    );
+    register_scalar(
+        conn,
+        "st_mmin",
+        "st_mmin",
+        &[(&[DataType::Binary], DataType::Float64)],
+    );
+    register_scalar(
+        conn,
+        "st_mod_edge_heal",
         "st_mod_edge_heal",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Int64],
@@ -4274,6 +5159,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_mod_edge_split",
+        "st_mod_edge_split",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Binary],
             DataType::Int64,
@@ -4281,6 +5167,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_modedgeheal",
         "st_modedgeheal",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Int64],
@@ -4290,6 +5177,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_modedgesplit",
+        "st_modedgesplit",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Binary],
             DataType::Int64,
@@ -4298,138 +5186,180 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_mpoint_from_text",
+        "st_mpoint_from_text",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_mpoint_from_text_srid",
         "st_mpoint_from_text_srid",
         &[(&[DataType::Text, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_mpoint_from_wkb",
+        "st_mpoint_from_wkb",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_mpoint_from_wkb_srid",
         "st_mpoint_from_wkb_srid",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_mpointfromtext",
+        "st_mpointfromtext",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_mpointfromwkb",
         "st_mpointfromwkb",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_mpoly_from_text",
+        "st_mpoly_from_text",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_mpoly_from_text_srid",
         "st_mpoly_from_text_srid",
         &[(&[DataType::Text, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_mpoly_from_wkb",
+        "st_mpoly_from_wkb",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_mpoly_from_wkb_srid",
         "st_mpoly_from_wkb_srid",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_mpolyfromtext",
+        "st_mpolyfromtext",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_mpolyfromwkb",
+        "st_mpolyfromwkb",
         &[(&[DataType::Binary], DataType::Binary)],
     );
-    register_scalar(conn, "st_multi", &[(&[DataType::Binary], DataType::Binary)]);
     register_scalar(
         conn,
+        "st_multi",
+        "st_multi",
+        &[(&[DataType::Binary], DataType::Binary)],
+    );
+    register_scalar(
+        conn,
+        "st_multi_line_from_wkb",
         "st_multi_line_from_wkb",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_multi_line_from_wkb_srid",
+        "st_multi_line_from_wkb_srid",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_multi_line_string_from_text",
         "st_multi_line_string_from_text",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_multi_line_string_from_text_srid",
+        "st_multi_line_string_from_text_srid",
         &[(&[DataType::Text, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_multi_point_from_text",
         "st_multi_point_from_text",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_multi_point_from_text_srid",
+        "st_multi_point_from_text_srid",
         &[(&[DataType::Text, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_multi_point_from_wkb",
         "st_multi_point_from_wkb",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_multi_point_from_wkb_srid",
+        "st_multi_point_from_wkb_srid",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_multi_poly_from_wkb",
         "st_multi_poly_from_wkb",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_multi_poly_from_wkb_srid",
+        "st_multi_poly_from_wkb_srid",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_multi_polygon_from_text",
         "st_multi_polygon_from_text",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_multi_polygon_from_text_srid",
+        "st_multi_polygon_from_text_srid",
         &[(&[DataType::Text, DataType::Int64], DataType::Binary)],
     );
-    register_scalar(conn, "st_n_dims", &[(&[DataType::Binary], DataType::Int64)]);
+    register_scalar(
+        conn,
+        "st_n_dims",
+        "st_n_dims",
+        &[(&[DataType::Binary], DataType::Int64)],
+    );
     register_scalar(
         conn,
         "st_n_dims_batch",
+        "st_n_dims_batch",
         &[(&[DataType::Text], DataType::Int64)],
     );
-    register_scalar(conn, "st_ndims", &[(&[DataType::Binary], DataType::Int64)]);
     register_scalar(
         conn,
+        "st_ndims",
+        "st_ndims",
+        &[(&[DataType::Binary], DataType::Int64)],
+    );
+    register_scalar(
+        conn,
+        "st_ndims_batch",
         "st_ndims_batch",
         &[(&[DataType::Text], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "st_nearest_value",
         "st_nearest_value",
         &[(
             &[
@@ -4444,6 +5374,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_nearestvalue",
+        "st_nearestvalue",
         &[(
             &[
                 DataType::Binary,
@@ -4457,6 +5388,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_new_edges_split",
+        "st_new_edges_split",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Binary],
             DataType::Int64,
@@ -4465,230 +5397,285 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_newedgessplit",
+        "st_newedgessplit",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Binary],
             DataType::Int64,
         )],
     );
-    register_scalar(conn, "st_node", &[(&[DataType::Binary], DataType::Binary)]);
     register_scalar(
         conn,
+        "st_node",
+        "st_node",
+        &[(&[DataType::Binary], DataType::Binary)],
+    );
+    register_scalar(
+        conn,
+        "st_normalize",
         "st_normalize",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_normalize_address",
+        "st_normalize_address",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_normalizeaddress",
         "st_normalizeaddress",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_npoints",
+        "st_npoints",
         &[(&[DataType::Binary], DataType::Int64)],
     );
-    register_scalar(conn, "st_nrings", &[(&[DataType::Binary], DataType::Int64)]);
     register_scalar(
         conn,
+        "st_nrings",
+        "st_nrings",
+        &[(&[DataType::Binary], DataType::Int64)],
+    );
+    register_scalar(
+        conn,
+        "st_num_bands",
         "st_num_bands",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
         "st_num_curves",
+        "st_num_curves",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "st_num_geometries",
         "st_num_geometries",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
         "st_num_geometries_batch",
+        "st_num_geometries_batch",
         &[(&[DataType::Text], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "st_num_geometries_threed",
         "st_num_geometries_threed",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
         "st_num_interior_ring",
+        "st_num_interior_ring",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "st_num_interior_rings",
         "st_num_interior_rings",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
         "st_num_interior_rings_threed",
+        "st_num_interior_rings_threed",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "st_num_points",
         "st_num_points",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
         "st_num_points_batch",
+        "st_num_points_batch",
         &[(&[DataType::Text], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "st_num_points_threed",
         "st_num_points_threed",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
         "st_numbands",
+        "st_numbands",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "st_numcurves",
         "st_numcurves",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
         "st_numgeometries",
+        "st_numgeometries",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "st_numinteriorring",
         "st_numinteriorring",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
         "st_numinteriorrings",
+        "st_numinteriorrings",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "st_numpoints",
         "st_numpoints",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
         "st_offset_curve",
+        "st_offset_curve",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_offset_polygon",
         "st_offset_polygon",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_offsetcurve",
+        "st_offsetcurve",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_optimal_alpha_shape",
         "st_optimal_alpha_shape",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_optimal_convex_partition",
+        "st_optimal_convex_partition",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_ordering_equals",
         "st_ordering_equals",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
         "st_orderingequals",
+        "st_orderingequals",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_orientable_surface",
         "st_orientable_surface",
         &[(&[DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
         "st_orientation",
+        "st_orientation",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "st_oriented_envelope",
         "st_oriented_envelope",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_orientedenvelope",
+        "st_orientedenvelope",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_overlaps",
         "st_overlaps",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
         "st_overlaps_batch",
+        "st_overlaps_batch",
         &[(&[DataType::Text, DataType::Text], DataType::Text)],
     );
     register_scalar(
         conn,
+        "st_parse_address",
         "st_parse_address",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_parseaddress",
+        "st_parseaddress",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_perimeter",
         "st_perimeter",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_perimeter2d",
+        "st_perimeter2d",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_perimeter_2d",
         "st_perimeter_2d",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_perimeter_batch",
+        "st_perimeter_batch",
         &[(&[DataType::Text], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_perimeter_threed",
         "st_perimeter_threed",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_perimeter_twod",
+        "st_perimeter_twod",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_perimeterthreed",
+        "st_perimeterthreed",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_pixel_as_centroid",
         "st_pixel_as_centroid",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Int64],
@@ -4698,10 +5685,12 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_pixel_as_centroids",
+        "st_pixel_as_centroids",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_pixel_as_point",
         "st_pixel_as_point",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Int64],
@@ -4711,10 +5700,12 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_pixel_as_points",
+        "st_pixel_as_points",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_pixel_as_polygon",
         "st_pixel_as_polygon",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Int64],
@@ -4724,15 +5715,18 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_pixel_as_polygons",
+        "st_pixel_as_polygons",
         &[(&[DataType::Binary, DataType::Int64], DataType::Text)],
     );
     register_scalar(
         conn,
         "st_pixel_height",
+        "st_pixel_height",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_pixel_of_value",
         "st_pixel_of_value",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Float64],
@@ -4742,10 +5736,12 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_pixel_width",
+        "st_pixel_width",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_pixelascentroid",
         "st_pixelascentroid",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Int64],
@@ -4755,6 +5751,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_pixelaspoint",
+        "st_pixelaspoint",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Int64],
             DataType::Binary,
@@ -4762,6 +5759,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_pixelaspolygon",
         "st_pixelaspolygon",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Int64],
@@ -4771,10 +5769,12 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_pixelaspolygons",
+        "st_pixelaspolygons",
         &[(&[DataType::Binary, DataType::Int64], DataType::Text)],
     );
     register_scalar(
         conn,
+        "st_pixelofvalue",
         "st_pixelofvalue",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Float64],
@@ -4784,6 +5784,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_pixels_of_values",
+        "st_pixels_of_values",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Text],
             DataType::Binary,
@@ -4792,35 +5793,42 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_point",
+        "st_point",
         &[(&[DataType::Float64, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_point_from_geohash",
         "st_point_from_geohash",
         &[(&[DataType::Text, DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_point_from_text",
+        "st_point_from_text",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_point_from_text_srid",
         "st_point_from_text_srid",
         &[(&[DataType::Text, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_point_from_wkb",
+        "st_point_from_wkb",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_point_from_wkb_srid",
+        "st_point_from_wkb_srid",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_point_inside_circle",
         "st_point_inside_circle",
         &[(
             &[
@@ -4835,6 +5843,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_point_m",
+        "st_point_m",
         &[(
             &[DataType::Float64, DataType::Float64, DataType::Float64],
             DataType::Binary,
@@ -4842,6 +5851,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_point_m_srid",
         "st_point_m_srid",
         &[(
             &[
@@ -4856,35 +5866,42 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_point_m_threed",
+        "st_point_m_threed",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_point_n",
         "st_point_n",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_point_n_batch",
+        "st_point_n_batch",
         &[(&[DataType::Text, DataType::Text], DataType::Text)],
     );
     register_scalar(
         conn,
+        "st_point_n_threed",
         "st_point_n_threed",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_point_on_surface",
+        "st_point_on_surface",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_point_on_surface_batch",
+        "st_point_on_surface_batch",
         &[(&[DataType::Text], DataType::Text)],
     );
     register_scalar(
         conn,
+        "st_point_srid",
         "st_point_srid",
         &[(
             &[DataType::Float64, DataType::Float64, DataType::Int64],
@@ -4894,15 +5911,18 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_point_x_threed",
+        "st_point_x_threed",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_point_y_threed",
+        "st_point_y_threed",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_point_z",
         "st_point_z",
         &[(
             &[DataType::Float64, DataType::Float64, DataType::Float64],
@@ -4911,6 +5931,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_point_z_srid",
         "st_point_z_srid",
         &[(
             &[
@@ -4925,10 +5946,12 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_point_z_threed",
+        "st_point_z_threed",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_point_zm",
         "st_point_zm",
         &[(
             &[
@@ -4942,6 +5965,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_point_zm_srid",
         "st_point_zm_srid",
         &[(
             &[
@@ -4957,20 +5981,24 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_pointfromgeohash",
+        "st_pointfromgeohash",
         &[(&[DataType::Text, DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_pointfromtext",
         "st_pointfromtext",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_pointfromwkb",
+        "st_pointfromwkb",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_pointinsidecircle",
         "st_pointinsidecircle",
         &[(
             &[
@@ -4985,6 +6013,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_pointm",
+        "st_pointm",
         &[(
             &[DataType::Float64, DataType::Float64, DataType::Float64],
             DataType::Binary,
@@ -4993,20 +6022,24 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_pointn",
+        "st_pointn",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_pointonsurface",
         "st_pointonsurface",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_points",
+        "st_points",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_pointz",
         "st_pointz",
         &[(
             &[DataType::Float64, DataType::Float64, DataType::Float64],
@@ -5015,6 +6048,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_pointzm",
         "st_pointzm",
         &[(
             &[
@@ -5029,65 +6063,78 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_polygon",
+        "st_polygon",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_polygon_from_text",
         "st_polygon_from_text",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_polygon_from_text_srid",
+        "st_polygon_from_text_srid",
         &[(&[DataType::Text, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_polygon_from_wkb",
         "st_polygon_from_wkb",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_polygon_from_wkb_srid",
+        "st_polygon_from_wkb_srid",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_polygonfromtext",
         "st_polygonfromtext",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_polygonfromwkb",
+        "st_polygonfromwkb",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_polygonize",
         "st_polygonize",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_polygonize_as_raster",
+        "st_polygonize_as_raster",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "st_polygonize_topology",
         "st_polygonize_topology",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
         "st_polyhedralsurface_from_text",
+        "st_polyhedralsurface_from_text",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_polyhedralsurface_from_wkb",
+        "st_polyhedralsurface_from_wkb",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_project",
         "st_project",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Float64],
@@ -5097,6 +6144,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_project_batch",
+        "st_project_batch",
         &[(
             &[DataType::Text, DataType::Text, DataType::Text],
             DataType::Text,
@@ -5104,6 +6152,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_quantile",
         "st_quantile",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Float64],
@@ -5113,6 +6162,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_quantiles",
+        "st_quantiles",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Text],
             DataType::Binary,
@@ -5120,6 +6170,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_quantize_coordinates",
         "st_quantize_coordinates",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Int64],
@@ -5129,6 +6180,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_quantizecoordinates",
+        "st_quantizecoordinates",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Int64],
             DataType::Binary,
@@ -5137,70 +6189,84 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_rast_height_dfer_batch",
+        "st_rast_height_dfer_batch",
         &[(&[DataType::Text], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "st_rast_scale_x_dfer_batch",
         "st_rast_scale_x_dfer_batch",
         &[(&[DataType::Text], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_rast_scale_y_dfer_batch",
+        "st_rast_scale_y_dfer_batch",
         &[(&[DataType::Text], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_rast_skew_x_dfer_batch",
         "st_rast_skew_x_dfer_batch",
         &[(&[DataType::Text], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_rast_skew_y_dfer_batch",
+        "st_rast_skew_y_dfer_batch",
         &[(&[DataType::Text], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_rast_srid_dfer_batch",
         "st_rast_srid_dfer_batch",
         &[(&[DataType::Text], DataType::Int64)],
     );
     register_scalar(
         conn,
         "st_rast_upper_left_x_dfer_batch",
+        "st_rast_upper_left_x_dfer_batch",
         &[(&[DataType::Text], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_rast_upper_left_y_dfer_batch",
         "st_rast_upper_left_y_dfer_batch",
         &[(&[DataType::Text], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_rast_width_dfer_batch",
+        "st_rast_width_dfer_batch",
         &[(&[DataType::Text], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "st_raster_contains",
         "st_raster_contains",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
         "st_raster_contains_geom",
+        "st_raster_contains_geom",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_raster_convex_hull",
         "st_raster_convex_hull",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_raster_covers",
+        "st_raster_covers",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_raster_intersection_geom",
         "st_raster_intersection_geom",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Int64],
@@ -5210,20 +6276,24 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_raster_intersects",
+        "st_raster_intersects",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_raster_intersects_geom",
         "st_raster_intersects_geom",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
         "st_raster_overlaps",
+        "st_raster_overlaps",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_raster_to_world_coord_x",
         "st_raster_to_world_coord_x",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Int64],
@@ -5233,6 +6303,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_raster_to_world_coord_y",
+        "st_raster_to_world_coord_y",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Int64],
             DataType::Float64,
@@ -5241,45 +6312,54 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_raster_within",
+        "st_raster_within",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_rastercontains",
         "st_rastercontains",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
         "st_rastercontainsgeom",
+        "st_rastercontainsgeom",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_rasterconvexhull",
         "st_rasterconvexhull",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_rastercovers",
+        "st_rastercovers",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_rasterintersects",
         "st_rasterintersects",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
         "st_rasterintersectsgeom",
+        "st_rasterintersectsgeom",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
         "st_rasteroverlaps",
+        "st_rasteroverlaps",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_rastertoworldcoordx",
         "st_rastertoworldcoordx",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Int64],
@@ -5289,6 +6369,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_rastertoworldcoordy",
+        "st_rastertoworldcoordy",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Int64],
             DataType::Float64,
@@ -5297,25 +6378,30 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_rasterwithin",
+        "st_rasterwithin",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_rastheight",
         "st_rastheight",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
         "st_rastnumbands",
+        "st_rastnumbands",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
         "st_rastwidth",
+        "st_rastwidth",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "st_reclass",
         "st_reclass",
         &[(
             &[
@@ -5330,6 +6416,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_reclass_exact",
+        "st_reclass_exact",
         &[(
             &[
                 DataType::Binary,
@@ -5343,10 +6430,12 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_reduce_precision",
+        "st_reduce_precision",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_reduce_precision_flags",
         "st_reduce_precision_flags",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Int64],
@@ -5356,15 +6445,18 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_reduceprecision",
+        "st_reduceprecision",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_relate",
+        "st_relate",
         &[(&[DataType::Binary, DataType::Binary], DataType::Text)],
     );
     register_scalar(
         conn,
+        "st_relate_bnr",
         "st_relate_bnr",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Int64],
@@ -5374,6 +6466,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_relate_match",
+        "st_relate_match",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Text],
             DataType::Boolean,
@@ -5381,6 +6474,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_relate_with_pattern",
         "st_relate_with_pattern",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Text],
@@ -5390,6 +6484,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_relatematch",
+        "st_relatematch",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Text],
             DataType::Boolean,
@@ -5398,15 +6493,18 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_remove_point",
+        "st_remove_point",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_remove_repeated_points",
+        "st_remove_repeated_points",
         &[(&[DataType::Binary, DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_remove_small_parts",
         "st_remove_small_parts",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Text],
@@ -5416,15 +6514,18 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_removepoint",
+        "st_removepoint",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_removerepeatedpoints",
+        "st_removerepeatedpoints",
         &[(&[DataType::Binary, DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_removesmallparts",
         "st_removesmallparts",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Text],
@@ -5433,6 +6534,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_rescale",
         "st_rescale",
         &[(
             &[
@@ -5447,6 +6549,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_resize",
+        "st_resize",
         &[(
             &[
                 DataType::Binary,
@@ -5459,6 +6562,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_retile",
         "st_retile",
         &[(
             &[
@@ -5473,25 +6577,30 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_reverse",
+        "st_reverse",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_reverse_threed",
         "st_reverse_threed",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_reversethreed",
+        "st_reversethreed",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_rotate",
+        "st_rotate",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_rotate_around_point",
         "st_rotate_around_point",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Binary],
@@ -5500,6 +6609,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_rotate_around_xy",
         "st_rotate_around_xy",
         &[(
             &[
@@ -5514,6 +6624,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_rotate_threed",
+        "st_rotate_threed",
         &[(
             &[
                 DataType::Binary,
@@ -5527,6 +6638,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_rotate_threed_around_center",
         "st_rotate_threed_around_center",
         &[(
             &[
@@ -5545,6 +6657,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_rotate_twod_around_center",
+        "st_rotate_twod_around_center",
         &[(
             &[
                 DataType::Binary,
@@ -5558,20 +6671,24 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_rotate_x",
+        "st_rotate_x",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_rotate_y",
         "st_rotate_y",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_rotate_z",
+        "st_rotate_z",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_rotatethreed",
         "st_rotatethreed",
         &[(
             &[
@@ -5587,35 +6704,42 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_rotatex",
+        "st_rotatex",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_rotatey",
         "st_rotatey",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_rotatez",
+        "st_rotatez",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_rotation",
         "st_rotation",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_roughness",
+        "st_roughness",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_round",
+        "st_round",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_scale",
         "st_scale",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Float64],
@@ -5624,6 +6748,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_scale_threed",
         "st_scale_threed",
         &[(
             &[
@@ -5637,6 +6762,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_scale_threed_around_center",
         "st_scale_threed_around_center",
         &[(
             &[
@@ -5654,6 +6780,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_scale_with_origin",
+        "st_scale_with_origin",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Binary],
             DataType::Binary,
@@ -5662,20 +6789,24 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_scale_with_vector",
+        "st_scale_with_vector",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_scale_x",
         "st_scale_x",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_scale_y",
+        "st_scale_y",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_scalethreed",
         "st_scalethreed",
         &[(
             &[
@@ -5690,30 +6821,36 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_scalex",
+        "st_scalex",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_scaley",
         "st_scaley",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_scroll",
+        "st_scroll",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_segmentize",
         "st_segmentize",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_set_band_is_nodata",
+        "st_set_band_is_nodata",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_set_band_nodata_value",
         "st_set_band_nodata_value",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Text],
@@ -5723,10 +6860,12 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_set_effective_area",
+        "st_set_effective_area",
         &[(&[DataType::Binary, DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_set_geo_reference",
         "st_set_geo_reference",
         &[(
             &[
@@ -5744,6 +6883,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_set_geo_reference_string",
+        "st_set_geo_reference_string",
         &[(
             &[DataType::Binary, DataType::Text, DataType::Text],
             DataType::Binary,
@@ -5751,6 +6891,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_set_point",
         "st_set_point",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Binary],
@@ -5760,10 +6901,12 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_set_rotation",
+        "st_set_rotation",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_set_scale",
         "st_set_scale",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Float64],
@@ -5773,10 +6916,12 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_set_scale_xy",
+        "st_set_scale_xy",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_set_skew",
         "st_set_skew",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Float64],
@@ -5786,15 +6931,18 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_set_skew_xy",
+        "st_set_skew_xy",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_set_srid",
+        "st_set_srid",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_set_upper_left",
         "st_set_upper_left",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Float64],
@@ -5803,6 +6951,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_set_value",
         "st_set_value",
         &[(
             &[
@@ -5818,6 +6967,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_set_value_at_point",
+        "st_set_value_at_point",
         &[(
             &[
                 DataType::Binary,
@@ -5830,6 +6980,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_set_values",
         "st_set_values",
         &[(
             &[
@@ -5844,6 +6995,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_set_values_rect",
         "st_set_values_rect",
         &[(
             &[
@@ -5861,25 +7013,30 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_seteffectivearea",
+        "st_seteffectivearea",
         &[(&[DataType::Binary, DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_setendm",
         "st_setendm",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_setendz",
+        "st_setendz",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_setm",
+        "st_setm",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_setpoint",
         "st_setpoint",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Binary],
@@ -5889,20 +7046,24 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_setsrid",
+        "st_setsrid",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_setstartm",
         "st_setstartm",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_setstartz",
+        "st_setstartz",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_setvalue",
         "st_setvalue",
         &[(
             &[
@@ -5918,70 +7079,84 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_setx",
+        "st_setx",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_sety",
         "st_sety",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_setz",
+        "st_setz",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_shared_paths",
         "st_shared_paths",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_sharedpaths",
+        "st_sharedpaths",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_shift_longitude",
         "st_shift_longitude",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_shiftlongitude",
+        "st_shiftlongitude",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_shortest_line",
         "st_shortest_line",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_shortest_line_3d",
+        "st_shortest_line_3d",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_shortest_line_threed",
         "st_shortest_line_threed",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_shortestline",
+        "st_shortestline",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_simplify",
         "st_simplify",
         &[(&[DataType::Binary, DataType::Float64], DataType::Int64)],
     );
     register_scalar(
         conn,
         "st_simplify_batch",
+        "st_simplify_batch",
         &[(&[DataType::Text, DataType::Text], DataType::Text)],
     );
     register_scalar(
         conn,
+        "st_simplify_polygon_hull",
         "st_simplify_polygon_hull",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Boolean],
@@ -5991,6 +7166,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_simplify_preserve_collapse",
+        "st_simplify_preserve_collapse",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Boolean],
             DataType::Binary,
@@ -5999,30 +7175,36 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_simplify_preserve_topology",
+        "st_simplify_preserve_topology",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_simplify_preserve_topology_batch",
         "st_simplify_preserve_topology_batch",
         &[(&[DataType::Text, DataType::Text], DataType::Text)],
     );
     register_scalar(
         conn,
         "st_simplify_preserve_topology_threed",
+        "st_simplify_preserve_topology_threed",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_simplify_threed",
         "st_simplify_threed",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_simplify_vw",
+        "st_simplify_vw",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_simplify_vw_preserve_collapse",
         "st_simplify_vw_preserve_collapse",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Boolean],
@@ -6032,6 +7214,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_simplifypolygonhull",
+        "st_simplifypolygonhull",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Boolean],
             DataType::Binary,
@@ -6040,40 +7223,48 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_simplifypreservetopology",
+        "st_simplifypreservetopology",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_simplifyvw",
         "st_simplifyvw",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_skew_x",
+        "st_skew_x",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_skew_y",
         "st_skew_y",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_skewx",
+        "st_skewx",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_skewy",
         "st_skewy",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_slope",
+        "st_slope",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_snap",
         "st_snap",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
@@ -6083,10 +7274,12 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_snap_to_grid",
+        "st_snap_to_grid",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_snap_to_grid_fourd",
         "st_snap_to_grid_fourd",
         &[(
             &[
@@ -6104,6 +7297,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_snap_to_grid_origin",
+        "st_snap_to_grid_origin",
         &[(
             &[
                 DataType::Binary,
@@ -6118,6 +7312,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_snap_to_grid_xy",
+        "st_snap_to_grid_xy",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Float64],
             DataType::Binary,
@@ -6126,15 +7321,18 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_snaptogrid",
+        "st_snaptogrid",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_split",
+        "st_split",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_square",
         "st_square",
         &[(
             &[
@@ -6147,83 +7345,108 @@ pub unsafe fn register_all(conn: duckdb_connection) {
             DataType::Binary,
         )],
     );
-    register_scalar(conn, "st_srid", &[(&[DataType::Binary], DataType::Int64)]);
     register_scalar(
         conn,
+        "st_srid",
+        "st_srid",
+        &[(&[DataType::Binary], DataType::Int64)],
+    );
+    register_scalar(
+        conn,
+        "st_start_point",
         "st_start_point",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_start_point_batch",
+        "st_start_point_batch",
         &[(&[DataType::Text], DataType::Text)],
     );
     register_scalar(
         conn,
+        "st_startpoint",
         "st_startpoint",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_straight_skeleton",
+        "st_straight_skeleton",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_straight_skeleton_distance",
         "st_straight_skeleton_distance",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_straight_skeleton_partition",
+        "st_straight_skeleton_partition",
         &[(&[DataType::Binary, DataType::Boolean], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_straightskeleton",
         "st_straightskeleton",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_subdivide_gridsize",
+        "st_subdivide_gridsize",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Float64],
             DataType::Binary,
         )],
     );
-    register_scalar(conn, "st_summary", &[(&[DataType::Binary], DataType::Text)]);
     register_scalar(
         conn,
+        "st_summary",
+        "st_summary",
+        &[(&[DataType::Binary], DataType::Text)],
+    );
+    register_scalar(
+        conn,
+        "st_summary_stats",
         "st_summary_stats",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_summarystats",
+        "st_summarystats",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_swap_ordinates",
         "st_swap_ordinates",
         &[(&[DataType::Binary, DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_swapordinates",
+        "st_swapordinates",
         &[(&[DataType::Binary, DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_sym_difference",
         "st_sym_difference",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_sym_difference_batch",
+        "st_sym_difference_batch",
         &[(&[DataType::Text, DataType::Text], DataType::Text)],
     );
     register_scalar(
         conn,
+        "st_sym_difference_gridsize",
         "st_sym_difference_gridsize",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
@@ -6233,20 +7456,24 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_sym_difference_threed",
+        "st_sym_difference_threed",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_symdifference",
         "st_symdifference",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_tesselate",
+        "st_tesselate",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_tile",
         "st_tile",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Int64],
@@ -6255,6 +7482,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_tile_envelope",
         "st_tile_envelope",
         &[(
             &[
@@ -6270,6 +7498,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_tileenvelope",
+        "st_tileenvelope",
         &[(
             &[
                 DataType::Int64,
@@ -6284,150 +7513,180 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_tin_from_text",
+        "st_tin_from_text",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_tin_from_wkb",
         "st_tin_from_wkb",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_topology_edge_count",
+        "st_topology_edge_count",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "st_topology_edge_count_batch",
         "st_topology_edge_count_batch",
         &[(&[DataType::Text], DataType::Int64)],
     );
     register_scalar(
         conn,
         "st_topology_face_count",
+        "st_topology_face_count",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "st_topology_face_count_batch",
         "st_topology_face_count_batch",
         &[(&[DataType::Text], DataType::Int64)],
     );
     register_scalar(
         conn,
         "st_topology_from_bytes",
+        "st_topology_from_bytes",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_topology_name",
         "st_topology_name",
         &[(&[DataType::Binary], DataType::Text)],
     );
     register_scalar(
         conn,
         "st_topology_name_batch",
+        "st_topology_name_batch",
         &[(&[DataType::Text], DataType::Text)],
     );
     register_scalar(
         conn,
+        "st_topology_node_count",
         "st_topology_node_count",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
         "st_topology_node_count_batch",
+        "st_topology_node_count_batch",
         &[(&[DataType::Text], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "st_topology_precision",
         "st_topology_precision",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_topology_precision_batch",
+        "st_topology_precision_batch",
         &[(&[DataType::Text], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_topology_srid",
         "st_topology_srid",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
         "st_topology_srid_batch",
+        "st_topology_srid_batch",
         &[(&[DataType::Text], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "st_topology_to_bytes",
         "st_topology_to_bytes",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_topologyedgecount",
+        "st_topologyedgecount",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "st_topologyfacecount",
         "st_topologyfacecount",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
         "st_topologyfrombytes",
+        "st_topologyfrombytes",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_topologyname",
         "st_topologyname",
         &[(&[DataType::Binary], DataType::Text)],
     );
     register_scalar(
         conn,
         "st_topologynodecount",
+        "st_topologynodecount",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "st_topologyprecision",
         "st_topologyprecision",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_topologysrid",
+        "st_topologysrid",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "st_topologytobytes",
         "st_topologytobytes",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_touches",
+        "st_touches",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "st_touches_batch",
         "st_touches_batch",
         &[(&[DataType::Text, DataType::Text], DataType::Text)],
     );
     register_scalar(
         conn,
         "st_tpi",
+        "st_tpi",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_transform",
         "st_transform",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_transform_pipeline",
+        "st_transform_pipeline",
         &[(&[DataType::Binary, DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_transform_pipeline_to_srid",
         "st_transform_pipeline_to_srid",
         &[(
             &[DataType::Binary, DataType::Text, DataType::Int64],
@@ -6437,10 +7696,12 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_transformpipeline",
+        "st_transformpipeline",
         &[(&[DataType::Binary, DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_translate",
         "st_translate",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Float64],
@@ -6449,6 +7710,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_translate_threed",
         "st_translate_threed",
         &[(
             &[
@@ -6463,6 +7725,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_translatethreed",
+        "st_translatethreed",
         &[(
             &[
                 DataType::Binary,
@@ -6475,6 +7738,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_transscale",
         "st_transscale",
         &[(
             &[
@@ -6490,55 +7754,66 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_tri",
+        "st_tri",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_triangle_from_text",
         "st_triangle_from_text",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_triangle_from_wkb",
+        "st_triangle_from_wkb",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_triangulate_polygon",
         "st_triangulate_polygon",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_triangulate_twod",
+        "st_triangulate_twod",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_triangulatepolygon",
         "st_triangulatepolygon",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_unary_union",
+        "st_unary_union",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_unaryunion",
         "st_unaryunion",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_union",
+        "st_union",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_union_batch",
+        "st_union_batch",
         &[(&[DataType::Text, DataType::Text], DataType::Text)],
     );
     register_scalar(
         conn,
+        "st_union_gridsize",
         "st_union_gridsize",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
@@ -6548,45 +7823,54 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_union_threed",
+        "st_union_threed",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_unionthreed",
         "st_unionthreed",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_upper_left_x",
+        "st_upper_left_x",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_upper_left_y",
         "st_upper_left_y",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_upperleftx",
+        "st_upperleftx",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_upperlefty",
         "st_upperlefty",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_validate_topology",
+        "st_validate_topology",
         &[(&[DataType::Binary], DataType::Text)],
     );
     register_scalar(
         conn,
         "st_validatetopology",
+        "st_validatetopology",
         &[(&[DataType::Binary], DataType::Text)],
     );
     register_scalar(
         conn,
+        "st_value",
         "st_value",
         &[(
             &[
@@ -6601,10 +7885,12 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_value_count",
+        "st_value_count",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_value_count_of_value",
         "st_value_count_of_value",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Float64],
@@ -6613,6 +7899,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_value_counts",
         "st_value_counts",
         &[(
             &[
@@ -6627,6 +7914,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_value_percent",
+        "st_value_percent",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Float64],
             DataType::Float64,
@@ -6634,6 +7922,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_value_percents",
         "st_value_percents",
         &[(
             &[
@@ -6648,15 +7937,18 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_valuecount",
+        "st_valuecount",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_visibility_point",
+        "st_visibility_point",
         &[(&[DataType::Binary, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_visibility_segment",
         "st_visibility_segment",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Binary],
@@ -6666,61 +7958,78 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_volume",
+        "st_volume",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "st_voronoi_lines",
         "st_voronoi_lines",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_voronoi_polygons",
+        "st_voronoi_polygons",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_voronoilines",
         "st_voronoilines",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_voronoipolygons",
+        "st_voronoipolygons",
         &[(&[DataType::Binary, DataType::Float64], DataType::Binary)],
     );
-    register_scalar(conn, "st_width", &[(&[DataType::Binary], DataType::Int64)]);
     register_scalar(
         conn,
+        "st_width",
+        "st_width",
+        &[(&[DataType::Binary], DataType::Int64)],
+    );
+    register_scalar(
+        conn,
+        "st_within",
         "st_within",
         &[(&[DataType::Binary, DataType::Binary], DataType::Boolean)],
     );
     register_scalar(
         conn,
         "st_within_batch",
+        "st_within_batch",
         &[(&[DataType::Text, DataType::Text], DataType::Text)],
     );
     register_scalar(
         conn,
+        "st_wkb_to_sql",
         "st_wkb_to_sql",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_wkbtosql",
+        "st_wkbtosql",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_wkt_to_sql",
         "st_wkt_to_sql",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
         "st_wkttosql",
+        "st_wkttosql",
         &[(&[DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "st_world_to_raster_coord",
         "st_world_to_raster_coord",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Float64],
@@ -6730,6 +8039,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_world_to_raster_coord_col",
+        "st_world_to_raster_coord_col",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Float64],
             DataType::Int64,
@@ -6737,6 +8047,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_world_to_raster_coord_row",
         "st_world_to_raster_coord_row",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Float64],
@@ -6746,6 +8057,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_worldtorastercoord",
+        "st_worldtorastercoord",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Float64],
             DataType::Text,
@@ -6753,6 +8065,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_worldtorastercoordcol",
         "st_worldtorastercoordcol",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Float64],
@@ -6762,6 +8075,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_worldtorastercoordrow",
+        "st_worldtorastercoordrow",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Float64],
             DataType::Int64,
@@ -6769,6 +8083,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "st_wrap_x",
         "st_wrap_x",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Float64],
@@ -6778,48 +8093,105 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "st_wrapx",
+        "st_wrapx",
         &[(
             &[DataType::Binary, DataType::Float64, DataType::Float64],
             DataType::Binary,
         )],
     );
-    register_scalar(conn, "st_x", &[(&[DataType::Binary], DataType::Float64)]);
+    register_scalar(
+        conn,
+        "st_x",
+        "st_x",
+        &[(&[DataType::Binary], DataType::Float64)],
+    );
     register_scalar(
         conn,
         "st_x_batch",
+        "st_x_batch",
         &[(&[DataType::Text], DataType::Float64)],
     );
-    register_scalar(conn, "st_xmax", &[(&[DataType::Binary], DataType::Float64)]);
-    register_scalar(conn, "st_xmin", &[(&[DataType::Binary], DataType::Float64)]);
-    register_scalar(conn, "st_y", &[(&[DataType::Binary], DataType::Float64)]);
     register_scalar(
         conn,
+        "st_xmax",
+        "st_xmax",
+        &[(&[DataType::Binary], DataType::Float64)],
+    );
+    register_scalar(
+        conn,
+        "st_xmin",
+        "st_xmin",
+        &[(&[DataType::Binary], DataType::Float64)],
+    );
+    register_scalar(
+        conn,
+        "st_y",
+        "st_y",
+        &[(&[DataType::Binary], DataType::Float64)],
+    );
+    register_scalar(
+        conn,
+        "st_y_batch",
         "st_y_batch",
         &[(&[DataType::Text], DataType::Float64)],
     );
     register_scalar(
         conn,
         "st_y_monotone_partition",
+        "st_y_monotone_partition",
         &[(&[DataType::Binary], DataType::Binary)],
     );
-    register_scalar(conn, "st_ymax", &[(&[DataType::Binary], DataType::Float64)]);
-    register_scalar(conn, "st_ymin", &[(&[DataType::Binary], DataType::Float64)]);
-    register_scalar(conn, "st_z", &[(&[DataType::Binary], DataType::Float64)]);
+    register_scalar(
+        conn,
+        "st_ymax",
+        "st_ymax",
+        &[(&[DataType::Binary], DataType::Float64)],
+    );
+    register_scalar(
+        conn,
+        "st_ymin",
+        "st_ymin",
+        &[(&[DataType::Binary], DataType::Float64)],
+    );
+    register_scalar(
+        conn,
+        "st_z",
+        "st_z",
+        &[(&[DataType::Binary], DataType::Float64)],
+    );
     register_scalar(
         conn,
         "st_z_batch",
+        "st_z_batch",
         &[(&[DataType::Text], DataType::Float64)],
     );
-    register_scalar(conn, "st_zmax", &[(&[DataType::Binary], DataType::Float64)]);
-    register_scalar(conn, "st_zmflag", &[(&[DataType::Binary], DataType::Int64)]);
-    register_scalar(conn, "st_zmin", &[(&[DataType::Binary], DataType::Float64)]);
     register_scalar(
         conn,
+        "st_zmax",
+        "st_zmax",
+        &[(&[DataType::Binary], DataType::Float64)],
+    );
+    register_scalar(
+        conn,
+        "st_zmflag",
+        "st_zmflag",
+        &[(&[DataType::Binary], DataType::Int64)],
+    );
+    register_scalar(
+        conn,
+        "st_zmin",
+        "st_zmin",
+        &[(&[DataType::Binary], DataType::Float64)],
+    );
+    register_scalar(
+        conn,
+        "state_extract",
         "state_extract",
         &[(&[DataType::Text], DataType::Text)],
     );
     register_scalar(
         conn,
+        "to_topogeom",
         "to_topogeom",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
@@ -6829,15 +8201,18 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "topo_element_array_append",
+        "topo_element_array_append",
         &[(&[DataType::Text, DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
         "topo_pgtp_all_batch",
+        "topo_pgtp_all_batch",
         &[(&[DataType::Text], DataType::Boolean)],
     );
     register_scalar(
         conn,
+        "topogeo_add_geometry",
         "topogeo_add_geometry",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
@@ -6847,6 +8222,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "topogeo_add_linestring",
+        "topogeo_add_linestring",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
             DataType::Int64,
@@ -6854,6 +8230,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "topogeo_add_point",
         "topogeo_add_point",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
@@ -6863,6 +8240,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "topogeo_add_polygon",
+        "topogeo_add_polygon",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
             DataType::Int64,
@@ -6870,6 +8248,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "topogeo_load_geometry",
         "topogeo_load_geometry",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
@@ -6879,10 +8258,12 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "topology_add_edge",
+        "topology_add_edge",
         &[(&[DataType::Binary, DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "topology_add_edge_mod_face",
         "topology_add_edge_mod_face",
         &[(
             &[
@@ -6897,6 +8278,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "topology_add_edge_new_faces",
+        "topology_add_edge_new_faces",
         &[(
             &[
                 DataType::Binary,
@@ -6910,6 +8292,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "topology_add_face",
+        "topology_add_face",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Boolean],
             DataType::Int64,
@@ -6917,6 +8300,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "topology_add_iso_edge",
         "topology_add_iso_edge",
         &[(
             &[
@@ -6931,6 +8315,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "topology_add_iso_node",
+        "topology_add_iso_node",
         &[(
             &[DataType::Binary, DataType::Text, DataType::Binary],
             DataType::Int64,
@@ -6939,6 +8324,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "topology_add_node",
+        "topology_add_node",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
             DataType::Int64,
@@ -6946,6 +8332,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "topology_add_topogeom_column",
         "topology_add_topogeom_column",
         &[(
             &[
@@ -6960,6 +8347,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "topology_as_gml",
+        "topology_as_gml",
         &[(
             &[DataType::Binary, DataType::Text, DataType::Int64],
             DataType::Text,
@@ -6968,15 +8356,18 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "topology_as_topojson",
+        "topology_as_topojson",
         &[(&[DataType::Binary], DataType::Text)],
     );
     register_scalar(
         conn,
         "topology_as_topojson_with_edge_map",
+        "topology_as_topojson_with_edge_map",
         &[(&[DataType::Binary, DataType::Boolean], DataType::Text)],
     );
     register_scalar(
         conn,
+        "topology_change_edge_geom",
         "topology_change_edge_geom",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Binary],
@@ -6986,10 +8377,12 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "topology_copy_topology",
+        "topology_copy_topology",
         &[(&[DataType::Binary, DataType::Text], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "topology_create",
         "topology_create",
         &[(
             &[DataType::Text, DataType::Int64, DataType::Float64],
@@ -6999,6 +8392,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "topology_create_topo_geom",
+        "topology_create_topo_geom",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Text],
             DataType::Binary,
@@ -7006,6 +8400,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "topology_drop_topogeom_column",
         "topology_drop_topogeom_column",
         &[(
             &[DataType::Binary, DataType::Text, DataType::Text],
@@ -7015,25 +8410,30 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "topology_drop_topology",
+        "topology_drop_topology",
         &[(&[DataType::Binary], DataType::Text)],
     );
     register_scalar(
         conn,
+        "topology_edge_count",
         "topology_edge_count",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
         "topology_face_count",
+        "topology_face_count",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
         "topology_from_bytes",
+        "topology_from_bytes",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "topology_get_edge_by_point",
         "topology_get_edge_by_point",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
@@ -7043,10 +8443,12 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "topology_get_edge_geometry",
+        "topology_get_edge_geometry",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "topology_get_face_by_point",
         "topology_get_face_by_point",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
@@ -7056,20 +8458,24 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "topology_get_face_containing_point",
+        "topology_get_face_containing_point",
         &[(&[DataType::Binary, DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "topology_get_face_edges",
         "topology_get_face_edges",
         &[(&[DataType::Binary, DataType::Int64], DataType::Int64)],
     );
     register_scalar(
         conn,
         "topology_get_face_geometry",
+        "topology_get_face_geometry",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "topology_get_node_by_point",
         "topology_get_node_by_point",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
@@ -7079,40 +8485,48 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "topology_get_node_edges",
+        "topology_get_node_edges",
         &[(&[DataType::Binary, DataType::Int64], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "topology_get_node_geometry",
         "topology_get_node_geometry",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "topology_get_ring_edges",
+        "topology_get_ring_edges",
         &[(&[DataType::Binary, DataType::Int64], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "topology_get_topology_id",
         "topology_get_topology_id",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
         "topology_get_topology_name",
+        "topology_get_topology_name",
         &[(&[DataType::Binary], DataType::Text)],
     );
     register_scalar(
         conn,
+        "topology_get_topology_srid",
         "topology_get_topology_srid",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
         "topology_make_topology_precise",
+        "topology_make_topology_precise",
         &[(&[DataType::Binary, DataType::Float64], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "topology_mod_edge_heal",
         "topology_mod_edge_heal",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Int64],
@@ -7122,6 +8536,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "topology_mod_edge_split",
+        "topology_mod_edge_split",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Binary],
             DataType::Int64,
@@ -7129,6 +8544,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "topology_move_iso_node",
         "topology_move_iso_node",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Binary],
@@ -7138,10 +8554,12 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "topology_name",
+        "topology_name",
         &[(&[DataType::Binary], DataType::Text)],
     );
     register_scalar(
         conn,
+        "topology_new_edge_heal",
         "topology_new_edge_heal",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Int64],
@@ -7151,6 +8569,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "topology_new_edges_split",
+        "topology_new_edges_split",
         &[(
             &[DataType::Binary, DataType::Int64, DataType::Binary],
             DataType::Int64,
@@ -7159,70 +8578,84 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "topology_node_count",
+        "topology_node_count",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "topology_polygonize",
         "topology_polygonize",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
         "topology_precision",
+        "topology_precision",
         &[(&[DataType::Binary], DataType::Float64)],
     );
     register_scalar(
         conn,
+        "topology_rem_edge_mod_face",
         "topology_rem_edge_mod_face",
         &[(&[DataType::Binary, DataType::Int64], DataType::Int64)],
     );
     register_scalar(
         conn,
         "topology_rem_edge_new_face",
+        "topology_rem_edge_new_face",
         &[(&[DataType::Binary, DataType::Int64], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "topology_remove_face",
         "topology_remove_face",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "topology_remove_iso_edge",
+        "topology_remove_iso_edge",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "topology_remove_iso_node",
         "topology_remove_iso_node",
         &[(&[DataType::Binary, DataType::Int64], DataType::Binary)],
     );
     register_scalar(
         conn,
         "topology_remove_unused_primitives",
+        "topology_remove_unused_primitives",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "topology_rename_topology",
         "topology_rename_topology",
         &[(&[DataType::Binary, DataType::Text], DataType::Text)],
     );
     register_scalar(
         conn,
         "topology_srid",
+        "topology_srid",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "topology_summary",
         "topology_summary",
         &[(&[DataType::Binary], DataType::Text)],
     );
     register_scalar(
         conn,
         "topology_to_bytes",
+        "topology_to_bytes",
         &[(&[DataType::Binary], DataType::Binary)],
     );
     register_scalar(
         conn,
+        "topology_to_topogeom",
         "topology_to_topogeom",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
@@ -7232,6 +8665,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "topology_topogeo_add_geometry",
+        "topology_topogeo_add_geometry",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
             DataType::Int64,
@@ -7239,6 +8673,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "topology_topogeo_add_linestring",
         "topology_topogeo_add_linestring",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
@@ -7248,6 +8683,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "topology_topogeo_add_point",
+        "topology_topogeo_add_point",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
             DataType::Int64,
@@ -7255,6 +8691,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     );
     register_scalar(
         conn,
+        "topology_topogeo_add_polygon",
         "topology_topogeo_add_polygon",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
@@ -7264,6 +8701,7 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "topology_topogeo_load_geometry",
+        "topology_topogeo_load_geometry",
         &[(
             &[DataType::Binary, DataType::Binary, DataType::Float64],
             DataType::Int64,
@@ -7272,63 +8710,81 @@ pub unsafe fn register_all(conn: duckdb_connection) {
     register_scalar(
         conn,
         "topology_total_topology_size",
+        "topology_total_topology_size",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
+        "topology_upgrade_topology",
         "topology_upgrade_topology",
         &[(&[DataType::Binary], DataType::Text)],
     );
     register_scalar(
         conn,
         "topology_validate",
+        "topology_validate",
         &[(&[DataType::Binary], DataType::Text)],
     );
     register_scalar(
         conn,
+        "topology_validate_topology",
         "topology_validate_topology",
         &[(&[DataType::Binary], DataType::Text)],
     );
     register_scalar(
         conn,
         "topology_validate_topology_precision",
+        "topology_validate_topology_precision",
         &[(&[DataType::Binary, DataType::Float64], DataType::Text)],
     );
     register_scalar(
         conn,
+        "total_topology_size",
         "total_topology_size",
         &[(&[DataType::Binary], DataType::Int64)],
     );
     register_scalar(
         conn,
         "upgrade_topology",
+        "upgrade_topology",
         &[(&[DataType::Binary], DataType::Text)],
     );
     register_scalar(
         conn,
+        "validate_topology",
         "validate_topology",
         &[(&[DataType::Binary], DataType::Text)],
     );
     register_scalar(
         conn,
         "validate_topology_precision",
+        "validate_topology_precision",
         &[(&[DataType::Binary, DataType::Float64], DataType::Text)],
     );
-    // Generic dispatch: 1218 canonical + 0 alias scalars (1218 parameter-list overloads), all registered with their REAL param + return types.
+    // Generic dispatch: 1218 canonical + 0 alias scalars (1218 parameter-list overloads), all registered with their REAL param + return types. Scalar/aggregate co-name suffix: 0 canonical + 0 alias names emitted with `_scalar` suffix.
 }
 
-/// Register one scalar (by canonical name or alias) as a function
-/// SET, one entry per parameter-list overload, each driven by the
-/// generic `invoke` dispatcher.
+/// Register one scalar as a function SET, one entry per
+/// parameter-list overload, each driven by the generic `invoke`
+/// dispatcher.
+///
+/// `sql_name` is the name DuckDB catalogs the function under
+/// (may be suffixed `_scalar` if the bare name is also published
+/// as an aggregate — see module docs). `shim_name` is the name
+/// the shim registry knows the definition by. They differ only
+/// for scalar/aggregate co-name clashes.
 unsafe fn register_scalar(
     conn: duckdb_connection,
     sql_name: &str,
+    shim_name: &str,
     overloads: &[(&[DataType], DataType)],
 ) {
-    let def = match registry::lookup_scalar(sql_name) {
+    let def = match registry::lookup_scalar(shim_name) {
         Some(d) => d,
         None => {
-            eprintln!("[shim-scalars] no shim entry for `{sql_name}` — skipping");
+            eprintln!(
+                "[shim-scalars] no shim entry for `{shim_name}` (SQL name `{sql_name}`) — skipping"
+            );
             return;
         }
     };
