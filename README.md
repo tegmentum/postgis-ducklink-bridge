@@ -4,6 +4,10 @@ Generated DuckDB loadable extension that bridges the **postgis** DataFission was
 
 Produced by [`ducklink-shim-codegen`](https://github.com/zacharywhitley/ducklink-shim-codegen) from a shim-interface SQLite database. **Do not edit by hand** — regenerate from the source.
 
+The upstream shim tracks 100% of PostGIS 3.6.4 parity via the
+`postgis-composed` plug (Geos + PROJ + SFCGAL + direct-CGAL
+wrappers, with native wasm exception handling enabled end-to-end).
+
 ## Surface
 
 | Extension | Version | Scalars | Aggregates | UDTFs | Windows | Types | Operators | Casts | Preprocessors | Catalog | Indexes |
