@@ -1,0 +1,1136 @@
+package geos:geometry@0.1.0;
+
+/// Core geometry types and representations
+interface types {
+    /// Geometry type enumeration
+    enum geometry-type {
+        point,
+        linestring,
+        linearring,
+        polygon,
+        multi-point,
+        multi-linestring,
+        multi-polygon,
+        geometry-collection,
+        // Curve types (GEOS 3.13+)
+        circular-string,
+        compound-curve,
+        curve-polygon,
+        multi-curve,
+        multi-surface
+    }
+
+    /// Coordinate dimensions
+    enum coordinate-dimension {
+        xy,
+        xyz,
+        xym,
+        xyzm
+    }
+
+    /// Well-Known Text (WKT) representation
+    type wkt = string;
+
+    /// Well-Known Binary (WKB) representation
+    type wkb = list<u8>;
+
+    /// GeoJSON representation
+    type geojson = string;
+
+    /// Geometry handle (opaque reference)
+    type geometry-handle = u64;
+
+    /// Coordinate sequence handle
+    type coord-seq-handle = u64;
+
+    /// Prepared geometry handle (for optimized predicates)
+    type prepared-geom-handle = u64;
+
+    /// STRtree spatial index handle
+    type spatial-index-handle = u64;
+
+    /// Coordinate (2D, 3D, or with measure)
+    record coordinate {
+        x: f64,
+        y: f64,
+        z: option<f64>,
+        m: option<f64>
+    }
+
+    /// Bounding box (envelope)
+    record envelope {
+        min-x: f64,
+        min-y: f64,
+        max-x: f64,
+        max-y: f64
+    }
+
+    /// Result types
+    variant geometry-result {
+        ok(geometry-handle),
+        err(string)
+    }
+
+    variant wkt-result {
+        ok(wkt),
+        err(string)
+    }
+
+    variant wkb-result {
+        ok(wkb),
+        err(string)
+    }
+
+    variant number-result {
+        ok(f64),
+        err(string)
+    }
+
+    variant bool-result {
+        ok(bool),
+        err(string)
+    }
+
+    variant coord-seq-result {
+        ok(coord-seq-handle),
+        err(string)
+    }
+}
+
+/// Geometry input/output and format conversion
+interface io {
+    use types.{geometry-handle, geometry-result, wkt, wkt-result, wkb, wkb-result, geojson};
+
+    /// Parse WKT into a geometry
+    from-wkt: func(wkt: wkt) -> geometry-result;
+
+    /// Parse WKT with fix structure option
+    from-wkt-fix-structure: func(wkt: wkt, fix-structure: bool) -> geometry-result;
+
+    /// Parse WKB into a geometry
+    from-wkb: func(wkb: wkb) -> geometry-result;
+
+    /// Parse WKB with fix structure option
+    from-wkb-fix-structure: func(wkb: wkb, fix-structure: bool) -> geometry-result;
+
+    /// Parse GeoJSON into a geometry
+    from-geojson: func(json: geojson) -> geometry-result;
+
+    /// Convert geometry to WKT
+    to-wkt: func(geom: geometry-handle) -> wkt-result;
+
+    /// Convert geometry to WKT with precision
+    to-wkt-precision: func(geom: geometry-handle, precision: s32) -> wkt-result;
+
+    /// Convert geometry to WKT with full options
+    /// precision: decimal places, trim: remove trailing zeros, use-old-threed: use older 3D format, output-dimension: 2, 3, or 4
+    to-wkt-with-options: func(geom: geometry-handle, precision: s32, trim: bool, use-old-threed: bool, output-dimension: s32) -> wkt-result;
+
+    /// Convert geometry to WKB
+    to-wkb: func(geom: geometry-handle) -> wkb-result;
+
+    /// Convert geometry to WKB with full options
+    /// byte-order: 0=XDR (big endian), 1=NDR (little endian)
+    /// include-srid: whether to include SRID
+    /// output-dimension: 2, 3, or 4
+    /// flavor: 1=ISO, 2=EXTENDED
+    to-wkb-with-options: func(geom: geometry-handle, byte-order: s32, include-srid: bool, output-dimension: s32, flavor: s32) -> wkb-result;
+
+    /// Convert geometry to GeoJSON
+    to-geojson: func(geom: geometry-handle) -> wkt-result;
+
+    /// Convert geometry to GeoJSON with indentation
+    to-geojson-indent: func(geom: geometry-handle, indent: s32) -> wkt-result;
+
+    /// Convert geometry to HEX-encoded WKB
+    to-hex: func(geom: geometry-handle) -> wkt-result;
+
+    /// Parse HEX-encoded WKB
+    from-hex: func(hex: string) -> geometry-result;
+}
+
+/// Geometry creation and construction
+interface construction {
+    use types.{geometry-handle, geometry-result, coord-seq-handle, coordinate, geometry-type};
+
+    /// Create a point from coordinates
+    create-point: func(x: f64, y: f64) -> geometry-result;
+
+    /// Create a point from XY (simpler version)
+    create-point-xy: func(x: f64, y: f64) -> geometry-result;
+
+    /// Create a 3D point
+    create-point-z: func(x: f64, y: f64, z: f64) -> geometry-result;
+
+    /// Create a point from coordinate sequence
+    create-point-from-seq: func(seq: coord-seq-handle) -> geometry-result;
+
+    /// Create a linestring from coordinate sequence
+    create-linestring: func(seq: coord-seq-handle) -> geometry-result;
+
+    /// Create a linear ring from coordinate sequence
+    create-linear-ring: func(seq: coord-seq-handle) -> geometry-result;
+
+    /// Create a polygon from shell and holes
+    create-polygon: func(shell: geometry-handle, holes: list<geometry-handle>) -> geometry-result;
+
+    /// Create a rectangular polygon from bounds
+    create-rectangle: func(xmin: f64, ymin: f64, xmax: f64, ymax: f64) -> geometry-result;
+
+    /// Create a multi-point
+    create-multi-point: func(points: list<geometry-handle>) -> geometry-result;
+
+    /// Create a multi-linestring
+    create-multi-linestring: func(lines: list<geometry-handle>) -> geometry-result;
+
+    /// Create a multi-polygon
+    create-multi-polygon: func(polygons: list<geometry-handle>) -> geometry-result;
+
+    /// Create a geometry collection
+    create-collection: func(geoms: list<geometry-handle>) -> geometry-result;
+
+    /// Create an empty geometry of specified type
+    create-empty: func(geom-type: geometry-type) -> geometry-result;
+
+    /// Create an empty point
+    create-empty-point: func() -> geometry-result;
+
+    /// Create an empty linestring
+    create-empty-linestring: func() -> geometry-result;
+
+    /// Create an empty polygon
+    create-empty-polygon: func() -> geometry-result;
+
+    /// Clone a geometry
+    clone: func(geom: geometry-handle) -> geometry-result;
+
+    /// Destroy/free a geometry handle
+    destroy: func(geom: geometry-handle);
+}
+
+/// Coordinate sequence operations
+interface coordinate-sequences {
+    use types.{coord-seq-handle, coord-seq-result, coordinate, coordinate-dimension};
+
+    /// Create a coordinate sequence
+    create-coord-seq: func(size: u32, dims: u32) -> coord-seq-result;
+
+    /// Create a coordinate sequence with explicit Z/M support
+    create-coord-seq-with-dimensions: func(size: u32, has-z: bool, has-m: bool) -> coord-seq-result;
+
+    /// Get the size of a coordinate sequence
+    get-size: func(seq: coord-seq-handle) -> u32;
+
+    /// Get the dimensions of a coordinate sequence
+    get-dimensions: func(seq: coord-seq-handle) -> u32;
+
+    /// Check if sequence has Z coordinates
+    has-z: func(seq: coord-seq-handle) -> bool;
+
+    /// Check if sequence has M coordinates
+    has-m: func(seq: coord-seq-handle) -> bool;
+
+    /// Set X coordinate at index
+    set-x: func(seq: coord-seq-handle, idx: u32, value: f64);
+
+    /// Set Y coordinate at index
+    set-y: func(seq: coord-seq-handle, idx: u32, value: f64);
+
+    /// Set Z coordinate at index
+    set-z: func(seq: coord-seq-handle, idx: u32, value: f64);
+
+    /// Set M coordinate at index
+    set-m: func(seq: coord-seq-handle, idx: u32, value: f64);
+
+    /// Set XY coordinates at index
+    set-xy: func(seq: coord-seq-handle, idx: u32, x: f64, y: f64);
+
+    /// Set XYZ coordinates at index
+    set-xyz: func(seq: coord-seq-handle, idx: u32, x: f64, y: f64, z: f64);
+
+    /// Get X coordinate at index
+    get-x: func(seq: coord-seq-handle, idx: u32) -> f64;
+
+    /// Get Y coordinate at index
+    get-y: func(seq: coord-seq-handle, idx: u32) -> f64;
+
+    /// Get Z coordinate at index
+    get-z: func(seq: coord-seq-handle, idx: u32) -> f64;
+
+    /// Get M coordinate at index
+    get-m: func(seq: coord-seq-handle, idx: u32) -> f64;
+
+    /// Set ordinate (generic coordinate value)
+    set-ordinate: func(seq: coord-seq-handle, idx: u32, dim: u32, value: f64);
+
+    /// Get ordinate (generic coordinate value)
+    get-ordinate: func(seq: coord-seq-handle, idx: u32, dim: u32) -> f64;
+
+    /// Check if coordinate sequence is counter-clockwise
+    is-ccw: func(seq: coord-seq-handle) -> bool;
+
+    /// Clone a coordinate sequence
+    clone-seq: func(seq: coord-seq-handle) -> coord-seq-result;
+
+    /// Copy a coordinate sequence (alias for clone-seq)
+    copy: func(seq: coord-seq-handle) -> coord-seq-result;
+
+    /// Copy coordinate sequence to a flat buffer (interleaved coordinates)
+    copy-to-buffer: func(seq: coord-seq-handle, has-z: bool, has-m: bool) -> list<u8>;
+
+    /// Create coordinate sequence from a flat buffer
+    copy-from-buffer: func(buf: list<f64>, size: u32, has-z: bool, has-m: bool) -> coord-seq-result;
+
+    /// Copy coordinates to separate X, Y, Z, M arrays
+    copy-to-arrays: func(seq: coord-seq-handle, x: list<f64>, y: list<f64>, z: option<list<f64>>, m: option<list<f64>>) -> bool;
+
+    /// Create coordinate sequence from separate X, Y, Z, M arrays
+    copy-from-arrays: func(x: list<f64>, y: list<f64>, z: option<list<f64>>, m: option<list<f64>>, size: u32) -> coord-seq-result;
+
+    /// Destroy a coordinate sequence
+    destroy-seq: func(seq: coord-seq-handle);
+}
+
+/// Geometry property accessors
+interface properties {
+    use types.{geometry-handle, geometry-type, geometry-result, envelope, coord-seq-handle, coordinate-dimension, number-result, wkb-result};
+
+    /// Get geometry type
+    get-type: func(geom: geometry-handle) -> geometry-type;
+
+    /// Get geometry type as string
+    get-type-name: func(geom: geometry-handle) -> string;
+
+    /// Get SRID (Spatial Reference ID)
+    get-srid: func(geom: geometry-handle) -> s32;
+
+    /// Set SRID
+    set-srid: func(geom: geometry-handle, srid: s32);
+
+    /// Get number of dimensions (2 or 3)
+    get-coordinate-dimension: func(geom: geometry-handle) -> u32;
+
+    /// Check if geometry has Z coordinates
+    has-z: func(geom: geometry-handle) -> bool;
+
+    /// Check if geometry has M coordinates
+    has-m: func(geom: geometry-handle) -> bool;
+
+    /// Get envelope (bounding box)
+    get-envelope: func(geom: geometry-handle) -> envelope;
+
+    /// Get number of points
+    get-num-points: func(geom: geometry-handle) -> u32;
+
+    /// Get number of coordinates
+    get-num-coordinates: func(geom: geometry-handle) -> u32;
+
+    /// Get number of interior rings (for polygons)
+    get-num-interior-rings: func(geom: geometry-handle) -> u32;
+
+    /// Get number of geometries (for collections)
+    get-num-geometries: func(geom: geometry-handle) -> u32;
+
+    /// Get nth geometry from collection
+    get-geometry-n: func(geom: geometry-handle, n: u32) -> u64;
+
+    /// Get exterior ring of polygon
+    get-exterior-ring: func(geom: geometry-handle) -> u64;
+
+    /// Get nth interior ring of polygon
+    get-interior-ring-n: func(geom: geometry-handle, n: u32) -> u64;
+
+    /// Get coordinate sequence from geometry
+    get-coord-seq: func(geom: geometry-handle) -> u64;
+
+    /// Get nth point from linestring
+    get-point-n: func(geom: geometry-handle, n: u32) -> geometry-result;
+
+    /// Get start point of linestring
+    get-start-point: func(geom: geometry-handle) -> geometry-result;
+
+    /// Get end point of linestring
+    get-end-point: func(geom: geometry-handle) -> geometry-result;
+
+    /// Get X coordinate of point geometry
+    get-x: func(geom: geometry-handle) -> number-result;
+
+    /// Get Y coordinate of point geometry
+    get-y: func(geom: geometry-handle) -> number-result;
+
+    /// Get Z coordinate of point geometry
+    get-z: func(geom: geometry-handle) -> number-result;
+
+    /// Get M coordinate of point geometry
+    get-m: func(geom: geometry-handle) -> number-result;
+
+    /// Get minimum X of geometry extent
+    get-x-min: func(geom: geometry-handle) -> number-result;
+
+    /// Get minimum Y of geometry extent
+    get-y-min: func(geom: geometry-handle) -> number-result;
+
+    /// Get maximum X of geometry extent
+    get-x-max: func(geom: geometry-handle) -> number-result;
+
+    /// Get maximum Y of geometry extent
+    get-y-max: func(geom: geometry-handle) -> number-result;
+
+    /// Get geometry dimensions (0=point, 1=line, 2=area)
+    get-dimensions: func(geom: geometry-handle) -> s32;
+
+    /// Check if geometry is empty
+    is-empty: func(geom: geometry-handle) -> bool;
+
+    /// Check if geometry is simple
+    is-simple: func(geom: geometry-handle) -> bool;
+
+    /// Check if geometry is a ring
+    is-ring: func(geom: geometry-handle) -> bool;
+
+    /// Check if geometry is closed
+    is-closed: func(geom: geometry-handle) -> bool;
+
+    /// Get a point guaranteed to be on the surface of a geometry
+    point-on-surface: func(geom: geometry-handle) -> geometry-result;
+
+    /// Set user data on a geometry (stores as integer)
+    set-user-data: func(geom: geometry-handle, data: u64);
+
+    /// Get user data from a geometry
+    get-user-data: func(geom: geometry-handle) -> u64;
+
+    /// Get extent as binary (4 doubles: xmin, ymin, xmax, ymax)
+    get-extent: func(geom: geometry-handle) -> list<u8>;
+}
+
+/// Geometry validation and repair
+interface validation {
+    use types.{geometry-handle, geometry-result, bool-result};
+
+    /// Check if geometry is topologically valid
+    is-valid: func(geom: geometry-handle) -> bool;
+
+    /// Get detailed validation error message
+    is-valid-reason: func(geom: geometry-handle) -> string;
+
+    /// Check validity with specific validation flags
+    is-valid-detail: func(geom: geometry-handle, validation-flags: u32) -> bool-result;
+
+    /// Make an invalid geometry valid
+    make-valid: func(geom: geometry-handle) -> geometry-result;
+
+    /// Make an invalid geometry valid with parameters
+    /// method: 0=LINEWORK, 1=STRUCTURE
+    make-valid-with-params: func(geom: geometry-handle, method: u32, keep-collapsed: bool) -> geometry-result;
+
+    /// Normalize geometry
+    normalize: func(geom: geometry-handle) -> geometry-result;
+
+    /// Orient polygon rings (exterior CW or CCW)
+    orient-polygons: func(geom: geometry-handle, exterior-cw: bool) -> geometry-result;
+}
+
+/// Metric calculations
+interface metrics {
+    use types.{geometry-handle, geometry-result, coord-seq-result, number-result};
+
+    /// Calculate area
+    area: func(geom: geometry-handle) -> f64;
+
+    /// Calculate length/perimeter
+    length: func(geom: geometry-handle) -> f64;
+
+    /// Calculate distance between geometries
+    distance: func(geom1: geometry-handle, geom2: geometry-handle) -> f64;
+
+    /// Calculate distance using spatial index (faster for repeated queries)
+    distance-indexed: func(geom1: geometry-handle, geom2: geometry-handle) -> f64;
+
+    /// Calculate distance within tolerance (returns -1 if > tolerance)
+    distance-within: func(geom1: geometry-handle, geom2: geometry-handle, tolerance: f64) -> bool;
+
+    /// Calculate Hausdorff distance
+    hausdorff-distance: func(geom1: geometry-handle, geom2: geometry-handle) -> f64;
+
+    /// Calculate Hausdorff distance with densify fraction
+    hausdorff-distance-densify: func(geom1: geometry-handle, geom2: geometry-handle, densify-frac: f64) -> f64;
+
+    /// Calculate Fréchet distance
+    frechet-distance: func(geom1: geometry-handle, geom2: geometry-handle) -> f64;
+
+    /// Calculate Fréchet distance with densification
+    frechet-distance-densify: func(geom1: geometry-handle, geom2: geometry-handle, densify-frac: f64) -> f64;
+
+    /// Get nearest points between two geometries
+    nearest-points: func(geom1: geometry-handle, geom2: geometry-handle) -> coord-seq-result;
+
+    /// Get minimum clearance of a geometry
+    minimum-clearance: func(geom: geometry-handle) -> number-result;
+
+    /// Get the minimum clearance line of a geometry
+    minimum-clearance-line: func(geom: geometry-handle) -> geometry-result;
+}
+
+/// Spatial relationship predicates (DE-9IM)
+interface predicates {
+    use types.{geometry-handle, geometry-result, bool-result, wkt-result};
+
+    /// Test if geometries are disjoint
+    disjoint: func(geom1: geometry-handle, geom2: geometry-handle) -> bool;
+
+    /// Test if geometries touch
+    touches: func(geom1: geometry-handle, geom2: geometry-handle) -> bool;
+
+    /// Test if geometries intersect
+    intersects: func(geom1: geometry-handle, geom2: geometry-handle) -> bool;
+
+    /// Test if geometries cross
+    crosses: func(geom1: geometry-handle, geom2: geometry-handle) -> bool;
+
+    /// Test if geom1 is within geom2
+    within: func(geom1: geometry-handle, geom2: geometry-handle) -> bool;
+
+    /// Test if geom1 contains geom2
+    contains: func(geom1: geometry-handle, geom2: geometry-handle) -> bool;
+
+    /// Test if geometries overlap
+    overlaps: func(geom1: geometry-handle, geom2: geometry-handle) -> bool;
+
+    /// Test if geometries are equal (spatially)
+    equals: func(geom1: geometry-handle, geom2: geometry-handle) -> bool;
+
+    /// Test if geometries are exactly equal
+    equals-exact: func(geom1: geometry-handle, geom2: geometry-handle, tolerance: f64) -> bool;
+
+    /// Test if geometries are topologically equal (identical structure)
+    equals-identical: func(geom1: geometry-handle, geom2: geometry-handle) -> bool;
+
+    /// Test if geom1 covers geom2
+    covers: func(geom1: geometry-handle, geom2: geometry-handle) -> bool;
+
+    /// Test if geom1 is covered by geom2
+    covered-by: func(geom1: geometry-handle, geom2: geometry-handle) -> bool;
+
+    /// Compute DE-9IM intersection matrix as string
+    relate: func(geom1: geometry-handle, geom2: geometry-handle) -> wkt-result;
+
+    /// Test relationship using DE-9IM pattern
+    relate-pattern: func(geom1: geometry-handle, geom2: geometry-handle, pattern: string) -> bool;
+
+    /// Test if a matrix matches a pattern
+    relate-pattern-match: func(matrix: string, pattern: string) -> bool;
+
+    /// Compute DE-9IM with boundary node rule
+    /// bnr: 1=MOD2, 2=ENDPOINT, 3=MULTIVALENT_ENDPOINT, 4=MONOVALENT_ENDPOINT
+    relate-boundary-node-rule: func(geom1: geometry-handle, geom2: geometry-handle, bnr: s32) -> wkt-result;
+
+    /// Check if geometry is simple with detailed information
+    /// Returns location of non-simple point if not simple
+    is-simple-detail: func(geom: geometry-handle) -> geometry-result;
+}
+
+/// Prepared geometry operations (optimized for repeated predicates)
+interface prepared {
+    use types.{geometry-handle, prepared-geom-handle, coord-seq-result, bool-result};
+
+    /// Create a prepared geometry for optimized predicate testing
+    prepare: func(geom: geometry-handle) -> u64;
+
+    /// Destroy prepared geometry
+    destroy-prepared: func(prep: prepared-geom-handle);
+
+    /// Prepared contains predicate
+    prepared-contains: func(prep: prepared-geom-handle, geom: geometry-handle) -> bool;
+
+    /// Prepared contains properly predicate
+    prepared-contains-properly: func(prep: prepared-geom-handle, geom: geometry-handle) -> bool;
+
+    /// Prepared covered-by predicate
+    prepared-covered-by: func(prep: prepared-geom-handle, geom: geometry-handle) -> bool;
+
+    /// Prepared covers predicate
+    prepared-covers: func(prep: prepared-geom-handle, geom: geometry-handle) -> bool;
+
+    /// Prepared crosses predicate
+    prepared-crosses: func(prep: prepared-geom-handle, geom: geometry-handle) -> bool;
+
+    /// Prepared disjoint predicate
+    prepared-disjoint: func(prep: prepared-geom-handle, geom: geometry-handle) -> bool;
+
+    /// Prepared intersects predicate
+    prepared-intersects: func(prep: prepared-geom-handle, geom: geometry-handle) -> bool;
+
+    /// Prepared overlaps predicate
+    prepared-overlaps: func(prep: prepared-geom-handle, geom: geometry-handle) -> bool;
+
+    /// Prepared touches predicate
+    prepared-touches: func(prep: prepared-geom-handle, geom: geometry-handle) -> bool;
+
+    /// Prepared within predicate
+    prepared-within: func(prep: prepared-geom-handle, geom: geometry-handle) -> bool;
+
+    /// Prepared contains XY point predicate
+    prepared-contains-xy: func(prep: prepared-geom-handle, x: f64, y: f64) -> bool;
+
+    /// Prepared intersects XY point predicate
+    prepared-intersects-xy: func(prep: prepared-geom-handle, x: f64, y: f64) -> bool;
+
+    /// Prepared relate - compute DE-9IM pattern
+    prepared-relate: func(prep: prepared-geom-handle, geom: geometry-handle) -> string;
+
+    /// Prepared relate pattern - test DE-9IM pattern
+    prepared-relate-pattern: func(prep: prepared-geom-handle, geom: geometry-handle, pattern: string) -> bool;
+
+    /// Prepared distance
+    prepared-distance: func(prep: prepared-geom-handle, geom: geometry-handle) -> f64;
+
+    /// Prepared distance within
+    prepared-distance-within: func(prep: prepared-geom-handle, geom: geometry-handle, distance: f64) -> bool;
+
+    /// Prepared nearest points
+    prepared-nearest-points: func(prep: prepared-geom-handle, geom: geometry-handle) -> coord-seq-result;
+}
+
+/// Topology operations (overlay operations)
+interface topology {
+    use types.{geometry-handle, geometry-result, number-result};
+
+    /// Compute union of two geometries
+    union: func(geom1: geometry-handle, geom2: geometry-handle) -> geometry-result;
+
+    /// Compute intersection of two geometries
+    intersection: func(geom1: geometry-handle, geom2: geometry-handle) -> geometry-result;
+
+    /// Compute difference (geom1 - geom2)
+    difference: func(geom1: geometry-handle, geom2: geometry-handle) -> geometry-result;
+
+    /// Compute symmetric difference
+    sym-difference: func(geom1: geometry-handle, geom2: geometry-handle) -> geometry-result;
+
+    /// Compute unary union (union of all components)
+    unary-union: func(geom: geometry-handle) -> geometry-result;
+
+    /// Compute union using cascaded algorithm (for collections)
+    union-cascaded: func(geom: geometry-handle) -> geometry-result;
+
+    /// Compute point-on-surface
+    point-on-surface: func(geom: geometry-handle) -> geometry-result;
+
+    /// Compute boundary
+    boundary: func(geom: geometry-handle) -> geometry-result;
+
+    /// Compute convex hull
+    convex-hull: func(geom: geometry-handle) -> geometry-result;
+
+    /// Compute concave hull with ratio (0=convex, 1=maximum concavity)
+    concave-hull: func(geom: geometry-handle, ratio: f64, allow-holes: bool) -> geometry-result;
+
+    /// Compute concave hull by maximum edge length
+    concave-hull-by-length: func(geom: geometry-handle, length: f64, allow-holes: bool) -> geometry-result;
+
+    /// Compute concave hull of polygons
+    concave-hull-of-polygons: func(geom: geometry-handle, length-ratio: f64, tight: bool, allow-holes: bool) -> geometry-result;
+
+    /// Simplify polygon hull by vertex fraction
+    polygon-hull-simplify: func(geom: geometry-handle, vertex-fraction: f64, is-outer: bool) -> geometry-result;
+
+    /// Simplify polygon hull with mode selection (1=vertex ratio, 2=area ratio)
+    polygon-hull-simplify-mode: func(geom: geometry-handle, is-outer: bool, mode: u32, param: f64) -> geometry-result;
+
+    /// Compute envelope (as geometry)
+    envelope: func(geom: geometry-handle) -> geometry-result;
+
+    /// Clip geometry by rectangle
+    clip-by-rect: func(geom: geometry-handle, xmin: f64, ymin: f64, xmax: f64, ymax: f64) -> geometry-result;
+
+    /// Snap geometry to another with tolerance
+    snap: func(geom: geometry-handle, snap-to: geometry-handle, tolerance: f64) -> geometry-result;
+
+    /// Shared paths between linestrings
+    shared-paths: func(geom1: geometry-handle, geom2: geometry-handle) -> geometry-result;
+
+    /// Compute centroid
+    centroid: func(geom: geometry-handle) -> geometry-result;
+
+    /// Extract unique points
+    unique-points: func(geom: geometry-handle) -> geometry-result;
+
+    /// Compute minimum rotated rectangle
+    minimum-rotated-rectangle: func(geom: geometry-handle) -> geometry-result;
+
+    /// Compute minimum width line
+    minimum-width: func(geom: geometry-handle) -> geometry-result;
+
+    /// Compute minimum clearance line
+    minimum-clearance-line: func(geom: geometry-handle) -> geometry-result;
+
+    /// Compute minimum clearance distance
+    minimum-clearance: func(geom: geometry-handle) -> number-result;
+
+    /// Compute node (self-union of linework)
+    node: func(geom: geometry-handle) -> geometry-result;
+
+    /// Compute maximum inscribed circle
+    maximum-inscribed-circle: func(geom: geometry-handle, tolerance: f64) -> geometry-result;
+
+    /// Compute disjoint subset union (optimized)
+    disjoint-subset-union: func(geom: geometry-handle) -> geometry-result;
+
+    /// Precision-aware union
+    union-prec: func(geom1: geometry-handle, geom2: geometry-handle, grid-size: f64) -> geometry-result;
+
+    /// Precision-aware intersection
+    intersection-prec: func(geom1: geometry-handle, geom2: geometry-handle, grid-size: f64) -> geometry-result;
+
+    /// Precision-aware difference
+    difference-prec: func(geom1: geometry-handle, geom2: geometry-handle, grid-size: f64) -> geometry-result;
+
+    /// Precision-aware symmetric difference
+    sym-difference-prec: func(geom1: geometry-handle, geom2: geometry-handle, grid-size: f64) -> geometry-result;
+
+    /// Precision-aware unary union
+    unary-union-prec: func(geom: geometry-handle, grid-size: f64) -> geometry-result;
+}
+
+/// Buffer operations
+interface buffer {
+    use types.{geometry-handle, geometry-result};
+
+    /// Buffer styles
+    enum cap-style {
+        round,
+        flat,
+        square
+    }
+
+    enum join-style {
+        round,
+        mitre,
+        bevel
+    }
+
+    /// Create buffer with default parameters
+    buffer: func(geom: geometry-handle, distance: f64) -> geometry-result;
+
+    /// Create buffer with quadrant segments
+    buffer-with-params: func(geom: geometry-handle, distance: f64, quad-segs: s32) -> geometry-result;
+
+    /// Create buffer with full parameter control
+    buffer-with-style: func(
+        geom: geometry-handle,
+        distance: f64,
+        quad-segs: s32,
+        cap-style: cap-style,
+        join-style: join-style,
+        mitre-limit: f64
+    ) -> geometry-result;
+
+    /// Create single-sided buffer (for linestrings)
+    single-sided-buffer: func(
+        geom: geometry-handle,
+        distance: f64,
+        quad-segs: s32,
+        join-style: join-style,
+        mitre-limit: f64,
+        left-side: bool
+    ) -> geometry-result;
+
+    /// Create offset curve (for linestrings)
+    offset-curve: func(
+        geom: geometry-handle,
+        distance: f64,
+        quad-segs: s32,
+        join-style: join-style,
+        mitre-limit: f64
+    ) -> geometry-result;
+}
+
+/// Simplification and refinement
+interface simplification {
+    use types.{geometry-handle, geometry-result};
+
+    /// Simplify using Douglas-Peucker algorithm
+    simplify: func(geom: geometry-handle, tolerance: f64) -> geometry-result;
+
+    /// Simplify preserving topology
+    topology-preserve-simplify: func(geom: geometry-handle, tolerance: f64) -> geometry-result;
+
+    /// Simplify using Visvalingam-Whyatt algorithm
+    simplify-vw: func(geom: geometry-handle, tolerance: f64) -> geometry-result;
+
+    /// Densify by adding vertices
+    densify: func(geom: geometry-handle, tolerance: f64) -> geometry-result;
+
+    /// Remove repeated/duplicate points
+    remove-repeated-points: func(geom: geometry-handle, tolerance: f64) -> geometry-result;
+
+    /// Reduce precision by rounding to grid
+    precision-reduce: func(geom: geometry-handle, grid-size: f64) -> geometry-result;
+}
+
+/// Linear referencing
+interface linear-referencing {
+    use types.{geometry-handle, geometry-result, coordinate, number-result};
+
+    /// Project point onto line and return distance along line
+    project: func(line: geometry-handle, point: geometry-handle) -> f64;
+
+    /// Project point onto normalized line (0-1)
+    project-normalized: func(line: geometry-handle, point: geometry-handle) -> f64;
+
+    /// Interpolate point at distance along line
+    interpolate: func(line: geometry-handle, distance: f64) -> geometry-result;
+
+    /// Interpolate point at normalized distance along line
+    interpolate-normalized: func(line: geometry-handle, fraction: f64) -> geometry-result;
+
+    /// Extract substring of line between two normalized positions (0-1)
+    line-substring: func(line: geometry-handle, start-frac: f64, end-frac: f64) -> geometry-result;
+}
+
+/// Polygonization and line operations
+interface polygonization {
+    use types.{geometry-handle, geometry-result};
+
+    /// Build polygons from lines (dangles and cuts are discarded)
+    polygonize: func(lines: list<geometry-handle>) -> geometry-result;
+
+    /// Build only valid polygons from lines
+    polygonize-valid: func(lines: list<geometry-handle>) -> geometry-result;
+
+    /// Get cut edges from polygonization
+    polygonize-cut-edges: func(lines: list<geometry-handle>) -> geometry-result;
+
+    /// Get full polygonization result (valid polygons, dangles, cuts, invalid)
+    polygonize-full: func(lines: list<geometry-handle>) -> tuple<geometry-result, geometry-result, geometry-result, geometry-result>;
+
+    /// Build geometry from lines that form a valid geometry
+    build-area: func(geom: geometry-handle) -> geometry-result;
+
+    /// Merge connected linestrings
+    line-merge: func(geom: geometry-handle) -> geometry-result;
+
+    /// Merge linestrings with direction preserved
+    line-merge-directed: func(geom: geometry-handle) -> geometry-result;
+
+    /// Reverse line direction
+    reverse: func(geom: geometry-handle) -> geometry-result;
+}
+
+/// Voronoi diagrams and Delaunay triangulation
+interface triangulation {
+    use types.{geometry-handle, geometry-result, envelope};
+
+    /// Compute Delaunay triangulation
+    delaunay-triangulation: func(geom: geometry-handle, tolerance: f64, only-edges: bool) -> geometry-result;
+
+    /// Compute constrained Delaunay triangulation
+    constrained-delaunay-triangulation: func(geom: geometry-handle) -> geometry-result;
+
+    /// Compute Voronoi diagram
+    voronoi-diagram: func(geom: geometry-handle, env: option<envelope>, tolerance: f64, only-edges: bool) -> geometry-result;
+}
+
+/// Affine transformations
+interface transformations {
+    use types.{geometry-handle, geometry-result};
+
+    /// Translate geometry
+    translate: func(geom: geometry-handle, dx: f64, dy: f64, dz: option<f64>) -> geometry-result;
+
+    /// Scale geometry
+    scale: func(geom: geometry-handle, x-scale: f64, y-scale: f64, z-scale: option<f64>) -> geometry-result;
+
+    /// Rotate geometry (radians)
+    rotate: func(geom: geometry-handle, angle: f64) -> geometry-result;
+
+    /// Rotate around point
+    rotate-around: func(geom: geometry-handle, angle: f64, x: f64, y: f64) -> geometry-result;
+}
+
+/// Minimum bounding geometry
+interface minimum-bounding {
+    use types.{geometry-handle, geometry-result};
+
+    /// Compute minimum bounding circle
+    minimum-bounding-circle: func(geom: geometry-handle) -> geometry-result;
+
+    /// Compute minimum rotated rectangle
+    minimum-rotated-rectangle: func(geom: geometry-handle) -> geometry-result;
+
+    /// Compute minimum width
+    minimum-width: func(geom: geometry-handle) -> geometry-result;
+
+    /// Compute minimum clearance
+    minimum-clearance: func(geom: geometry-handle) -> f64;
+
+    /// Compute minimum clearance line
+    minimum-clearance-line: func(geom: geometry-handle) -> geometry-result;
+}
+
+/// Spatial indexing (STRtree)
+interface spatial-index {
+    use types.{geometry-handle, spatial-index-handle, envelope};
+
+    /// Create a new STRtree spatial index
+    create-index: func(node-capacity: u32) -> u64;
+
+    /// Build the index after all inserts
+    build: func(tree: spatial-index-handle) -> bool;
+
+    /// Insert geometry into index with ID
+    insert: func(tree: spatial-index-handle, geom: geometry-handle, item-id: u64);
+
+    /// Query index with envelope, returns list of IDs
+    query-envelope: func(tree: spatial-index-handle, env: envelope) -> list<u64>;
+
+    /// Query index with geometry, returns list of IDs
+    query: func(tree: spatial-index-handle, geom: geometry-handle) -> list<u64>;
+
+    /// Find nearest geometry to query geometry
+    nearest: func(tree: spatial-index-handle, geom: geometry-handle) -> u64;
+
+    /// Find the item-id of the nearest inserted geometry to the query.
+    nearest-item: func(tree: spatial-index-handle, geom: geometry-handle) -> u64;
+
+    /// k nearest item-ids to the query geometry, nearest first.
+    nearest-k: func(tree: spatial-index-handle, geom: geometry-handle, k: u32) -> list<u64>;
+
+    /// Item-ids of inserted geometries within max-distance of the query.
+    within-distance: func(tree: spatial-index-handle, geom: geometry-handle, max-distance: f64) -> list<u64>;
+
+    /// Remove item from index
+    remove: func(tree: spatial-index-handle, geom: geometry-handle, item-id: u64) -> bool;
+
+    /// Iterate over all items in the tree, returns list of all IDs
+    iterate: func(tree: spatial-index-handle) -> list<u64>;
+
+    /// Destroy spatial index
+    destroy-index: func(tree: spatial-index-handle);
+}
+
+/// Clustering operations
+interface clustering {
+    use types.{geometry-handle};
+
+    /// Cluster result record
+    record cluster-result {
+        /// Cluster ID for each input geometry (-1 for noise/unassigned)
+        cluster-ids: list<u64>,
+        /// Number of clusters found
+        num-clusters: u64
+    }
+
+    /// Perform DBSCAN clustering
+    /// eps: maximum distance between points in same cluster
+    /// min-points: minimum points to form a dense region
+    dbscan: func(geom: geometry-handle, eps: f64, min-points: u32) -> cluster-result;
+
+    /// Cluster geometries by distance threshold
+    cluster-by-distance: func(geom: geometry-handle, distance: f64) -> cluster-result;
+
+    /// Cluster geometries that intersect
+    cluster-intersects: func(geom: geometry-handle) -> cluster-result;
+
+    /// Cluster by envelope distance
+    cluster-envelope-distance: func(geom: geometry-handle, distance: f64) -> cluster-result;
+
+    /// Cluster by envelope intersection
+    cluster-envelope-intersects: func(geom: geometry-handle) -> cluster-result;
+}
+
+/// Geometry collection operations
+interface collections {
+    use types.{geometry-handle, geometry-result};
+
+    /// Extract all points from geometry
+    extract-points: func(geom: geometry-handle) -> geometry-result;
+
+    /// Extract unique points
+    extract-unique-points: func(geom: geometry-handle) -> geometry-result;
+
+    /// Get all coordinates as flat array
+    get-coordinates: func(geom: geometry-handle) -> list<f64>;
+
+    /// Line merge connected linestrings
+    line-merge: func(geom: geometry-handle) -> geometry-result;
+
+    /// Build area from linework
+    build-area: func(geom: geometry-handle) -> geometry-result;
+
+    /// Release a geometry collection, keeping sub-geometries
+    release-collection: func(geom: geometry-handle) -> tuple<geometry-result, u64>;
+}
+
+/// Precision model operations
+interface precision {
+    use types.{geometry-handle, geometry-result};
+
+    /// Precision model types
+    enum precision-type {
+        floating,
+        floating-single,
+        fixed
+    }
+
+    /// Set geometry precision
+    set-precision: func(geom: geometry-handle, grid-size: f64) -> geometry-result;
+
+    /// Reduce precision while maintaining topology
+    reduce-precision: func(geom: geometry-handle, grid-size: f64) -> geometry-result;
+}
+
+/// Coordinate transformation utilities
+interface coordinate-transform {
+    use types.{geometry-handle, geometry-result};
+
+    /// Force 2D by removing Z coordinates
+    force-twod: func(geom: geometry-handle) -> geometry-result;
+
+    /// Force geometry to be counter-clockwise
+    force-ccw: func(geom: geometry-handle) -> geometry-result;
+
+    /// Force geometry to be clockwise
+    force-cw: func(geom: geometry-handle) -> geometry-result;
+}
+
+/// Utility functions
+interface utilities {
+    use types.{geometry-handle, geometry-result, number-result, wkb-result};
+
+    /// Get GEOS version string
+    get-version: func() -> string;
+
+    /// Get GEOS version components (major, minor, patch)
+    get-version-components: func() -> tuple<u32, u32, u32>;
+
+    /// Get last error message
+    get-last-error: func() -> string;
+
+    /// Compute segment intersection point
+    segment-intersection: func(ax: f64, ay: f64, bx: f64, by: f64, cx: f64, cy: f64, dx: f64, dy: f64) -> geometry-result;
+
+    /// Compute orientation index of three points (1=CCW, -1=CW, 0=collinear)
+    orientation-index: func(ax: f64, ay: f64, bx: f64, by: f64, px: f64, py: f64) -> s32;
+
+    /// Compute Hilbert code for geometry within extent
+    hilbert-code: func(geom: geometry-handle, extent: geometry-handle, level: u32) -> number-result;
+
+    /// Compute intersection fractions of geometry with a regular grid
+    /// Returns array of floats [0-1] for each cell (row-major order)
+    grid-intersection-fractions: func(geom: geometry-handle, xmin: f64, ymin: f64, xmax: f64, ymax: f64, nx: u32, ny: u32) -> wkb-result;
+}
+
+/// Coverage operations (GEOS 3.12+)
+interface coverage {
+    use types.{geometry-handle, geometry-result, bool-result};
+
+    /// Result type for coverage validation
+    record coverage-validation-result {
+        /// Whether the coverage is valid (true) or invalid (false)
+        is-valid: bool,
+        /// Handle to geometry collection of invalid edges (0 if valid or not requested)
+        invalid-edges: geometry-handle
+    }
+
+    /// Check if a coverage is valid
+    /// Returns validation result with optional invalid edges
+    /// gap-width: maximum width of gaps to detect
+    coverage-is-valid: func(geom: geometry-handle, gap-width: f64) -> coverage-validation-result;
+
+    /// Simplify a coverage using Visvalingam-Whyatt algorithm
+    /// Maintains coverage validity while simplifying
+    /// preserve-boundary: if true, outer boundary edges are not simplified
+    coverage-simplify-vw: func(geom: geometry-handle, tolerance: f64, preserve-boundary: bool) -> geometry-result;
+
+    /// Union geometries in a coverage (optimized for valid coverages)
+    /// Input must be a valid coverage (no overlaps, edges match exactly)
+    coverage-union: func(geom: geometry-handle) -> geometry-result;
+
+    /// Clean a polygonal coverage by fixing overlaps and gaps (GEOS 3.14+)
+    /// Uses default parameters (small snapping distance, no gap merging)
+    coverage-clean: func(geom: geometry-handle) -> geometry-result;
+
+    /// Clean a polygonal coverage with parameters (GEOS 3.14+)
+    /// snapping-distance: distance for vertex snapping (0 = no snapping)
+    /// gap-max-width: maximum width of gaps to merge (0 = no gap merging)
+    /// overlap-merge-strategy: 0=longest border, 1=max area, 2=min area, 3=min index
+    coverage-clean-with-params: func(geom: geometry-handle, snapping-distance: f64, gap-max-width: f64, overlap-merge-strategy: u32) -> geometry-result;
+}
+
+/// Curve geometry operations (GEOS 3.13+)
+interface curves {
+    use types.{geometry-handle, geometry-result, coord-seq-handle};
+
+    /// Create an empty CircularString
+    create-empty-circular-string: func() -> geometry-result;
+
+    /// Create a CircularString from coordinate sequence
+    /// Coordinates define arcs: each arc uses 3 points (start, mid-arc, end)
+    /// For multiple arcs, consecutive arcs share endpoints
+    create-circular-string: func(seq: coord-seq-handle) -> geometry-result;
+
+    /// Create an empty CompoundCurve
+    create-empty-compound-curve: func() -> geometry-result;
+
+    /// Create a CompoundCurve from component curves (LineStrings and CircularStrings)
+    /// Components must have matching start/end points
+    create-compound-curve: func(curves: list<geometry-handle>) -> geometry-result;
+
+    /// Create an empty CurvePolygon
+    create-empty-curve-polygon: func() -> geometry-result;
+
+    /// Create a CurvePolygon from shell (ring or curve) and optional holes
+    create-curve-polygon: func(shell: geometry-handle, holes: list<geometry-handle>) -> geometry-result;
+
+    /// Convert curved geometry to linear approximation (ST_CurveToLine)
+    /// tolerance: controls approximation quality
+    /// tolerance-type: 0 = segments per quadrant (default 32)
+    ///                 1 = max deviation from curve in source units
+    ///                 2 = max angle between generating radii in radians
+    /// curve-flags: bit flags (1 = symmetric, 2 = retain angle)
+    curve-to-line: func(geom: geometry-handle, tolerance: f64, tolerance-type: u32, curve-flags: u32) -> geometry-result;
+
+    /// Convert linear geometry to curved approximation (ST_LineToCurve)
+    /// Attempts to find circular arcs that fit the linear segments
+    line-to-curve: func(geom: geometry-handle) -> geometry-result;
+
+    /// Check if geometry contains curved segments
+    has-curve: func(geom: geometry-handle) -> bool;
+
+    /// Get number of curves in a CompoundCurve or MultiCurve
+    get-num-curves: func(geom: geometry-handle) -> u32;
+
+    /// Get nth curve from CompoundCurve or MultiCurve
+    get-curve-n: func(geom: geometry-handle, n: u32) -> geometry-result;
+}
+
+/// Main world that exports all interfaces
+world geos {
+    export types;
+    export io;
+    export construction;
+    export coordinate-sequences;
+    export properties;
+    export validation;
+    export metrics;
+    export predicates;
+    export prepared;
+    export topology;
+    export buffer;
+    export simplification;
+    export linear-referencing;
+    export polygonization;
+    export triangulation;
+    export transformations;
+    export minimum-bounding;
+    export spatial-index;
+    export clustering;
+    export collections;
+    export precision;
+    export coordinate-transform;
+    export utilities;
+    export coverage;
+    export curves;
+}

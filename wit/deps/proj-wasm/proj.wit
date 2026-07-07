@@ -1,0 +1,194 @@
+/// PROJ C API exposed as a WIT interface
+///
+/// This interface provides coordinate transformation functionality
+/// from the PROJ library. It supports creating transformations from
+/// PROJ strings or CRS definitions, and transforming coordinates.
+interface proj-api {
+    // =========================================================================
+    // Basic Types
+    // =========================================================================
+
+    /// 4D coordinate (x/lon, y/lat, z/height, t/time)
+    record coord {
+        x: f64,
+        y: f64,
+        z: f64,
+        t: f64,
+    }
+
+    /// Area of interest for transformation selection
+    record area {
+        west-lon-degree: f64,
+        south-lat-degree: f64,
+        east-lon-degree: f64,
+        north-lat-degree: f64,
+    }
+
+    /// Transformation direction
+    enum direction {
+        /// Forward transformation
+        forward,
+        /// Inverse transformation
+        inverse,
+        /// Identity (no transformation)
+        identity,
+    }
+
+    /// Library version information
+    record library-info {
+        major: u32,
+        minor: u32,
+        patch: u32,
+        release: string,
+        searchpath: string,
+    }
+
+    /// Projection/transformation information
+    record proj-info {
+        id: string,
+        description: string,
+        definition: string,
+        has-inverse: bool,
+        accuracy: f64,
+    }
+
+    /// Geodesic result (distance and azimuths)
+    record geodesic {
+        /// Distance in meters
+        distance: f64,
+        /// Forward azimuth in radians
+        azimuth1: f64,
+        /// Reverse azimuth in radians
+        azimuth2: f64,
+    }
+
+    /// Projection factors (scale and distortion)
+    record factors {
+        meridional-scale: f64,
+        parallel-scale: f64,
+        areal-scale: f64,
+        angular-distortion: f64,
+        meridian-parallel-angle: f64,
+        meridian-convergence: f64,
+        tissot-semimajor: f64,
+        tissot-semiminor: f64,
+    }
+
+    /// Error information
+    record proj-error {
+        code: s32,
+        message: string,
+    }
+
+    // =========================================================================
+    // Resources (Opaque Handles)
+    // =========================================================================
+
+    /// PROJ context - manages state, error handling, and configuration
+    resource context {
+        /// Create a new PROJ context
+        constructor();
+
+        /// Set search paths for PROJ data files
+        set-search-paths: func(paths: list<string>);
+
+        /// Enable or disable network access for grid downloads
+        set-enable-network: func(enabled: bool);
+
+        /// Check if network access is enabled
+        is-network-enabled: func() -> bool;
+
+        /// Set the URL endpoint for grid downloads
+        set-url-endpoint: func(url: string);
+
+        /// Get the URL endpoint for grid downloads
+        get-url-endpoint: func() -> string;
+
+        /// Get the last error code
+        errno: func() -> s32;
+
+        /// Get error message for an error code
+        errno-string: func(err: s32) -> string;
+
+        /// Create a transformation from a PROJ string
+        create: func(definition: string) -> result<transformation, proj-error>;
+
+        /// Create a transformation between two CRS
+        create-crs-to-crs: func(
+            source-crs: string,
+            target-crs: string,
+            area-of-interest: option<area>
+        ) -> result<transformation, proj-error>;
+    }
+
+    /// PROJ transformation object
+    resource transformation {
+        /// Transform a single coordinate
+        trans: func(direction: direction, coord: coord) -> coord;
+
+        /// Transform an array of coordinates
+        trans-array: func(direction: direction, coords: list<coord>) -> list<coord>;
+
+        /// Get information about this transformation
+        info: func() -> proj-info;
+
+        /// Check if this transformation expects angular input
+        angular-input: func(dir: direction) -> bool;
+
+        /// Check if this transformation produces angular output
+        angular-output: func(dir: direction) -> bool;
+
+        /// Get the last error code for this transformation
+        errno: func() -> s32;
+
+        /// Get projection factors at a point
+        factors: func(coord: coord) -> factors;
+
+        /// Normalize for visualization (axis order adjustment)
+        normalize-for-visualization: func() -> result<transformation, proj-error>;
+    }
+
+    // =========================================================================
+    // Standalone Functions
+    // =========================================================================
+
+    /// Get library version information
+    info: func() -> library-info;
+
+    /// Create a coordinate from components
+    make-coord: func(x: f64, y: f64, z: f64, t: f64) -> coord;
+
+    /// Convert degrees to radians
+    torad: func(angle-in-degrees: f64) -> f64;
+
+    /// Convert radians to degrees
+    todeg: func(angle-in-radians: f64) -> f64;
+
+    /// Calculate geodesic distance between two points (angular coords in radians)
+    /// Returns distance in meters
+    lp-dist: func(ctx: borrow<context>, p: borrow<transformation>, a: coord, b: coord) -> f64;
+
+    /// Calculate geodesic distance with height difference
+    lpz-dist: func(ctx: borrow<context>, p: borrow<transformation>, a: coord, b: coord) -> f64;
+
+    /// Euclidean distance between two points (linear coords)
+    xy-dist: func(a: coord, b: coord) -> f64;
+
+    /// Euclidean 3D distance between two points
+    xyz-dist: func(a: coord, b: coord) -> f64;
+
+    /// Geodesic calculation: distance and azimuths between two points
+    geod: func(ctx: borrow<context>, p: borrow<transformation>, a: coord, b: coord) -> geodesic;
+
+    /// Direct geodesic problem: find destination given start, azimuth, and distance
+    geod-direct: func(
+        ctx: borrow<context>,
+        p: borrow<transformation>,
+        start: coord,
+        azimuth: f64,
+        distance: f64
+    ) -> coord;
+
+    /// Clean up PROJ global resources
+    cleanup: func();
+}

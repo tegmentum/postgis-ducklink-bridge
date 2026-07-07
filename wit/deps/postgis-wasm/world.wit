@@ -1,0 +1,120 @@
+package postgis:wasm@0.1.0;
+
+/// PostGIS WebAssembly component world
+/// Provides spatial functions compatible with PostGIS UDFs
+world postgis-world {
+    // Import PROJ for coordinate transformations
+    import proj:wasm/proj-api@0.1.0;
+
+    // Import MVT for vector tile operations
+    import mvt:vectortile/mvt-api@0.1.0;
+
+    // Import FlatGeobuf for binary format support
+    import flatgeobuf:format/flatgeobuf-api@0.1.0;
+
+    // Import KML for KML parsing
+    import kml:parser/kml-api@0.1.0;
+
+    // Import GEOS for advanced geometry operations
+    import geos:geometry/types@0.1.0;
+    import geos:geometry/io@0.1.0;
+    import geos:geometry/triangulation@0.1.0;
+    import geos:geometry/construction@0.1.0;
+    import geos:geometry/coverage@0.1.0;
+    import geos:geometry/curves@0.1.0;
+    import geos:geometry/spatial-index@0.1.0;
+    // #755 Option A: overlay + simplify ops route through GEOS proper
+    // (was: geo-crate 2D BooleanOps/Simplify with vertex-position matching
+    // to graft Z / M back on). GEOS preserves Z natively via OverlayNG.
+    import geos:geometry/topology@0.1.0;
+    import geos:geometry/simplification@0.1.0;
+
+    // Import Geobuf for compact binary GeoJSON encoding
+    import geobuf:wasm/geobuf-encoder@0.1.0;
+    import geobuf:wasm/geobuf-decoder@0.1.0;
+
+    // Import MARC21 for library cataloging geographic data
+    import marc21:wasm/marc21-parser@0.1.0;
+    import marc21:wasm/marc21-builder@0.1.0;
+    // 2026-06-23 — marc21-geo brings the bbox encode/decode helpers
+    // that ST_AsMARC21 / ST_GeomFromMARC21 delegate to.
+    import marc21:wasm/marc21-geo@0.1.0;
+
+    // Import GML parser for GML/XML geometry parsing
+    import gml:parser/types@0.1.0;
+    import gml:parser/parser@0.1.0;
+
+    // Import TTF parser for font glyph extraction (ST_Letters)
+    import ttf:parser/font-parser@0.1.0;
+    import ttf:parser/glyph-outliner@0.1.0;
+
+    // Import Rustybuzz for text shaping (ST_Letters)
+    import rustybuzz:shaper/text-shaper@0.1.0;
+
+    // Import GeographicLib for geodesic calculations (Geography type support)
+    import geographiclib:geodesic/geodesic-api@0.1.0;
+
+    // Import GDAL for the raster engine (dataset/band, srs, in-memory vfs I/O)
+    import gdal:core/types@0.1.0;
+    import gdal:core/raster@0.1.0;
+    import gdal:core/srs@0.1.0;
+    import gdal:core/vfs@0.1.0;
+    import gdal:core/algorithms@0.1.0;
+    import gdal:core/utils@0.1.0;
+
+    // Import SFCGAL for exact 3D operations (CGAL-backed)
+    import sfcgal:component/geometry@1.0.0;
+    import sfcgal:component/io@1.0.0;
+
+    // Export shared types (geometry resource, coordinates, errors)
+    export postgis-types;
+
+    // Export modular PostGIS interfaces
+    export postgis-constructors;
+    export postgis-measurements;
+    export postgis-predicates;
+    export postgis-processing;
+    export postgis-accessors;
+    export postgis-transformations;
+    export postgis-output;
+    export postgis-geodetic;
+    export postgis-clustering;
+    export postgis-linear-ref;
+    export postgis-spatial-index;
+    export postgis-batch;
+    export postgis-operators;
+    export postgis-aggregates;
+    export postgis-three-d;
+    export postgis-raster-types;
+    export postgis-raster-constructors;
+    export postgis-raster-accessors;
+    export postgis-raster-pixels;
+    export postgis-raster-output;
+    export postgis-raster-stats;
+    export postgis-raster-mapalgebra;
+    export postgis-raster-vector;
+    export postgis-raster-predicates;
+    export postgis-raster-processing;
+    export postgis-raster-tile;
+    export postgis-raster-aggregates;
+    export postgis-topology-types;
+    export postgis-topology-edit;
+    export postgis-topology-query;
+    export postgis-topology-output;
+    export postgis-topology-topogeom;
+    export postgis-topology-srf;
+    export postgis-sfcgal;
+    export postgis-geocoder;
+
+    // #784 — durable home for parser-rewrite metadata (casts /
+    // operators / preprocessor patterns). Extractor snapshots into
+    // the interface DB at extract time; before this the rows lived
+    // only in /tmp/postgis-interface.sqlite and got wiped on
+    // re-extraction. Mirrors datafission:sql-extension-plugin/metadata.
+    export postgis-metadata;
+
+    // PostGIS version + library metadata (postgis_lib_version,
+    // postgis_full_version, postgis_hasbbox, postgis_noop, ...).
+    // Closes the postgis_* utility surface at 3.6.4 parity.
+    export postgis-version;
+}

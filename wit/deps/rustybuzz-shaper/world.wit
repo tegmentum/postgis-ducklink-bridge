@@ -1,0 +1,117 @@
+package rustybuzz:shaper@0.1.0;
+
+/// Rustybuzz Text Shaping WebAssembly Component
+/// Shapes text using OpenType font features (pure Rust HarfBuzz port)
+
+world rustybuzz-world {
+    export text-shaper;
+    export font-features;
+}
+
+/// Text shaping interface
+interface text-shaper {
+    /// Shaping error
+    record shaping-error {
+        message: string,
+    }
+
+    /// Text direction
+    enum direction {
+        /// Left to right
+        ltr,
+        /// Right to left
+        rtl,
+        /// Top to bottom
+        ttb,
+        /// Bottom to top
+        btt,
+    }
+
+    /// Script identifier (ISO 15924)
+    /// Common values: "Latn", "Arab", "Deva", "Hans", etc.
+    /// Use "auto" for automatic detection
+    type script = string;
+
+    /// Language tag (BCP 47)
+    /// Examples: "en", "ar", "hi", "zh-Hans"
+    type language = string;
+
+    /// OpenType feature tag (4 characters)
+    /// Examples: "kern", "liga", "smcp"
+    type feature-tag = string;
+
+    /// Shaping options
+    record shaping-options {
+        /// Text direction
+        direction: direction,
+        /// Script (use "auto" for detection)
+        script: script,
+        /// Language tag
+        language: option<language>,
+        /// OpenType features to enable (e.g., ["kern", "liga"])
+        features-on: list<feature-tag>,
+        /// OpenType features to disable
+        features-off: list<feature-tag>,
+    }
+
+    /// A positioned glyph in the shaped output
+    record glyph-position {
+        /// Glyph ID in the font
+        glyph-id: u16,
+        /// Cluster index (character index this glyph belongs to)
+        cluster: u32,
+        /// X advance (horizontal distance to next glyph)
+        x-advance: s32,
+        /// Y advance (vertical distance to next glyph)
+        y-advance: s32,
+        /// X offset from default position
+        x-offset: s32,
+        /// Y offset from default position
+        y-offset: s32,
+    }
+
+    /// Shaped text result
+    record shaped-text {
+        /// Positioned glyphs
+        glyphs: list<glyph-position>,
+        /// Total width in font units
+        total-width: s32,
+        /// Total height in font units
+        total-height: s32,
+    }
+
+    /// Shape text using a font
+    shape: func(font-data: list<u8>, text: string, options: shaping-options) -> result<shaped-text, shaping-error>;
+
+    /// Shape text with default options (LTR, auto script)
+    shape-simple: func(font-data: list<u8>, text: string) -> result<shaped-text, shaping-error>;
+
+    /// Get default shaping options
+    default-options: func() -> shaping-options;
+
+    /// Detect script for text
+    detect-script: func(text: string) -> script;
+}
+
+/// Font feature information
+interface font-features {
+    /// Feature information
+    record feature-info {
+        /// four-character tag
+        tag: string,
+        /// Human-readable name (if available)
+        name: option<string>,
+    }
+
+    /// Get list of OpenType features available in font
+    list-features: func(font-data: list<u8>) -> list<feature-info>;
+
+    /// Check if font supports a specific feature
+    has-feature: func(font-data: list<u8>, tag: string) -> bool;
+
+    /// Get list of supported scripts in font
+    list-scripts: func(font-data: list<u8>) -> list<string>;
+
+    /// Get list of supported languages for a script
+    list-languages: func(font-data: list<u8>, script: string) -> list<string>;
+}

@@ -1,0 +1,88 @@
+/// PostGIS version and library metadata surface.
+///
+/// Every function here corresponds to a `postgis_*_version` /
+/// `postgis_*` utility that upstream PostGIS 3.6.4 exposes via
+/// `postgis.sql.in`. Values are compile-time constants describing
+/// the versions this build was generated against; sibling libraries
+/// (PROJ, GEOS, libxml, protobuf, ...) are supplied as separate
+/// wasm components, so the strings identify the versions the WIT
+/// bindings were pinned to.
+interface postgis-version {
+    use postgis-types.{geometry, postgis-error};
+
+    /// postgis_version - Compact "MAJOR.MINOR USE_..." banner.
+    postgis-version: func() -> string;
+
+    /// postgis_full_version - Verbose banner listing every sub-library.
+    postgis-full-version: func() -> string;
+
+    /// postgis_lib_version - Just the PostGIS release string.
+    postgis-lib-version: func() -> string;
+
+    /// postgis_lib_build_date - Build date of the linked PostGIS core.
+    postgis-lib-build-date: func() -> string;
+
+    /// postgis_lib_revision - Source revision (git short-SHA equivalent).
+    postgis-lib-revision: func() -> string;
+
+    /// postgis_geos_version - Runtime GEOS version string.
+    postgis-geos-version: func() -> string;
+
+    /// postgis_geos_compiled_version - Header-time GEOS version.
+    postgis-geos-compiled-version: func() -> string;
+
+    /// postgis_proj_version - Runtime PROJ version string.
+    postgis-proj-version: func() -> string;
+
+    /// postgis_proj_compiled_version - Header-time PROJ version.
+    postgis-proj-compiled-version: func() -> string;
+
+    /// postgis_libjson_version - json-c version PostGIS was built against.
+    postgis-libjson-version: func() -> string;
+
+    /// postgis_liblwgeom_version - liblwgeom version (matches PostGIS release).
+    postgis-liblwgeom-version: func() -> string;
+
+    /// postgis_libxml_version - libxml2 version string.
+    postgis-libxml-version: func() -> string;
+
+    /// postgis_libprotobuf_version - protobuf-c version string.
+    postgis-libprotobuf-version: func() -> string;
+
+    /// postgis_svn_version - Legacy SVN revision hook (returns lib revision).
+    postgis-svn-version: func() -> string;
+
+    /// postgis_scripts_installed - Installed SQL scripts version.
+    postgis-scripts-installed: func() -> string;
+
+    /// postgis_scripts_released - Released SQL scripts version.
+    postgis-scripts-released: func() -> string;
+
+    /// postgis_scripts_build_date - Scripts generation date.
+    postgis-scripts-build-date: func() -> string;
+
+    /// postgis_wagyu_version - Bundled Wagyu (MVT tiler) version.
+    postgis-wagyu-version: func() -> string;
+
+    /// postgis_hasbbox - True if the serialized geometry carries a cached
+    /// bounding box. The wasm shim always computes bboxes on demand.
+    postgis-hasbbox: func(geom: borrow<geometry>) -> bool;
+
+    /// postgis_noop - Identity function (returns geom unchanged).
+    postgis-noop: func(geom: borrow<geometry>) -> geometry;
+
+    /// postgis_geos_noop - Round-trip geom through GEOS (identity for shim).
+    postgis-geos-noop: func(geom: borrow<geometry>) -> result<geometry, postgis-error>;
+
+    /// postgis_type_name - OGC type code + Z/M flag to type string.
+    postgis-type-name: func(geomkind: u32, coord-dim: u32, use-new-name: bool) -> string;
+
+    /// postgis_getbbox - Return the geometry's bounding box (BOX2D).
+    postgis-getbbox: func(geom: borrow<geometry>) -> result<geometry, postgis-error>;
+
+    /// postgis_addbbox - Force cached bbox onto geometry (wasm no-op).
+    postgis-addbbox: func(geom: borrow<geometry>) -> geometry;
+
+    /// postgis_dropbbox - Drop cached bbox (wasm no-op).
+    postgis-dropbbox: func(geom: borrow<geometry>) -> geometry;
+}

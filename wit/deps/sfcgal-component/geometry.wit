@@ -1,0 +1,583 @@
+/// Geometry types and operations
+interface geometry {
+    /// 2D coordinate
+    record coordinate2d {
+        x: f64,
+        y: f64,
+    }
+
+    /// 3D coordinate
+    record coordinate3d {
+        x: f64,
+        y: f64,
+        z: f64,
+    }
+
+    /// 4D coordinate (with measure)
+    record coordinate4d {
+        x: f64,
+        y: f64,
+        z: f64,
+        m: f64,
+    }
+
+    /// Coordinate variant
+    variant coordinate {
+        coord2d(coordinate2d),
+        coord3d(coordinate3d),
+        coord4d(coordinate4d),
+    }
+
+    /// Geometry types enum
+    enum geometry-type {
+        point,
+        linestring,
+        polygon,
+        multipoint,
+        multilinestring,
+        multipolygon,
+        geometrycollection,
+        triangulatedsurface,
+        polyhedralsurface,
+        solid,
+        multisolid,
+    }
+
+    /// SFCGAL error information
+    record sfcgal-error {
+        code: s32,
+        message: string,
+    }
+
+    /// Geometry handle (opaque reference to SFCGAL geometry)
+    type geometry-handle = u64;
+
+    /// Result type for geometry operations
+    variant geometry-result {
+        ok(geometry-handle),
+        err(sfcgal-error),
+    }
+
+    /// Result type for boolean operations
+    variant bool-result {
+        ok(bool),
+        err(sfcgal-error),
+    }
+
+    /// Result type for numeric operations
+    variant f64-result {
+        ok(f64),
+        err(sfcgal-error),
+    }
+
+    /// Result type for integer operations
+    variant s32-result {
+        ok(s32),
+        err(sfcgal-error),
+    }
+
+    /// Result type for string operations
+    variant string-result {
+        ok(string),
+        err(sfcgal-error),
+    }
+
+    /// Result type for void operations
+    variant void-result {
+        ok,
+        err(sfcgal-error),
+    }
+
+    // ============================================
+    // Geometry Handle Operations (formerly resource methods)
+    // ============================================
+
+    /// Create a new empty geometry
+    create-empty: func() -> geometry-result;
+
+    /// Destroy/free a geometry handle
+    destroy: func(geom: geometry-handle);
+
+    /// Clone a geometry
+    clone: func(geom: geometry-handle) -> geometry-result;
+
+    /// Get the geometry type
+    get-geometry-type: func(geom: geometry-handle) -> geometry-type;
+
+    /// Check if geometry is empty
+    is-empty: func(geom: geometry-handle) -> bool;
+
+    /// Check if geometry is valid
+    is-valid: func(geom: geometry-handle) -> bool;
+
+    /// Get detailed validity information
+    is-valid-detail: func(geom: geometry-handle) -> string-result;
+
+    /// Check if geometry is 3D
+    is-threed: func(geom: geometry-handle) -> bool;
+
+    /// Check if geometry has measure (M) coordinate
+    is-measured: func(geom: geometry-handle) -> bool;
+
+    /// Check if geometry is a SOLID (or MULTISOLID).
+    /// Derived from `sfcgal_geometry_type_id` — SFCGAL v2.0.0 has no
+    /// dedicated `sfcgal_geometry_is_solid` C entry point.
+    is-solid: func(geom: geometry-handle) -> bool;
+
+    /// Get coordinate dimension (2, 3, or 4)
+    coordinate-dimension: func(geom: geometry-handle) -> s32;
+
+    /// Make geometry valid by fixing issues
+    make-valid: func(geom: geometry-handle) -> geometry-result;
+
+    // ============================================
+    // Geometry Constructors
+    // ============================================
+
+    /// Create a 2D point
+    point2d: func(x: f64, y: f64) -> geometry-result;
+
+    /// Create a 3D point
+    point3d: func(x: f64, y: f64, z: f64) -> geometry-result;
+
+    /// Create a 4D point (with measure)
+    point4d: func(x: f64, y: f64, z: f64, m: f64) -> geometry-result;
+
+    /// Create a linestring from coordinates
+    linestring: func(coords: list<coordinate>) -> geometry-result;
+
+    /// Create a polygon from exterior ring coordinates
+    polygon: func(exterior: list<coordinate>) -> geometry-result;
+
+    /// Create a polygon with holes
+    polygon-with-holes: func(exterior: list<coordinate>, holes: list<list<coordinate>>) -> geometry-result;
+
+    /// Create a triangle from 3 points
+    triangle: func(p1: coordinate, p2: coordinate, p3: coordinate) -> geometry-result;
+
+    /// Create a multipoint from points
+    multipoint: func(points: list<coordinate>) -> geometry-result;
+
+    /// Create a multilinestring
+    multilinestring: func(linestrings: list<geometry-handle>) -> geometry-result;
+
+    /// Create a multipolygon
+    multipolygon: func(polygons: list<geometry-handle>) -> geometry-result;
+
+    /// Create a geometry collection
+    geometry-collection: func(geometries: list<geometry-handle>) -> geometry-result;
+
+    /// Create a triangulated surface
+    triangulated-surface: func(triangles: list<geometry-handle>) -> geometry-result;
+
+    /// Create a polyhedral surface
+    polyhedral-surface: func(polygons: list<geometry-handle>) -> geometry-result;
+
+    /// Create a solid from a polyhedral surface shell
+    solid: func(exterior-shell: geometry-handle) -> geometry-result;
+
+    // ============================================
+    // Spatial Predicates (Boolean Operations)
+    // ============================================
+
+    /// Check if two geometries intersect
+    intersects: func(a: geometry-handle, b: geometry-handle) -> bool-result;
+
+    /// Check if two geometries intersect in 3D
+    intersects-threed: func(a: geometry-handle, b: geometry-handle) -> bool-result;
+
+    /// Check if geometry A covers geometry B
+    covers: func(a: geometry-handle, b: geometry-handle) -> bool-result;
+
+    /// Check if geometry A covers geometry B in 3D
+    covers-threed: func(a: geometry-handle, b: geometry-handle) -> bool-result;
+
+    /// Check if two geometries are equal
+    equals: func(a: geometry-handle, b: geometry-handle) -> bool-result;
+
+    // ============================================
+    // Set Operations
+    // ============================================
+
+    /// Compute intersection of two geometries
+    intersection: func(a: geometry-handle, b: geometry-handle) -> geometry-result;
+
+    /// Compute intersection of two geometries in 3D
+    intersection-threed: func(a: geometry-handle, b: geometry-handle) -> geometry-result;
+
+    /// Compute union of two geometries
+    %union: func(a: geometry-handle, b: geometry-handle) -> geometry-result;
+
+    /// Compute union of two geometries in 3D
+    union-threed: func(a: geometry-handle, b: geometry-handle) -> geometry-result;
+
+    /// Compute the 3D union of an arbitrary list of geometries (aggregate variant).
+    /// Implemented as a left-fold over the pairwise union-threed. The fold tolerates
+    /// individual NULL inputs (they are skipped); the empty list yields an empty
+    /// geometry-collection.
+    union-threed-aggregate: func(geoms: list<geometry-handle>) -> geometry-result;
+
+    /// Compute difference (A - B)
+    difference: func(a: geometry-handle, b: geometry-handle) -> geometry-result;
+
+    /// Compute difference in 3D
+    difference-threed: func(a: geometry-handle, b: geometry-handle) -> geometry-result;
+
+    /// Compute symmetric difference
+    sym-difference: func(a: geometry-handle, b: geometry-handle) -> geometry-result;
+
+    /// Compute symmetric difference in 3D
+    sym-difference-threed: func(a: geometry-handle, b: geometry-handle) -> geometry-result;
+
+    // ============================================
+    // Measurements
+    // ============================================
+
+    /// Compute 2D area
+    area: func(geom: geometry-handle) -> f64-result;
+
+    /// Compute 3D area (surface area)
+    area-threed: func(geom: geometry-handle) -> f64-result;
+
+    /// Compute volume (for 3D geometries)
+    volume: func(geom: geometry-handle) -> f64-result;
+
+    /// Compute 2D length
+    length: func(geom: geometry-handle) -> f64-result;
+
+    /// Compute 3D length
+    length-threed: func(geom: geometry-handle) -> f64-result;
+
+    /// Compute 2D distance between geometries
+    distance: func(a: geometry-handle, b: geometry-handle) -> f64-result;
+
+    /// Compute 3D distance between geometries
+    distance-threed: func(a: geometry-handle, b: geometry-handle) -> f64-result;
+
+    // ============================================
+    // Transformations
+    // ============================================
+
+    /// Compute buffer around geometry
+    buffer: func(geom: geometry-handle, radius: f64, segments: s32) -> geometry-result;
+
+    /// Compute 3D buffer (sphere-based)
+    buffer-threed: func(geom: geometry-handle, radius: f64, segments: s32) -> geometry-result;
+
+    /// Compute offset polygon
+    offset-polygon: func(geom: geometry-handle, radius: f64) -> geometry-result;
+
+    /// Compute convex hull
+    convex-hull: func(geom: geometry-handle) -> geometry-result;
+
+    /// Compute convex hull in 3D
+    convex-hull-threed: func(geom: geometry-handle) -> geometry-result;
+
+    /// Compute alpha shape (concave hull)
+    alpha-shape: func(geom: geometry-handle, alpha: f64) -> geometry-result;
+
+    /// Compute optimal alpha shape
+    optimal-alpha-shape: func(geom: geometry-handle) -> geometry-result;
+
+    /// Translate geometry
+    translate-twod: func(geom: geometry-handle, dx: f64, dy: f64) -> geometry-result;
+
+    /// Translate geometry in 3D
+    translate-threed: func(geom: geometry-handle, dx: f64, dy: f64, dz: f64) -> geometry-result;
+
+    /// Scale geometry
+    scale: func(geom: geometry-handle, factor: f64) -> geometry-result;
+
+    /// Scale geometry with different factors per axis
+    scale-threed: func(geom: geometry-handle, sx: f64, sy: f64, sz: f64) -> geometry-result;
+
+    /// Rotate geometry around Z axis (2D rotation)
+    rotate-twod: func(geom: geometry-handle, angle: f64) -> geometry-result;
+
+    /// Rotate geometry around arbitrary axis
+    rotate-threed: func(geom: geometry-handle, angle: f64, ax: f64, ay: f64, az: f64) -> geometry-result;
+
+    // ============================================
+    // 3D Operations
+    // ============================================
+
+    /// Extrude 2D geometry to 3D
+    extrude: func(geom: geometry-handle, dx: f64, dy: f64, dz: f64) -> geometry-result;
+
+    /// Extrude geometry straight up
+    extrude-straight: func(geom: geometry-handle, height: f64) -> geometry-result;
+
+    /// Tessellate geometry into triangles
+    tessellate: func(geom: geometry-handle) -> geometry-result;
+
+    /// Triangulate a polygon (Constrained Delaunay)
+    triangulate-twod: func(geom: geometry-handle) -> geometry-result;
+
+    /// Minkowski sum of two geometries
+    minkowski-sum: func(a: geometry-handle, b: geometry-handle) -> geometry-result;
+
+    /// Force geometry to 2D (drop Z)
+    force-twod: func(geom: geometry-handle) -> geometry-result;
+
+    /// Force geometry to 3D (add Z=0 if missing)
+    force-threed: func(geom: geometry-handle) -> geometry-result;
+
+    // ============================================
+    // Mesh Operations
+    // ============================================
+
+    /// Approximate medial axis
+    approximate-medial-axis: func(geom: geometry-handle) -> geometry-result;
+
+    /// Straight skeleton
+    straight-skeleton: func(geom: geometry-handle) -> geometry-result;
+
+    /// Straight skeleton with distance
+    straight-skeleton-distance: func(geom: geometry-handle) -> geometry-result;
+
+    /// Extrude straight skeleton
+    extrude-straight-skeleton: func(geom: geometry-handle, height: f64) -> geometry-result;
+
+    // ============================================
+    // Geometry Access
+    // ============================================
+
+    /// Get number of points in geometry
+    num-points: func(geom: geometry-handle) -> s32-result;
+
+    /// Get number of geometries in collection
+    num-geometries: func(geom: geometry-handle) -> s32-result;
+
+    /// Get geometry at index from collection
+    geometry-n: func(geom: geometry-handle, n: s32) -> geometry-result;
+
+    /// Get point at index
+    point-n: func(geom: geometry-handle, n: s32) -> geometry-result;
+
+    /// Get X coordinate of point
+    point-x: func(geom: geometry-handle) -> f64-result;
+
+    /// Get Y coordinate of point
+    point-y: func(geom: geometry-handle) -> f64-result;
+
+    /// Get Z coordinate of point
+    point-z: func(geom: geometry-handle) -> f64-result;
+
+    /// Get M coordinate of point
+    point-m: func(geom: geometry-handle) -> f64-result;
+
+    /// Get exterior ring of polygon
+    exterior-ring: func(geom: geometry-handle) -> geometry-result;
+
+    /// Get number of interior rings
+    num-interior-rings: func(geom: geometry-handle) -> s32-result;
+
+    /// Get interior ring at index
+    interior-ring-n: func(geom: geometry-handle, n: s32) -> geometry-result;
+
+    /// Get centroid
+    centroid: func(geom: geometry-handle) -> geometry-result;
+
+    /// Get boundary
+    boundary: func(geom: geometry-handle) -> geometry-result;
+
+    /// 3D boundary (ST_3DBoundary). Same OGC boundary as `boundary` for
+    /// non-solid inputs, plus support for Solid and MultiSolid — a closed
+    /// Solid returns an empty GeometryCollection, an open Solid returns a
+    /// MultiLineString of border edges (edges appearing in exactly one
+    /// polygon of the shell graph). Implemented via a direct SFCGAL C++
+    /// BoundaryVisitor + Solid/MultiSolid extension (see #689 —
+    /// BoundaryVisitor upstream leaves Solid/MultiSolid as @todo).
+    boundary-threed: func(geom: geometry-handle) -> geometry-result;
+
+    /// Get envelope (bounding box)
+    envelope: func(geom: geometry-handle) -> geometry-result;
+
+    /// Center of the minimum bounding sphere (smallest enclosing sphere of
+    /// all vertices). Implemented via a direct CGAL::Min_sphere_of_spheres_d
+    /// wrapper because SFCGAL 2.0.0's C API doesn't surface it (#689).
+    /// Returns a 3D Point; 2D inputs are lifted to Z=0.
+    minimum-bounding-sphere-center: func(geom: geometry-handle) -> geometry-result;
+
+    /// Radius of the minimum bounding sphere (see minimum-bounding-sphere-center).
+    minimum-bounding-sphere-radius: func(geom: geometry-handle) -> f64-result;
+
+    /// 3D Alpha Wrapping (CGAL::alpha_wrap_3). Produces a watertight,
+    /// two-manifold, intersection-free TriangulatedSurface that strictly
+    /// contains the input. `alpha` controls which input features survive
+    /// (small alpha = tighter wrap that preserves more detail); `offset`
+    /// controls how far the wrap sits from the input. Both MUST be
+    /// strictly positive. Input MUST be a 3D surface-like geometry
+    /// (PolyhedralSurface / TriangulatedSurface / Solid / MultiSolid) —
+    /// 2D inputs are rejected. Implemented via a direct CGAL bridge
+    /// because the SFCGAL 2.0.0 C API does not expose alpha_wrap_3.
+    alpha-wrapping-threed: func(geom: geometry-handle, alpha: f64, offset: f64) -> geometry-result;
+
+    /// Constrained Delaunay triangulation of a 2D polygon or multipolygon.
+    /// Every ring (exterior + holes) is inserted as a closed constraint;
+    /// only the triangles that fall inside the polygon domain are
+    /// emitted (holes are properly excluded). Returns a
+    /// TriangulatedSurface. Distinct from `triangulate-twod`, which
+    /// returns a full planar triangulation of the vertex set ignoring
+    /// hole rings. Implemented via a direct CGAL bridge (CDT_2 +
+    /// mark_domain_in_triangulation) because the SFCGAL 2.0.0 C API
+    /// does not expose CDT.
+    constrained-delaunay-triangles: func(geom: geometry-handle) -> geometry-result;
+
+    /// Repair an invalid 2D polygon or multipolygon using the even-odd
+    /// rule (CGAL::Polygon_repair::repair). Handles self-intersections,
+    /// duplicate vertices, and hole/boundary tangling; always returns a
+    /// MultiPolygon (even when the repaired output is a single polygon).
+    /// Input MUST be Polygon or MultiPolygon. Implemented via a direct
+    /// CGAL bridge because the SFCGAL 2.0.0 C API does not expose the
+    /// Polygon_repair package.
+    polygon-repair: func(geom: geometry-handle) -> geometry-result;
+
+    /// True if the input polyhedral surface admits a consistent orientation
+    /// (an orientation assignment where adjacent faces walk their shared
+    /// edge in opposite directions). Implemented directly on the SFCGAL C
+    /// accessors — walk each face's boundary, collect canonical edges,
+    /// then two-color the dual graph via BFS with sign propagation. Non-
+    /// manifold shared edges (edge belongs to > 2 faces) return false per
+    /// the PostGIS convention. Empty / lower-dim inputs (Point,
+    /// LineString, single Polygon, etc.) are vacuously orientable. See
+    /// #689 — neither SFCGAL nor CGAL exposes a direct predicate.
+    orientable-surface: func(geom: geometry-handle) -> bool-result;
+
+    // ============================================
+    // Simplification
+    // ============================================
+
+    /// Simplify using Douglas-Peucker algorithm
+    simplify: func(geom: geometry-handle, tolerance: f64) -> geometry-result;
+
+    /// Simplify preserving topology
+    simplify-preserve-topology: func(geom: geometry-handle, tolerance: f64) -> geometry-result;
+
+    // ============================================
+    // Orientation & Validity (#717)
+    // ============================================
+
+    /// Polygon orientation: -1 counter-clockwise, 1 clockwise, 0 invalid/undetermined.
+    orientation: func(geom: geometry-handle) -> s32-result;
+
+    /// True if the geometry is planar.
+    is-planar: func(geom: geometry-handle) -> bool-result;
+
+    /// True if the geometry has an explicit validity flag set.
+    has-validity-flag: func(geom: geometry-handle) -> bool;
+
+    /// Force Left Handed Rule winding.
+    force-lhr: func(geom: geometry-handle) -> geometry-result;
+
+    /// Force Right Handed Rule winding.
+    force-rhr: func(geom: geometry-handle) -> geometry-result;
+
+    /// Explicitly set (or clear) the validity flag on a geometry.
+    force-valid: func(geom: geometry-handle, valid: bool) -> void-result;
+
+    /// Global toggle for automatic geometry validation before each op.
+    set-geometry-validation: func(enabled: bool);
+
+    // ============================================
+    // Axis-Aligned Rotations & Around-Center (#717)
+    // ============================================
+
+    /// Rotate around the X axis by `angle` radians.
+    rotate-x: func(geom: geometry-handle, angle: f64) -> geometry-result;
+
+    /// Rotate around the Y axis by `angle` radians.
+    rotate-y: func(geom: geometry-handle, angle: f64) -> geometry-result;
+
+    /// Rotate around the Z axis by `angle` radians.
+    rotate-z: func(geom: geometry-handle, angle: f64) -> geometry-result;
+
+    /// Rotate 2D around an explicit center point.
+    rotate-twod-around-center: func(geom: geometry-handle, angle: f64, cx: f64, cy: f64) -> geometry-result;
+
+    /// Rotate 3D around an arbitrary axis anchored at an explicit center point.
+    rotate-threed-around-center: func(geom: geometry-handle, angle: f64, ax: f64, ay: f64, az: f64, cx: f64, cy: f64, cz: f64) -> geometry-result;
+
+    /// Scale in 3D around an explicit center point.
+    scale-threed-around-center: func(geom: geometry-handle, sx: f64, sy: f64, sz: f64, cx: f64, cy: f64, cz: f64) -> geometry-result;
+
+    // ============================================
+    // Rounding & Solid Conversion (#717)
+    // ============================================
+
+    /// Round coordinates to `factor` decimal places (integer factor).
+    %round: func(geom: geometry-handle, factor: s32) -> geometry-result;
+
+    /// Convert a PolyhedralSurface to a Solid.
+    make-solid: func(geom: geometry-handle) -> geometry-result;
+
+    // ============================================
+    // Partition Algorithms (#717)
+    // ============================================
+
+    /// Approximate convex partition of a polygon (no holes).
+    approx-convex-partition-two: func(geom: geometry-handle) -> geometry-result;
+
+    /// Greene's approximate convex partition of a polygon (no holes).
+    greene-approx-convex-partition-two: func(geom: geometry-handle) -> geometry-result;
+
+    /// Optimal convex partition of a polygon (no holes).
+    optimal-convex-partition-two: func(geom: geometry-handle) -> geometry-result;
+
+    /// Y-monotone partition of a polygon (no holes).
+    y-monotone-partition-two: func(geom: geometry-handle) -> geometry-result;
+
+    /// Straight-skeleton-based partition of a polygon.
+    straight-skeleton-partition: func(geom: geometry-handle, auto-orientation: bool) -> geometry-result;
+
+    // ============================================
+    // Linear Operations, Visibility, Skeleton Extrusion (#717)
+    // ============================================
+
+    /// Extract the substring of a LineString between two fractional distances (-1..1).
+    line-sub-string: func(geom: geometry-handle, start: f64, %end: f64) -> geometry-result;
+
+    /// Visibility polygon of `point` inside `polygon`.
+    visibility-point: func(polygon: geometry-handle, point: geometry-handle) -> geometry-result;
+
+    /// Visibility polygon of the segment `point-a -> point-b` in `polygon`.
+    visibility-segment: func(polygon: geometry-handle, point-a: geometry-handle, point-b: geometry-handle) -> geometry-result;
+
+    /// Extrude a polygon into a solid: prism up to `building-height` topped by
+    /// the straight-skeleton roof of `roof-height`.
+    extrude-polygon-straight-skeleton: func(geom: geometry-handle, building-height: f64, roof-height: f64) -> geometry-result;
+
+    // ============================================
+    // Prepared Geometry (#718)
+    // ============================================
+
+    /// Opaque handle to a PreparedGeometry (owns its inner Geometry).
+    type prepared-geometry-handle = u64;
+
+    /// Result variant for prepared-geometry operations.
+    variant prepared-result {
+        ok(prepared-geometry-handle),
+        err(sfcgal-error),
+    }
+
+    /// Create an empty PreparedGeometry.
+    prepared-create: func() -> prepared-result;
+
+    /// Wrap an existing geometry as a PreparedGeometry with the given SRID.
+    /// Ownership of the underlying geometry is transferred; the input handle
+    /// becomes invalid and MUST NOT be reused.
+    prepared-create-from-geometry: func(geom: geometry-handle, srid: u32) -> prepared-result;
+
+    /// Destroy a PreparedGeometry and free its inner geometry.
+    prepared-destroy: func(pg: prepared-geometry-handle);
+
+    /// Return a clone of the geometry associated with this PreparedGeometry.
+    /// The returned geometry-handle is independently owned.
+    prepared-geometry: func(pg: prepared-geometry-handle) -> geometry-result;
+
+    /// Get the SRID of a PreparedGeometry.
+    prepared-srid: func(pg: prepared-geometry-handle) -> u32;
+
+    /// Set the SRID of a PreparedGeometry.
+    prepared-set-srid: func(pg: prepared-geometry-handle, srid: u32);
+}

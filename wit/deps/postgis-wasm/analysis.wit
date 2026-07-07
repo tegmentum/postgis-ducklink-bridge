@@ -1,0 +1,11 @@
+/// PostGIS analysis interface
+/// Note: Most analysis functions are in their respective interfaces:
+/// - Distance/measurement functions -> postgis-measurements
+/// - Bounding operations -> postgis-accessors
+/// - Hull/processing operations -> postgis-processing
+interface postgis-analysis {
+    use postgis-types.{geometry, postgis-error};
+
+    // This interface is intentionally minimal as analysis functions
+    // are categorized in their appropriate interfaces above.
+}

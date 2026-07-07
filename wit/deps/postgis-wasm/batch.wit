@@ -1,0 +1,317 @@
+package postgis:wasm@0.1.0;
+
+/// Batch operations — amortise per-call wasmtime overhead by
+/// processing many geometries in a single call.
+///
+/// Each function accepts a list of WKB byte arrays (one per input
+/// geometry) and returns a parallel list of results. The order of
+/// outputs matches the order of inputs.
+///
+/// Proof-of-concept scope: only `st_area_batch` is implemented in
+/// this round. The pattern generalises to every scalar
+/// measurement/predicate; expand based on profiling.
+interface postgis-batch {
+    /// ST_Area over a batch of geometries.
+    /// Returns the area for each input. NaN if a geometry fails to
+    /// parse (caller can filter).
+    st-area-batch: func(wkbs: list<list<u8>>) -> list<f64>;
+
+    /// ST_Length over a batch of geometries.
+    st-length-batch: func(wkbs: list<list<u8>>) -> list<f64>;
+
+    /// ST_X over a batch of POINT geometries.
+    st-x-batch: func(wkbs: list<list<u8>>) -> list<f64>;
+
+    /// ST_Y over a batch of POINT geometries.
+    st-y-batch: func(wkbs: list<list<u8>>) -> list<f64>;
+
+    /// ST_Perimeter over a batch of polygons (length of exterior).
+    /// 0.0 for non-polygon geometries; NaN on parse error.
+    st-perimeter-batch: func(wkbs: list<list<u8>>) -> list<f64>;
+
+    /// ST_Distance over parallel A/B batches. NaN on parse error
+    /// or length mismatch.
+    st-distance-batch: func(
+        as-wkbs: list<list<u8>>, bs-wkbs: list<list<u8>>,
+    ) -> list<f64>;
+
+    /// ST_Contains over parallel A/B batches. False on parse error.
+    st-contains-batch: func(
+        as-wkbs: list<list<u8>>, bs-wkbs: list<list<u8>>,
+    ) -> list<bool>;
+
+    /// ST_Intersects over parallel A/B batches.
+    st-intersects-batch: func(
+        as-wkbs: list<list<u8>>, bs-wkbs: list<list<u8>>,
+    ) -> list<bool>;
+
+    /// ST_Within over parallel A/B batches.
+    st-within-batch: func(
+        as-wkbs: list<list<u8>>, bs-wkbs: list<list<u8>>,
+    ) -> list<bool>;
+
+    /// ST_Crosses — DE-9IM relate-based crossing test.
+    st-crosses-batch: func(
+        as-wkbs: list<list<u8>>, bs-wkbs: list<list<u8>>,
+    ) -> list<bool>;
+
+    /// ST_Disjoint — `!intersects`.
+    st-disjoint-batch: func(
+        as-wkbs: list<list<u8>>, bs-wkbs: list<list<u8>>,
+    ) -> list<bool>;
+
+    /// ST_Equals — topological equality via DE-9IM.
+    st-equals-batch: func(
+        as-wkbs: list<list<u8>>, bs-wkbs: list<list<u8>>,
+    ) -> list<bool>;
+
+    /// ST_Touches — DE-9IM-based touch test.
+    st-touches-batch: func(
+        as-wkbs: list<list<u8>>, bs-wkbs: list<list<u8>>,
+    ) -> list<bool>;
+
+    /// ST_Covers — A covers B (DE-9IM).
+    st-covers-batch: func(
+        as-wkbs: list<list<u8>>, bs-wkbs: list<list<u8>>,
+    ) -> list<bool>;
+
+    /// ST_CoveredBy — A is covered by B (DE-9IM).
+    st-covered-by-batch: func(
+        as-wkbs: list<list<u8>>, bs-wkbs: list<list<u8>>,
+    ) -> list<bool>;
+
+    /// ST_Overlaps — DE-9IM-based overlap test.
+    st-overlaps-batch: func(
+        as-wkbs: list<list<u8>>, bs-wkbs: list<list<u8>>,
+    ) -> list<bool>;
+
+    /// ST_NumPoints — vertex count for LineString, 0 otherwise.
+    st-num-points-batch: func(wkbs: list<list<u8>>) -> list<s32>;
+
+    /// ST_NumGeometries — sub-geometry count (1 for singles).
+    st-num-geometries-batch: func(wkbs: list<list<u8>>) -> list<s32>;
+
+    /// ST_GeometryType — PostGIS-style type name ("ST_Point", etc.)
+    st-geometry-type-batch: func(wkbs: list<list<u8>>) -> list<string>;
+
+    /// ST_IsEmpty — geometry is empty per its variant.
+    st-is-empty-batch: func(wkbs: list<list<u8>>) -> list<bool>;
+
+    /// ST_IsValid — simplified validity check (polygon ring length).
+    st-is-valid-batch: func(wkbs: list<list<u8>>) -> list<bool>;
+
+    /// ST_IsSimple — point + simple-linestring path.
+    st-is-simple-batch: func(wkbs: list<list<u8>>) -> list<bool>;
+
+    /// ST_Buffer — buffer each input by its paired distance,
+    /// returning a WKB blob per row. Empty `list<u8>` on parse
+    /// failure or unsupported geometry type. Lengths of `wkbs`
+    /// and `distances` must match.
+    st-buffer-batch: func(
+        wkbs: list<list<u8>>, distances: list<f64>,
+    ) -> list<list<u8>>;
+
+    /// Single-arg WKB → WKB fns. Empty `list<u8>` on parse
+    /// failure or unsupported geometry type.
+    st-centroid-batch: func(wkbs: list<list<u8>>) -> list<list<u8>>;
+    st-envelope-batch: func(wkbs: list<list<u8>>) -> list<list<u8>>;
+    st-convex-hull-batch: func(wkbs: list<list<u8>>) -> list<list<u8>>;
+    st-boundary-batch: func(wkbs: list<list<u8>>) -> list<list<u8>>;
+    st-start-point-batch: func(wkbs: list<list<u8>>) -> list<list<u8>>;
+    st-end-point-batch: func(wkbs: list<list<u8>>) -> list<list<u8>>;
+    st-point-on-surface-batch: func(wkbs: list<list<u8>>) -> list<list<u8>>;
+
+    /// Two-arg set operations (polygons / multipolygons).
+    /// Empty `list<u8>` on parse failure, length mismatch, or
+    /// unsupported geometry type pair.
+    st-union-batch: func(
+        as-wkbs: list<list<u8>>, bs-wkbs: list<list<u8>>,
+    ) -> list<list<u8>>;
+    st-intersection-batch: func(
+        as-wkbs: list<list<u8>>, bs-wkbs: list<list<u8>>,
+    ) -> list<list<u8>>;
+    st-difference-batch: func(
+        as-wkbs: list<list<u8>>, bs-wkbs: list<list<u8>>,
+    ) -> list<list<u8>>;
+    st-sym-difference-batch: func(
+        as-wkbs: list<list<u8>>, bs-wkbs: list<list<u8>>,
+    ) -> list<list<u8>>;
+
+    /// (WKB, f64) → WKB — same shape as ST_Buffer.
+    st-simplify-preserve-topology-batch: func(
+        wkbs: list<list<u8>>, tolerances: list<f64>,
+    ) -> list<list<u8>>;
+
+    /// Aggregate forms — collapse all N inputs into one result.
+    /// Without these, the shim's finalize step does N per-row
+    /// `from_wkb` crossings into postgis-types to lift each
+    /// accumulated WKB into a geometry resource before calling
+    /// the original `postgis-aggregates` fn. These versions do
+    /// the parse + aggregation in one trampoline.
+    ///
+    /// Returns an empty `list<u8>` if N == 0 (matching the
+    /// shim's existing "empty group → NULL" convention).
+
+    /// ST_Union aggregate. Returns a MultiPolygon for pure-polygon
+    /// inputs, a GeometryCollection when mixed.
+    st-union-aggregate-batch: func(wkbs: list<list<u8>>) -> list<u8>;
+
+    /// ST_MakeLine aggregate. Inputs must be POINTs; returns a
+    /// LineString connecting them in order. Empty `list<u8>` on
+    /// non-point input or < 2 inputs.
+    st-make-line-aggregate-batch: func(wkbs: list<list<u8>>) -> list<u8>;
+
+    /// ST_Polygonize aggregate. Closed-ring LineStrings become
+    /// Polygons; result is a GeometryCollection.
+    st-polygonize-aggregate-batch: func(wkbs: list<list<u8>>) -> list<u8>;
+
+    /// ST_3DExtent aggregate. Returns 6 f64 in order:
+    /// (min-x, min-y, min-z, max-x, max-y, max-z). Empty input
+    /// returns 6× NaN.
+    st-extent-threed-batch: func(wkbs: list<list<u8>>) -> list<f64>;
+
+    /// Geodetic batch fns — WGS84 ellipsoid via the
+    /// `geographiclib-rs` Rust crate (same maths as the
+    /// geographiclib-wasm sibling component, just in-process so
+    /// no inter-component crossing per row). Each takes WKB
+    /// blobs of POINT/LINESTRING/POLYGON geography values
+    /// (interpreted as lon/lat). Returns NaN/false on parse
+    /// failure or non-point input where a Point is required.
+
+    /// Geodesic distance between two POINTs in metres.
+    st-geog-distance-batch: func(
+        as-wkbs: list<list<u8>>, bs-wkbs: list<list<u8>>,
+    ) -> list<f64>;
+
+    /// Geodesic length of a LINESTRING (sum of segment
+    /// geodesics). Returns 0 for non-linestring inputs.
+    st-geog-length-batch: func(wkbs: list<list<u8>>) -> list<f64>;
+
+    /// Geodesic area of a polygon (m²). Returns 0 for
+    /// non-polygon inputs.
+    st-geog-area-batch: func(wkbs: list<list<u8>>) -> list<f64>;
+
+    /// Geodesic perimeter of a polygon's outer ring in metres.
+    /// Returns 0 for non-polygon inputs.
+    st-geog-perimeter-batch: func(wkbs: list<list<u8>>) -> list<f64>;
+
+    /// Geodesic d-within: `distance(a, b) <= threshold`.
+    /// Threshold in metres. False on parse failure.
+    st-geog-dwithin-batch: func(
+        as-wkbs: list<list<u8>>, bs-wkbs: list<list<u8>>,
+        thresholds: list<f64>,
+    ) -> list<bool>;
+
+    /// ST_DistanceSphere — haversine distance between two
+    /// geometries (uses centroid for non-points). Earth radius
+    /// 6371008.8 m. NaN on parse failure.
+    st-distance-sphere-batch: func(
+        as-wkbs: list<list<u8>>, bs-wkbs: list<list<u8>>,
+    ) -> list<f64>;
+
+    /// ST_GeogAzimuth — WGS84 forward azimuth from POINT a to
+    /// POINT b, in RADIANS. NaN on parse failure or non-point.
+    st-geog-azimuth-batch: func(
+        as-wkbs: list<list<u8>>, bs-wkbs: list<list<u8>>,
+    ) -> list<f64>;
+
+    /// ST_Project (sphere) — destination POINT from origin POINT,
+    /// distance (m), azimuth (RADIANS). Earth radius 6371008.8 m.
+    /// Empty WKB on parse failure or non-point input.
+    st-project-batch: func(
+        wkbs: list<list<u8>>, distances: list<f64>, azimuths: list<f64>,
+    ) -> list<list<u8>>;
+
+    /// ST_GeogProject — WGS84 destination POINT from origin POINT,
+    /// azimuth (RADIANS), distance (m). Argument order matches the
+    /// per-row impl: (geog, azimuth, distance).
+    st-geog-project-batch: func(
+        wkbs: list<list<u8>>, azimuths: list<f64>, distances: list<f64>,
+    ) -> list<list<u8>>;
+
+    /// ST_DistanceSpheroid (WGS84 only). Per-row impl uses
+    /// hardcoded WGS84 and ignores the user-supplied spheroid
+    /// text; batch matches that. Same numeric result as
+    /// st-geog-distance for POINT inputs; non-points use centroid
+    /// (matching per-row st_distance_spheroid).
+    st-distance-spheroid-batch: func(
+        as-wkbs: list<list<u8>>, bs-wkbs: list<list<u8>>,
+    ) -> list<f64>;
+
+    /// ST_PointN — nth point of a LineString, 1-based. Empty
+    /// WKB on non-LineString input or out-of-bounds index.
+    st-point-n-batch: func(
+        wkbs: list<list<u8>>, ns: list<s32>,
+    ) -> list<list<u8>>;
+
+    /// ST_Simplify — Ramer–Douglas–Peucker (non-topology-preserving
+    /// variant). Same algorithm as st-simplify-preserve-topology;
+    /// PostGIS distinguishes them on the per-row API but the geo
+    /// crate exposes one Simplify trait.
+    st-simplify-batch: func(
+        wkbs: list<list<u8>>, tolerances: list<f64>,
+    ) -> list<list<u8>>;
+
+    /// ST_GeogSegmentize — densify linestrings/polygon rings
+    /// along the WGS84 geodesic so no segment exceeds
+    /// `max-segment-lengths[i]` metres. Returns same WKB on
+    /// Point/MultiPoint inputs.
+    st-geog-segmentize-batch: func(
+        wkbs: list<list<u8>>, max-segment-lengths: list<f64>,
+    ) -> list<list<u8>>;
+
+    /// Raster cheap-accessor batches. Each parses the 64-byte
+    /// DFER header (the empty-raster prefix the upstream emits)
+    /// directly — no GDAL crossing for empty/template rasters.
+    /// Returns sentinel (0 / NaN / 1.0) for non-DFER input so
+    /// the shim's dispatch can detect "wasn't a DFER raster"
+    /// and fall back to per-row; the shim makes that decision
+    /// since it sees the call shape.
+    st-rast-width-dfer-batch: func(rasts: list<list<u8>>) -> list<s32>;
+    st-rast-height-dfer-batch: func(rasts: list<list<u8>>) -> list<s32>;
+    st-rast-srid-dfer-batch: func(rasts: list<list<u8>>) -> list<s32>;
+    st-rast-upper-left-x-dfer-batch: func(rasts: list<list<u8>>) -> list<f64>;
+    st-rast-upper-left-y-dfer-batch: func(rasts: list<list<u8>>) -> list<f64>;
+    st-rast-scale-x-dfer-batch: func(rasts: list<list<u8>>) -> list<f64>;
+    st-rast-scale-y-dfer-batch: func(rasts: list<list<u8>>) -> list<f64>;
+    st-rast-skew-x-dfer-batch: func(rasts: list<list<u8>>) -> list<f64>;
+    st-rast-skew-y-dfer-batch: func(rasts: list<list<u8>>) -> list<f64>;
+
+    /// True when every input is a DFER-formatted raster (magic
+    /// bytes match). When false, the shim should fall back to
+    /// per-row dispatch for the matching batch.
+    rast-dfer-all-batch: func(rasts: list<list<u8>>) -> bool;
+
+    /// Broader guard for width/height batches — true when every
+    /// input is either DFER or a valid GeoTIFF. The width/height
+    /// fns now handle both formats internally; the geotransform
+    /// fns (UpperLeftX/Y, ScaleX/Y, SkewX/Y) still need the
+    /// narrower DFER guard above.
+    rast-metadata-all-batch: func(rasts: list<list<u8>>) -> bool;
+
+    /// Topology cheap accessors — parse the PGTP-magic binary
+    /// directly (no `from_bytes` crossing into postgis-topology-types).
+    /// Returns sentinel/empty on non-PGTP input; the shim's
+    /// `topo-pgtp-all-batch` guard short-circuits to per-row when
+    /// the batch is mixed.
+    st-topology-name-batch: func(topos: list<list<u8>>) -> list<string>;
+    st-topology-srid-batch: func(topos: list<list<u8>>) -> list<s32>;
+    st-topology-precision-batch: func(topos: list<list<u8>>) -> list<f64>;
+    st-topology-node-count-batch: func(topos: list<list<u8>>) -> list<s32>;
+    st-topology-edge-count-batch: func(topos: list<list<u8>>) -> list<s32>;
+    st-topology-face-count-batch: func(topos: list<list<u8>>) -> list<s32>;
+    topo-pgtp-all-batch: func(topos: list<list<u8>>) -> bool;
+
+    /// Z / M / NDims — read the dimension flags from the WKB
+    /// type code without crossing into postgis-types::from_wkb.
+    /// Supports both ISO extended (type += 1000 for Z, += 2000
+    /// for M) and PostGIS EWKB (high bits 0x80000000 for Z,
+    /// 0x40000000 for M, 0x20000000 for SRID).
+    ///
+    /// ST_Z / ST_M return NaN when the dimension isn't present
+    /// or when the input isn't a single POINT.
+    /// ST_NDims returns 2/3/4.
+    st-z-batch: func(wkbs: list<list<u8>>) -> list<f64>;
+    st-m-batch: func(wkbs: list<list<u8>>) -> list<f64>;
+    st-ndims-batch: func(wkbs: list<list<u8>>) -> list<s32>;
+}

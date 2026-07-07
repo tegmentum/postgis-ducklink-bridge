@@ -1,0 +1,59 @@
+package geobuf:wasm@0.1.0;
+
+/// Geobuf WebAssembly Component
+/// Encodes GeoJSON to Geobuf binary format and decodes Geobuf back to GeoJSON
+
+world geobuf-world {
+    export geobuf-encoder;
+    export geobuf-decoder;
+}
+
+/// Geobuf encoding functions
+interface geobuf-encoder {
+    /// Error type for encoding operations
+    record encode-error {
+        message: string,
+    }
+
+    /// Encoding options
+    record encode-options {
+        /// Precision for coordinates (number of decimal digits, default 6)
+        precision: option<u32>,
+        /// Dimension (2 for 2D, 3 for 3D, default 2)
+        dimension: option<u32>,
+    }
+
+    /// Encode GeoJSON string to Geobuf binary format
+    /// Returns the binary Geobuf data
+    encode: func(geojson: string) -> result<list<u8>, encode-error>;
+
+    /// Encode GeoJSON with custom options
+    encode-with-options: func(geojson: string, options: encode-options) -> result<list<u8>, encode-error>;
+
+    /// Get the default encoding options
+    default-options: func() -> encode-options;
+}
+
+/// Geobuf decoding functions
+interface geobuf-decoder {
+    /// Error type for decoding operations
+    record decode-error {
+        message: string,
+    }
+
+    /// Decode Geobuf binary data to GeoJSON string
+    decode: func(geobuf: list<u8>) -> result<string, decode-error>;
+
+    /// Decode Geobuf and return pretty-printed GeoJSON
+    decode-pretty: func(geobuf: list<u8>) -> result<string, decode-error>;
+
+    /// Get metadata from Geobuf without full decode
+    /// Returns: precision, dimension, keys (property names)
+    record geobuf-metadata {
+        precision: u32,
+        dimension: u32,
+        keys: list<string>,
+    }
+
+    get-metadata: func(geobuf: list<u8>) -> result<geobuf-metadata, decode-error>;
+}

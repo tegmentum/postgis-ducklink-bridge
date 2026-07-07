@@ -1,0 +1,282 @@
+package kml:parser@0.1.0;
+
+/// KML (Keyhole Markup Language) parsing and generation
+///
+/// This interface provides functionality to parse and generate KML files,
+/// commonly used for geographic data in Google Earth and other applications.
+interface kml-api {
+    // =========================================================================
+    // Error Types
+    // =========================================================================
+
+    /// Error from KML operations
+    record kml-error {
+        /// Error message
+        message: string,
+    }
+
+    // =========================================================================
+    // Coordinate Types
+    // =========================================================================
+
+    /// A geographic coordinate
+    record coord {
+        /// Longitude in degrees
+        x: f64,
+        /// Latitude in degrees
+        y: f64,
+        /// Altitude in meters (optional, 0 if not present)
+        z: f64,
+    }
+
+    // =========================================================================
+    // Geometry Types
+    // =========================================================================
+
+    /// Types of KML geometry
+    enum geometry-type {
+        point,
+        line-string,
+        linear-ring,
+        polygon,
+        multi-geometry,
+    }
+
+    /// A KML geometry (flattened to avoid recursive types)
+    /// For multi-geometries, child geometries are stored separately
+    record geometry {
+        /// Type of geometry
+        geom-type: geometry-type,
+        /// Coordinates (interpretation depends on type)
+        coords: list<coord>,
+        /// Whether to extrude (extend to ground)
+        extrude: bool,
+        /// Whether to tessellate (follow terrain)
+        tessellate: bool,
+        /// Altitude mode
+        altitude-mode: string,
+    }
+
+    /// A multi-geometry container (separate to avoid recursive types)
+    record multi-geometry {
+        /// Child geometries
+        geometries: list<geometry>,
+    }
+
+    // =========================================================================
+    // Style Types
+    // =========================================================================
+
+    /// Color in AABBGGRR format (KML standard)
+    record color {
+        /// Alpha (0-255)
+        a: u8,
+        /// Blue (0-255)
+        b: u8,
+        /// Green (0-255)
+        g: u8,
+        /// Red (0-255)
+        r: u8,
+    }
+
+    /// Line style
+    record line-style {
+        /// Line color
+        color: color,
+        /// Line width in pixels
+        width: f64,
+    }
+
+    /// Polygon style
+    record poly-style {
+        /// Fill color
+        color: color,
+        /// Whether to fill
+        fill: bool,
+        /// Whether to draw outline
+        outline: bool,
+    }
+
+    /// Icon style for points
+    record icon-style {
+        /// Icon URL
+        href: string,
+        /// Scale factor
+        scale: f64,
+        /// Color tint
+        color: color,
+    }
+
+    /// Label style
+    record label-style {
+        /// Label color
+        color: color,
+        /// Scale factor
+        scale: f64,
+    }
+
+    /// Combined style
+    record style {
+        /// Style ID
+        id: string,
+        /// Line style (optional)
+        line: option<line-style>,
+        /// Polygon style (optional)
+        poly: option<poly-style>,
+        /// Icon style (optional)
+        icon: option<icon-style>,
+        /// Label style (optional)
+        label: option<label-style>,
+    }
+
+    // =========================================================================
+    // Feature Types
+    // =========================================================================
+
+    /// Extended data field
+    record data-field {
+        /// Field name
+        name: string,
+        /// Field value
+        value: string,
+    }
+
+    /// A KML placemark (feature with geometry)
+    record placemark {
+        /// Placemark ID
+        id: string,
+        /// Name/title
+        name: string,
+        /// Description (can be HTML)
+        description: string,
+        /// Geometry (single geometry)
+        geometry: option<geometry>,
+        /// For multi-geometries, additional geometries
+        multi-geometry: option<multi-geometry>,
+        /// Style URL reference
+        style-url: string,
+        /// Inline style
+        inline-style: option<style>,
+        /// Extended data fields
+        extended-data: list<data-field>,
+        /// Visibility
+        visible: bool,
+    }
+
+    /// A KML folder (container) - flattened to avoid recursion
+    record folder {
+        /// Folder ID
+        id: string,
+        /// Name
+        name: string,
+        /// Description
+        description: string,
+        /// Contained placemarks
+        placemarks: list<placemark>,
+        /// Subfolder IDs (references to other folders)
+        subfolder-ids: list<string>,
+        /// Visibility
+        visible: bool,
+        /// Whether folder is open in UI
+        open: bool,
+    }
+
+    /// A KML document
+    record document {
+        /// Document ID
+        id: string,
+        /// Name
+        name: string,
+        /// Description
+        description: string,
+        /// Shared styles
+        styles: list<style>,
+        /// Top-level placemarks
+        placemarks: list<placemark>,
+        /// All folders (flattened)
+        folders: list<folder>,
+    }
+
+    // =========================================================================
+    // Bounding Box
+    // =========================================================================
+
+    /// Geographic bounding box
+    record bbox {
+        /// Minimum longitude
+        min-x: f64,
+        /// Minimum latitude
+        min-y: f64,
+        /// Maximum longitude
+        max-x: f64,
+        /// Maximum latitude
+        max-y: f64,
+    }
+
+    // =========================================================================
+    // Parsing Functions
+    // =========================================================================
+
+    /// Parse KML from string
+    parse-kml: func(kml-string: string) -> result<document, kml-error>;
+
+    /// Parse KML from bytes
+    parse-kml-bytes: func(kml-bytes: list<u8>) -> result<document, kml-error>;
+
+    // =========================================================================
+    // Generation Functions
+    // =========================================================================
+
+    /// Generate KML string from document
+    to-kml-string: func(doc: document) -> result<string, kml-error>;
+
+    /// Generate KML bytes from document
+    to-kml-bytes: func(doc: document) -> result<list<u8>, kml-error>;
+
+    // =========================================================================
+    // Geometry Conversion
+    // =========================================================================
+
+    /// Convert geometry to WKT
+    geometry-to-wkt: func(geom: geometry) -> string;
+
+    /// Convert WKT to geometry
+    wkt-to-geometry: func(wkt: string) -> result<geometry, kml-error>;
+
+    /// Get bounding box of geometry
+    geometry-bbox: func(geom: geometry) -> option<bbox>;
+
+    /// Get bounding box of document
+    document-bbox: func(doc: document) -> option<bbox>;
+
+    // =========================================================================
+    // Utility Functions
+    // =========================================================================
+
+    /// Count total placemarks in document (including in folders)
+    count-placemarks: func(doc: document) -> u32;
+
+    /// Extract all geometries from document
+    extract-geometries: func(doc: document) -> list<geometry>;
+
+    /// Create a simple point placemark
+    make-point-placemark: func(name: string, lon: f64, lat: f64, alt: f64) -> placemark;
+
+    /// Create a simple line placemark
+    make-line-placemark: func(name: string, coords: list<coord>) -> placemark;
+
+    /// Create a simple polygon placemark
+    make-polygon-placemark: func(name: string, coords: list<coord>) -> placemark;
+
+    /// Create an empty document
+    make-document: func(name: string) -> document;
+
+    /// Create a default style
+    make-default-style: func(id: string) -> style;
+
+    /// Convert KML color string (aabbggrr) to color record
+    parse-color: func(color-string: string) -> result<color, kml-error>;
+
+    /// Convert color record to KML color string
+    color-to-string: func(c: color) -> string;
+}

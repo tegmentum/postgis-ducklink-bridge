@@ -1,0 +1,117 @@
+package postgis:wasm@0.1.0;
+
+/// PostGIS parser-rewrite metadata (#784).
+///
+/// Durable home for the cast / operator / preprocessor tables that
+/// the extractor snapshots into the interface DB at extract time.
+/// Before #784 those rows lived only in `/tmp/postgis-interface.sqlite`
+/// and got wiped on every re-extraction; hard-coding them behind a
+/// WIT surface here mirrors the `sql-extension-plugin/metadata@1.1.0`
+/// shape (used by mobilitydb-wasm's sibling bridge) so the composed
+/// wasm can carry them verbatim across extract → seed cycles.
+///
+/// This surface is READ-ONLY metadata (the shim does no work at call
+/// time). The three list functions are called ONCE by the extractor;
+/// the returned tables are then written into
+///   * `cast_rewrites`
+///   * `operators`
+///   * `preprocessor_patterns`
+/// on the shim-interface DB. Downstream sqlink/ducklink generators
+/// consume those tables to emit parser-token rewrites.
+///
+/// Field shapes intentionally mirror `datafission:sql-extension-plugin`
+/// so the postgis-composed → postgis-sqlink-bridge codegen path can
+/// plumb rewrites through with a straight `.into()`.
+interface postgis-metadata {
+    /// Which source-expression shape a cast-rewrite should match.
+    ///
+    /// `any`               — source-blind (matches columns, function
+    ///                       results, literals). Used for output casts
+    ///                       like `geom::text` → `st_astext(geom)`.
+    /// `string-literal`    — only match literal strings. Used for
+    ///                       input casts like `CAST('POINT(0 0)' AS
+    ///                       GEOMETRY)` → `st_geomfromtext('...')`,
+    ///                       which is unsafe on non-literal sources
+    ///                       (would try to parse a WKB blob as text).
+    /// `geography-column`  — only match column refs typed GEOGRAPHY.
+    ///                       Solves the `geog::geometry` collision
+    ///                       with the string-literal `text→geometry`
+    ///                       rewrite under an `any` source-kind.
+    enum cast-source-kind {
+        any,
+        string-literal,
+        geography-column,
+    }
+
+    /// A cast rewrite directive.
+    ///
+    /// `expr::<target-type>` → `function-name(expr)` when the
+    /// source-side shape matches `source-kind` (and, when non-empty,
+    /// `source-fn-hint` matches the source-side function).
+    ///
+    /// `source-type-id` narrows the rewrite to a specific source-side
+    /// custom type (u32 namespace shared with `operator-rewrite.lhs-
+    /// type-id` — 2001 = geometry, 2002 = topogeom, 2003 = geography,
+    /// 2004 = raster, 2005 = box2d, 2006 = box3d, 2007 = box; 2010-
+    /// 2012 name PostgreSQL native point/polygon/path). `none` leaves
+    /// the source side unrestricted (bytea-fed `st_geomfromwkb`,
+    /// string-literal `st_geomfromtext`, output casts). The field
+    /// exists so distinct rewrites that share
+    /// `(target-type, source-kind, source-fn-hint)` don't collide on
+    /// the interface DB's `cast_rewrites` PK — added in #798 after
+    /// the #788 followup found the earlier PK dropped 7 entries.
+    record cast-rewrite {
+        target-type: string,
+        function-name: string,
+        source-fn-hint: string,
+        source-kind: cast-source-kind,
+        source-type-id: option<u32>,
+    }
+
+    /// A binary-operator rewrite directive.
+    ///
+    /// `a <symbol> b` → `function-name(a, b)`. `lhs-type-id` /
+    /// `rhs-type-id` qualify by operand type (u32 namespace shared
+    /// with the extension's custom types — 2001 = geometry,
+    /// 2003 = geography, 2004 = raster). `none` is a wildcard.
+    record operator-rewrite {
+        symbol: string,
+        lhs-type-id: option<u32>,
+        rhs-type-id: option<u32>,
+        function-name: string,
+    }
+
+    /// A pre-tokenisation source-rewrite pattern.
+    ///
+    /// Used for operators sqlparser-rs can't tokenise on its own
+    /// (`<->`, `<#>`, `<<->>`, `|=|`). Host applies as a regex on the
+    /// SQL source before parsing, skipping single-quoted strings.
+    record preprocessor-pattern {
+        op-token: string,
+        function-name: string,
+    }
+
+    /// Extraction error (never fired by the current all-static
+    /// implementation, but preserved for shape-parity with
+    /// `datafission:sql-extension-plugin/types.sql-ext-error`).
+    variant sql-ext-error {
+        invalid-name(string),
+        internal(string),
+    }
+
+    /// Return every `::target-type` cast rewrite PostGIS advertises
+    /// (input + output + conversion casts across geometry / geography
+    /// / box2d / box3d / raster / topogeometry).
+    list-cast-rewrites: func() -> result<list<cast-rewrite>, sql-ext-error>;
+
+    /// Return every binary-operator rewrite PostGIS advertises
+    /// (bbox `&&` / `&&&`, KNN `<->` / `<#>`, position `<<` / `>>` /
+    /// `<<|` / `|>>`, over- variants, spatial equality `~=` / `~~=`,
+    /// nd containment `~~` / `@@`, cpa `|=|`, and the geography /
+    /// raster bbox families).
+    list-operator-rewrites: func() -> result<list<operator-rewrite>, sql-ext-error>;
+
+    /// Return every pre-tokenisation source-rewrite pattern
+    /// (`<->`, `<#>`, `<<->>`, `|=|`, `~==`).
+    list-preprocessor-patterns: func() -> result<list<preprocessor-pattern>, sql-ext-error>;
+}

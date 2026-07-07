@@ -1,0 +1,720 @@
+package postgis:wasm@0.1.0;
+
+/// Raster types (Feature 1, phase R1). MVP raster engine: an in-memory
+/// grid of bands, each stored as f64 with a declared pixel type and
+/// optional nodata value. The raster crosses the boundary as a resource
+/// handle (like geometry); use `as-binary` / `from-binary` to persist.
+interface postgis-raster-types {
+    variant raster-error {
+        parse-error(string),
+        out-of-bounds(string),
+        type-mismatch(string),
+        general(string),
+    }
+
+    /// PostGIS pixel types.
+    enum pixel-type {
+        bool1,
+        uint8,
+        int8,
+        uint16,
+        int16,
+        uint32,
+        int32,
+        float32,
+        float64,
+    }
+
+    resource raster {
+        /// Empty 0x0 raster, identity georeference, no SRID, no bands.
+        constructor();
+        /// Width in pixels.
+        width: func() -> u32;
+        /// Height in pixels.
+        height: func() -> u32;
+        /// Number of bands.
+        num-bands: func() -> u32;
+        /// (upper-left-x, upper-left-y, scale-x, scale-y, skew-x, skew-y).
+        georeference: func() -> tuple<f64, f64, f64, f64, f64, f64>;
+        /// SRID, or none.
+        srid: func() -> option<s32>;
+        /// Pixel value at 1-based (band, x, y); NaN if out of range.
+        value: func(band: u32, x: u32, y: u32) -> f64;
+        /// Serialise to the component-internal raster format.
+        as-binary: func() -> list<u8>;
+    }
+
+    /// Reconstruct from `as-binary`.
+    from-binary: func(bytes: list<u8>) -> result<raster, raster-error>;
+
+    /// Composite raster metadata (matches `ST_MetaData`).
+    record raster-metadata {
+        upper-left-x: f64,
+        upper-left-y: f64,
+        width: u32,
+        height: u32,
+        scale-x: f64,
+        scale-y: f64,
+        skew-x: f64,
+        skew-y: f64,
+        srid: s32,
+        num-bands: u32,
+    }
+}
+
+interface postgis-raster-constructors {
+    use postgis-raster-types.{raster, raster-error, pixel-type};
+
+    /// ST_MakeEmptyRaster — a raster with the given dimensions and
+    /// georeference, no bands.
+    st-make-empty-raster: func(
+        width: u32, height: u32,
+        upper-left-x: f64, upper-left-y: f64,
+        scale-x: f64, scale-y: f64,
+        skew-x: f64, skew-y: f64,
+        srid: s32,
+    ) -> result<raster, raster-error>;
+
+    /// ST_AddBand — return a new raster with an extra band initialised to
+    /// `initial-value`, optionally with a nodata value.
+    st-add-band: func(
+        rast: borrow<raster>,
+        pixel-t: pixel-type,
+        initial-value: f64,
+        no-data-value: option<f64>,
+    ) -> result<raster, raster-error>;
+
+    /// ST_SetScale — return a new raster with pixel size (scale-x, scale-y).
+    st-set-scale: func(
+        rast: borrow<raster>, scale-x: f64, scale-y: f64,
+    ) -> result<raster, raster-error>;
+    /// ST_SetSkew — return a new raster with skew (skew-x, skew-y).
+    st-set-skew: func(
+        rast: borrow<raster>, skew-x: f64, skew-y: f64,
+    ) -> result<raster, raster-error>;
+    /// ST_SetUpperLeft — move the raster's origin to (ulx, uly) in world coords.
+    st-set-upper-left: func(
+        rast: borrow<raster>, ulx: f64, uly: f64,
+    ) -> result<raster, raster-error>;
+    /// ST_SetSRID — return a new raster with the given SRID (0 clears).
+    st-set-srid: func(
+        rast: borrow<raster>, srid: s32,
+    ) -> result<raster, raster-error>;
+    /// ST_SetRotation — rebuild skew/scale from a single rotation angle
+    /// (radians), preserving the input's pixel size magnitudes.
+    st-set-rotation: func(
+        rast: borrow<raster>, radians: f64,
+    ) -> result<raster, raster-error>;
+    /// ST_SetGeoReference — replace the full georeference in one call.
+    st-set-geo-reference: func(
+        rast: borrow<raster>,
+        ulx: f64, uly: f64,
+        scale-x: f64, scale-y: f64,
+        skew-x: f64, skew-y: f64,
+    ) -> result<raster, raster-error>;
+    /// ST_SetBandNoDataValue — set (or clear via none) a band's nodata value.
+    st-set-band-nodata-value: func(
+        rast: borrow<raster>, band: u32, nodata: option<f64>,
+    ) -> result<raster, raster-error>;
+
+    /// ST_SetBandIsNoData — fill the band with its declared nodata value,
+    /// effectively marking every pixel as nodata. Fails if the band has no
+    /// nodata value set.
+    st-set-band-is-nodata: func(
+        rast: borrow<raster>, band: u32,
+    ) -> result<raster, raster-error>;
+
+    /// ST_SetScale — single-scalar overload (PostGIS `ST_SetScale(rast, xy)`).
+    /// Applies `xy` as the x-scale and `-xy` as the y-scale (PostGIS
+    /// convention: a north-up raster has a negative scale-y).
+    st-set-scale-xy: func(
+        rast: borrow<raster>, xy: f64,
+    ) -> result<raster, raster-error>;
+
+    /// ST_SetSkew — single-scalar overload (PostGIS `ST_SetSkew(rast, xy)`).
+    /// Applies `xy` to both skew-x and skew-y.
+    st-set-skew-xy: func(
+        rast: borrow<raster>, xy: f64,
+    ) -> result<raster, raster-error>;
+
+    /// ST_SetGeoReference — string form (PostGIS
+    /// `ST_SetGeoReference(rast, georef, format)`). `georef` is six
+    /// whitespace-separated numbers; `format` is "GDAL" (scaleX skewY skewX
+    /// scaleY ulx uly) or "ESRI" (same order but ulx/uly are the pixel
+    /// centre of the upper-left cell — PostGIS applies a half-pixel shift).
+    st-set-geo-reference-string: func(
+        rast: borrow<raster>, georef: string, format: string,
+    ) -> result<raster, raster-error>;
+
+    /// ST_MakeEmptyCoverage(tilewidth, tileheight, width, height, ulx, uly,
+    /// scalex, scaley, skewx, skewy, srid) — a SETOF empty rasters covering
+    /// a `width x height` pixel extent, split into tiles of at most
+    /// `tilewidth x tileheight` pixels. Edge tiles are shrunk to fit.
+    /// Rows are emitted in row-major tile order (top-left → bottom-right).
+    st-make-empty-coverage: func(
+        tile-width: u32, tile-height: u32,
+        width: u32, height: u32,
+        upper-left-x: f64, upper-left-y: f64,
+        scale-x: f64, scale-y: f64,
+        skew-x: f64, skew-y: f64,
+        srid: s32,
+    ) -> result<list<raster>, raster-error>;
+}
+
+interface postgis-raster-accessors {
+    use postgis-raster-types.{raster, raster-error, pixel-type, raster-metadata};
+    use postgis-types.{geometry};
+
+    st-width: func(rast: borrow<raster>) -> u32;
+    st-height: func(rast: borrow<raster>) -> u32;
+    st-num-bands: func(rast: borrow<raster>) -> u32;
+    st-upper-left-x: func(rast: borrow<raster>) -> f64;
+    st-upper-left-y: func(rast: borrow<raster>) -> f64;
+    st-scale-x: func(rast: borrow<raster>) -> f64;
+    st-scale-y: func(rast: borrow<raster>) -> f64;
+    st-skew-x: func(rast: borrow<raster>) -> f64;
+    st-skew-y: func(rast: borrow<raster>) -> f64;
+    st-srid: func(rast: borrow<raster>) -> s32;
+    /// Pixel type of a 1-based band.
+    st-band-pixel-type: func(rast: borrow<raster>, band: u32) -> result<pixel-type, raster-error>;
+    /// Nodata value of a 1-based band, if set.
+    st-band-nodata-value: func(rast: borrow<raster>, band: u32) -> result<option<f64>, raster-error>;
+    /// True if the (1-based) band index does not exist.
+    st-has-no-band: func(rast: borrow<raster>, band: u32) -> bool;
+    /// Pixel value at 1-based (band, x, y).
+    st-value: func(rast: borrow<raster>, band: u32, x: u32, y: u32) -> result<f64, raster-error>;
+    /// Return a new raster with the pixel at 1-based (band, x, y) set.
+    st-set-value: func(
+        rast: borrow<raster>, band: u32, x: u32, y: u32, val: f64,
+    ) -> result<raster, raster-error>;
+    /// Upper-left corner of the 1-based pixel (x, y) in world coordinates.
+    st-pixel-as-point: func(rast: borrow<raster>, x: u32, y: u32) -> result<geometry, raster-error>;
+
+    /// ST_MetaData — every raster field packed into one record.
+    st-metadata: func(rast: borrow<raster>) -> raster-metadata;
+
+    /// Extent bounds in world coordinates, accounting for skew.
+    st-min-x: func(rast: borrow<raster>) -> f64;
+    st-min-y: func(rast: borrow<raster>) -> f64;
+    st-max-x: func(rast: borrow<raster>) -> f64;
+    st-max-y: func(rast: borrow<raster>) -> f64;
+    /// ST_Envelope — the axis-aligned bounding box polygon.
+    st-envelope: func(rast: borrow<raster>) -> result<geometry, raster-error>;
+
+    /// Per-band scalar summaries (from `ST_SummaryStats`).
+    st-band-mean: func(rast: borrow<raster>, band: u32) -> result<f64, raster-error>;
+    st-band-min: func(rast: borrow<raster>, band: u32) -> result<f64, raster-error>;
+    st-band-max: func(rast: borrow<raster>, band: u32) -> result<f64, raster-error>;
+    st-band-stddev: func(rast: borrow<raster>, band: u32) -> result<f64, raster-error>;
+    st-band-sum: func(rast: borrow<raster>, band: u32) -> result<f64, raster-error>;
+    /// Count of non-nodata pixels in a band.
+    st-band-count: func(rast: borrow<raster>, band: u32) -> result<u64, raster-error>;
+
+    /// Per-band metadata (matches PostGIS `ST_BandMetaData`). For in-memory
+    /// rasters `is-outdb` is always false and the file-backing fields are
+    /// zero/empty; they exist for shape parity with the PostGIS SRF.
+    record band-metadata {
+        bandnum: u32,
+        pixel-t: pixel-type,
+        nodata-value: option<f64>,
+        is-outdb: bool,
+        path: string,
+        outdb-bandnum: u32,
+        filesize: u64,
+        filetimestamp: s64,
+    }
+
+    /// ST_BandMetaData(rast, band) — metadata for a single 1-based band.
+    st-band-metadata: func(
+        rast: borrow<raster>, band: u32,
+    ) -> result<band-metadata, raster-error>;
+
+    /// ST_BandMetaData(rast, bands int[]) — SETOF form; one row per input
+    /// band, in input order.
+    st-bands-metadata: func(
+        rast: borrow<raster>, bands: list<u32>,
+    ) -> result<list<band-metadata>, raster-error>;
+
+    /// ST_MinConvexHull(rast, band?) — convex hull of the raster footprint,
+    /// trimmed to the non-nodata extent of `band` (or every band when none).
+    /// Falls back to the full extent when the requested band(s) have no
+    /// nodata definition.
+    st-min-convex-hull: func(
+        rast: borrow<raster>, band: option<u32>,
+    ) -> result<geometry, raster-error>;
+
+    /// ST_GeoReference(rast, format) — georef as six whitespace-separated
+    /// numbers in the requested `format` ("GDAL" or "ESRI"). ESRI applies a
+    /// half-pixel shift to ulx/uly (PostGIS convention).
+    st-geo-reference: func(
+        rast: borrow<raster>, format: string,
+    ) -> result<string, raster-error>;
+
+    /// ST_PixelWidth — |scale-x|. (`ST_ScaleX` returns signed, this is the
+    /// PostGIS accessor for the magnitude only.)
+    st-pixel-width: func(rast: borrow<raster>) -> f64;
+    /// ST_PixelHeight — |scale-y|.
+    st-pixel-height: func(rast: borrow<raster>) -> f64;
+    /// ST_Rotation — atan2(skew-y, scale-x) in radians.
+    st-rotation: func(rast: borrow<raster>) -> f64;
+}
+
+/// Pixel access (Feature 1, phase R2).
+interface postgis-raster-pixels {
+    use postgis-raster-types.{raster, raster-error};
+    use postgis-types.{geometry};
+
+    /// Pixel coordinate (1-based column/row).
+    record pixel-coord {
+        x: u32,
+        y: u32,
+    }
+
+    /// Set a rectangular block of values whose top-left is the 1-based
+    /// pixel (x, y); `values` is row-major. Returns a new raster.
+    st-set-values: func(
+        rast: borrow<raster>, band: u32, x: u32, y: u32, values: list<list<f64>>,
+    ) -> result<raster, raster-error>;
+
+    /// ST_SetValues — fill a rectangular block starting at the 1-based
+    /// pixel (x, y) with the same value. PostGIS overload
+    /// `ST_SetValues(rast, band, x, y, width, height, newvalue)`.
+    st-set-values-rect: func(
+        rast: borrow<raster>, band: u32,
+        x: u32, y: u32,
+        width: u32, height: u32,
+        val: f64,
+    ) -> result<raster, raster-error>;
+
+    /// ST_SetValue — geometry-point overload
+    /// `ST_SetValue(rast, band, pt, newvalue)`. Sets the pixel covering the
+    /// world coordinate of `pt` (POINT, no SRID check) in the given band.
+    st-set-value-at-point: func(
+        rast: borrow<raster>, band: u32, pt: borrow<geometry>, val: f64,
+    ) -> result<raster, raster-error>;
+
+    /// The square footprint of the 1-based pixel (x, y) as a POLYGON.
+    st-pixel-as-polygon: func(rast: borrow<raster>, x: u32, y: u32) -> result<geometry, raster-error>;
+
+    /// The centre point of the 1-based pixel (x, y) as a POINT.
+    st-pixel-as-centroid: func(rast: borrow<raster>, x: u32, y: u32) -> result<geometry, raster-error>;
+
+    /// Nearest non-nodata value to the 1-based pixel (x, y) in a band.
+    st-nearest-value: func(rast: borrow<raster>, band: u32, x: u32, y: u32) -> result<f64, raster-error>;
+
+    /// 1-based pixel coordinates whose band value equals `search-value`.
+    st-pixel-of-value: func(rast: borrow<raster>, band: u32, search-value: f64) -> result<list<pixel-coord>, raster-error>;
+
+    /// One row of a multi-value pixel-of-value SRF: matched value + 1-based
+    /// (x, y). Matches PostGIS's `ST_PixelOfValue(rast, search[])` shape
+    /// `(val, x, y)`.
+    record pixel-value-coord {
+        val: f64,
+        x: u32,
+        y: u32,
+    }
+
+    /// ST_PixelOfValue(rast, band, search-values[]) — 1-based (x, y) for every
+    /// non-nodata pixel whose value matches any of `search-values`. Rows are
+    /// emitted row-major (top→bottom, left→right); a matching pixel emits one
+    /// row per matched search value.
+    st-pixels-of-values: func(
+        rast: borrow<raster>, band: u32, search-values: list<f64>,
+    ) -> result<list<pixel-value-coord>, raster-error>;
+
+    /// All band values as a row-major 2D array (rows of width values).
+    st-dump-values: func(rast: borrow<raster>, band: u32) -> result<list<list<f64>>, raster-error>;
+
+    /// One row of the multi-band `ST_DumpValues` SRF: the band number and the
+    /// band's values row-major as `list<list<f64>>` (outer length = height,
+    /// inner length = width). nodata pixels appear as NaN.
+    record band-values-entry {
+        nband: u32,
+        values: list<list<f64>>,
+    }
+
+    /// ST_DumpValues(rast, nband integer[]) — dump values for each of `bands`
+    /// (1-based). Output order matches the input `bands` order.
+    st-dump-values-multi: func(
+        rast: borrow<raster>, bands: list<u32>,
+    ) -> result<list<band-values-entry>, raster-error>;
+
+    /// World coordinate (x) of the upper-left corner of pixel (col, row).
+    st-raster-to-world-coord-x: func(rast: borrow<raster>, col: u32, row: u32) -> f64;
+    /// World coordinate (y) of the upper-left corner of pixel (col, row).
+    st-raster-to-world-coord-y: func(rast: borrow<raster>, col: u32, row: u32) -> f64;
+    /// 1-based (col, row) of the pixel covering world coordinate (wx, wy).
+    st-world-to-raster-coord: func(rast: borrow<raster>, wx: f64, wy: f64) -> tuple<s32, s32>;
+}
+
+/// Raster output formats (Feature 1, phase R2 — PNG only for now).
+interface postgis-raster-output {
+    use postgis-raster-types.{raster, raster-error};
+
+    /// Encode one band as an 8-bit greyscale PNG, linearly scaling the
+    /// band's non-nodata range to 0..255 (nodata -> 0).
+    st-as-png: func(rast: borrow<raster>, band: u32) -> result<list<u8>, raster-error>;
+
+    /// Encode the whole raster as a GeoTIFF (via the GDAL GTiff driver).
+    st-as-tiff: func(rast: borrow<raster>) -> result<list<u8>, raster-error>;
+
+    /// Encode one band as a baseline JPEG (via the GDAL JPEG driver). JPEG is
+    /// 8-bit only; the band's non-nodata range is linearly scaled to 0..255
+    /// (nodata -> 0) before encoding.
+    st-as-jpeg: func(rast: borrow<raster>, band: u32) -> result<list<u8>, raster-error>;
+
+    /// ST_AsGDALRaster — write the raster via any GDAL driver reachable
+    /// through `create_copy` (e.g. "GTiff", "PNG", "JPEG", "netCDF"). The
+    /// driver name must match a driver linked into the host `gdal-wasm`.
+    st-as-gdal-raster: func(
+        rast: borrow<raster>, format: string,
+    ) -> result<list<u8>, raster-error>;
+}
+
+/// Raster statistics (Feature 1, phase R4).
+interface postgis-raster-stats {
+    use postgis-raster-types.{raster, raster-error};
+
+    record summary-stats {
+        count: u64,
+        sum: f64,
+        mean: f64,
+        stddev: f64,
+        min: f64,
+        max: f64,
+    }
+    record histogram-bin {
+        min: f64,
+        max: f64,
+        count: u64,
+    }
+    record value-count {
+        value: f64,
+        count: u64,
+    }
+
+    /// ST_SummaryStats — count/sum/mean/stddev/min/max over non-nodata pixels.
+    st-summary-stats: func(rast: borrow<raster>, band: u32) -> result<summary-stats, raster-error>;
+    /// ST_Histogram — `bins` equal-width buckets over the value range.
+    st-histogram: func(rast: borrow<raster>, band: u32, bins: u32) -> result<list<histogram-bin>, raster-error>;
+    /// ST_ValueCount — distinct value -> pixel count (non-nodata).
+    st-value-count: func(rast: borrow<raster>, band: u32) -> result<list<value-count>, raster-error>;
+    /// ST_Quantile — value at `quantile` in [0,1] over sorted non-nodata pixels.
+    st-quantile: func(rast: borrow<raster>, band: u32, quantile: f64) -> result<f64, raster-error>;
+
+    /// ST_Count — count non-nodata pixels in a band.
+    st-count: func(rast: borrow<raster>, band: u32) -> result<u64, raster-error>;
+
+    /// ST_ValueCount(rast, band, search-value) — number of non-nodata pixels
+    /// exactly equal to `search-value` in the band.
+    st-value-count-of-value: func(
+        rast: borrow<raster>, band: u32, search-value: f64,
+    ) -> result<u64, raster-error>;
+
+    /// ST_ValuePercent — fraction (0..1) of non-nodata pixels equal to
+    /// `search-value` in the band. Returns NaN if the band has no non-nodata
+    /// pixels.
+    st-value-percent: func(
+        rast: borrow<raster>, band: u32, search-value: f64,
+    ) -> result<f64, raster-error>;
+
+    /// ST_ApproxSummaryStats — same shape as `st-summary-stats` but computed
+    /// over a bernoulli sample of the non-nodata pixels. `sample-percent` is
+    /// clamped to (0, 1]; `1.0` reduces to the exact `st-summary-stats`.
+    st-approx-summary-stats: func(
+        rast: borrow<raster>, band: u32, sample-percent: f64,
+    ) -> result<summary-stats, raster-error>;
+
+    /// ST_ApproxHistogram — like `st-histogram` but computed over a
+    /// bernoulli-style sample of the non-nodata pixels. `sample-percent`
+    /// is clamped to (0, 1]; `1.0` reduces to the exact histogram.
+    st-approx-histogram: func(
+        rast: borrow<raster>, band: u32, bins: u32, sample-percent: f64,
+    ) -> result<list<histogram-bin>, raster-error>;
+
+    /// One row of a quantile SRF: (requested quantile, value at that quantile).
+    /// Matches PostGIS's `ST_Quantile(rast, band, quantiles double precision[])`
+    /// output shape `(quantile, value)`.
+    record quantile-entry {
+        quantile: f64,
+        value: f64,
+    }
+
+    /// ST_Quantile(rast, band, quantiles[]) — value at each of `quantiles`
+    /// (each in [0,1]) over the sorted non-nodata pixels of `band`.
+    /// Interpolates linearly between adjacent samples.
+    st-quantiles: func(
+        rast: borrow<raster>, band: u32, quantiles: list<f64>,
+    ) -> result<list<quantile-entry>, raster-error>;
+
+    /// ST_ApproxQuantile — sampled scalar form. `sample-percent` is clamped
+    /// to (0, 1]; step is `ceil(1 / sample-percent)`. `quantile` is clamped
+    /// to [0, 1].
+    st-approx-quantile: func(
+        rast: borrow<raster>, band: u32, sample-percent: f64, quantile: f64,
+    ) -> result<f64, raster-error>;
+
+    /// ST_ApproxQuantile(rast, band, sample-percent, quantiles[]) — sampled
+    /// SETOF form. Sampling shape matches `st-approx-summary-stats`.
+    st-approx-quantiles: func(
+        rast: borrow<raster>, band: u32, sample-percent: f64, quantiles: list<f64>,
+    ) -> result<list<quantile-entry>, raster-error>;
+
+    /// ST_ValueCount(rast, band, search-values[], roundto) — for each search
+    /// value, the count of non-nodata pixels whose value rounded to `roundto`
+    /// equals the search value rounded to `roundto`. `roundto <= 0` means
+    /// exact-match. Output rows are in the input `search-values` order.
+    st-value-counts: func(
+        rast: borrow<raster>, band: u32, search-values: list<f64>, roundto: f64,
+    ) -> result<list<value-count>, raster-error>;
+
+    /// One row of a value-percent SRF: (search value, fraction 0..1 of the
+    /// band's non-nodata pixels equal to it).
+    record value-percent-entry {
+        value: f64,
+        percent: f64,
+    }
+
+    /// ST_ValuePercent(rast, band, search-values[], roundto) — per-search
+    /// fraction of non-nodata pixels matching. `roundto <= 0` means exact.
+    st-value-percents: func(
+        rast: borrow<raster>, band: u32, search-values: list<f64>, roundto: f64,
+    ) -> result<list<value-percent-entry>, raster-error>;
+
+    /// ST_ApproxValueCount(rast, band, search-value, sample-percent) — sampled
+    /// scalar count. Same subsampling shape as `st-approx-summary-stats`.
+    st-approx-value-count: func(
+        rast: borrow<raster>, band: u32, search-value: f64, sample-percent: f64,
+    ) -> result<u64, raster-error>;
+
+    /// ST_ApproxValuePercent(rast, band, search-value, sample-percent) —
+    /// sampled scalar fraction (0..1). NaN if the sample is empty.
+    st-approx-value-percent: func(
+        rast: borrow<raster>, band: u32, search-value: f64, sample-percent: f64,
+    ) -> result<f64, raster-error>;
+
+    /// ST_ApproxValueCount(rast, band, search-values[], sample-percent, roundto)
+    /// — sampled SETOF value/count.
+    st-approx-value-counts: func(
+        rast: borrow<raster>, band: u32, search-values: list<f64>,
+        sample-percent: f64, roundto: f64,
+    ) -> result<list<value-count>, raster-error>;
+
+    /// ST_ApproxValuePercent(rast, band, search-values[], sample-percent,
+    /// roundto) — sampled SETOF value/percent.
+    st-approx-value-percents: func(
+        rast: borrow<raster>, band: u32, search-values: list<f64>,
+        sample-percent: f64, roundto: f64,
+    ) -> result<list<value-percent-entry>, raster-error>;
+}
+
+/// Raster map algebra (Feature 1, phase R3).
+interface postgis-raster-mapalgebra {
+    use postgis-raster-types.{raster, raster-error, pixel-type};
+
+    /// ST_MapAlgebra (1 raster): per-pixel `expression` with the variable
+    /// `val`; produces a new single-band raster of `pixel-t`. nodata passes
+    /// through.
+    st-map-algebra: func(
+        rast: borrow<raster>, band: u32, pixel-t: pixel-type, expression: string,
+    ) -> result<raster, raster-error>;
+
+    /// ST_MapAlgebra (2 rasters): variables `val1`, `val2`. Rasters must
+    /// share dimensions; output aligns to rast1.
+    st-map-algebra2: func(
+        rast1: borrow<raster>, band1: u32,
+        rast2: borrow<raster>, band2: u32,
+        pixel-t: pixel-type, expression: string,
+    ) -> result<raster, raster-error>;
+
+    /// ST_Reclass — remap value ranges, e.g. "0-100:1, 100-200:2". Each rule
+    /// is "lo-hi:newval"; a value in [lo, hi] maps to newval; unmatched ->
+    /// nodata (NaN).
+    st-reclass: func(
+        rast: borrow<raster>, band: u32, reclass-expr: string, pixel-t: pixel-type,
+    ) -> result<raster, raster-error>;
+
+    /// ST_ReclassExact — exact-match remap, e.g. "1:10,2:20,3:30". Each rule
+    /// is "val:newval"; a pixel equal to val maps to newval; unmatched
+    /// non-nodata pixels pass through unchanged.
+    st-reclass-exact: func(
+        rast: borrow<raster>, band: u32, rules: string, pixel-t: pixel-type,
+    ) -> result<raster, raster-error>;
+}
+
+/// Raster <-> vector (Feature 1, phase R5).
+interface postgis-raster-vector {
+    use postgis-raster-types.{raster, raster-error};
+    use postgis-types.{geometry};
+
+    /// One row of a raster→vector SRF: the pixel geometry, its band value,
+    /// and its 1-based (col, row) coordinates. Shape matches the PostGIS
+    /// SRF signature ((geom, val, x, y)).
+    record pixel-vec-entry {
+        geom: geometry,
+        val: f64,
+        x: u32,
+        y: u32,
+    }
+
+    /// ST_DumpAsPolygons — merge contiguous equal-value, non-nodata pixels
+    /// (four-connectivity) into polygons; returns one (geometry, value) per
+    /// region.
+    st-dump-as-polygons: func(
+        rast: borrow<raster>, band: u32,
+    ) -> result<list<tuple<geometry, f64>>, raster-error>;
+
+    /// ST_PixelAsPolygons — every non-nodata pixel as its own square polygon
+    /// with the pixel value.
+    st-pixel-as-polygons: func(
+        rast: borrow<raster>, band: u32,
+    ) -> result<list<tuple<geometry, f64>>, raster-error>;
+
+    /// ST_PixelAsPoints — one POINT per non-nodata pixel, positioned at the
+    /// pixel's upper-left corner in world coordinates. Row shape matches
+    /// PostGIS: (geom, val, x, y).
+    st-pixel-as-points: func(
+        rast: borrow<raster>, band: u32,
+    ) -> result<list<pixel-vec-entry>, raster-error>;
+
+    /// ST_PixelAsCentroids — one POINT per non-nodata pixel at the pixel's
+    /// centre in world coordinates. Row shape matches PostGIS:
+    /// (geom, val, x, y).
+    st-pixel-as-centroids: func(
+        rast: borrow<raster>, band: u32,
+    ) -> result<list<pixel-vec-entry>, raster-error>;
+
+    /// ST_Polygon — the non-nodata footprint of a band as a (multi)polygon.
+    st-polygon: func(rast: borrow<raster>, band: u32) -> result<geometry, raster-error>;
+
+    /// ST_Intersection(rast, geom, band) — raster/geometry intersection SRF.
+    /// Vectorises the band via `st-dump-as-polygons` and intersects each
+    /// polygon with `geom`; returns one (geom, val) per non-empty
+    /// intersection. Matches PostGIS's `ST_Intersection(geomin, rast, band)`
+    /// shape `SETOF geomval`.
+    st-raster-intersection-geom: func(
+        rast: borrow<raster>, geom: borrow<geometry>, band: u32,
+    ) -> result<list<tuple<geometry, f64>>, raster-error>;
+}
+
+/// Raster predicates (Feature 1, phase R8). These operate on the raster's
+/// footprint (its extent polygon, which accounts for skew) — the
+/// convex-hull interpretation PostGIS uses for raster predicates.
+interface postgis-raster-predicates {
+    use postgis-raster-types.{raster, raster-error};
+    use postgis-types.{geometry};
+
+    /// ST_ConvexHull(raster) / ST_Envelope basis — the extent polygon.
+    st-raster-convex-hull: func(rast: borrow<raster>) -> result<geometry, raster-error>;
+
+    /// raster–raster footprint predicates.
+    st-raster-intersects: func(rast1: borrow<raster>, rast2: borrow<raster>) -> bool;
+    st-raster-contains: func(rast1: borrow<raster>, rast2: borrow<raster>) -> bool;
+    st-raster-within: func(rast1: borrow<raster>, rast2: borrow<raster>) -> bool;
+    st-raster-covers: func(rast1: borrow<raster>, rast2: borrow<raster>) -> bool;
+    st-raster-overlaps: func(rast1: borrow<raster>, rast2: borrow<raster>) -> bool;
+
+    /// raster–geometry footprint predicates.
+    st-raster-intersects-geom: func(rast: borrow<raster>, geom: borrow<geometry>) -> bool;
+    st-raster-contains-geom: func(rast: borrow<raster>, geom: borrow<geometry>) -> bool;
+}
+
+/// Raster processing (Feature 1, phases R7 DEM + R9 resample), via GDAL.
+interface postgis-raster-processing {
+    use postgis-raster-types.{raster, raster-error};
+
+    /// ST_Slope — slope (degrees) of a DEM band.
+    st-slope: func(rast: borrow<raster>, band: u32) -> result<raster, raster-error>;
+    /// ST_Aspect — aspect (compass direction of steepest slope).
+    st-aspect: func(rast: borrow<raster>, band: u32) -> result<raster, raster-error>;
+    /// ST_HillShade — shaded relief for the given sun azimuth/altitude.
+    st-hill-shade: func(
+        rast: borrow<raster>, band: u32, azimuth: f64, altitude: f64,
+    ) -> result<raster, raster-error>;
+    /// ST_Roughness — largest inter-cell difference of a central pixel.
+    st-roughness: func(rast: borrow<raster>, band: u32) -> result<raster, raster-error>;
+    /// ST_TRI — Terrain Ruggedness Index.
+    st-tri: func(rast: borrow<raster>, band: u32) -> result<raster, raster-error>;
+    /// ST_TPI — Topographic Position Index.
+    st-tpi: func(rast: borrow<raster>, band: u32) -> result<raster, raster-error>;
+
+    /// ST_Resize — resample to new pixel dimensions. `algorithm` is one of
+    /// nearest|bilinear|cubic|cubic-spline|lanczos|average|mode.
+    st-resize: func(
+        rast: borrow<raster>, width: u32, height: u32, algorithm: string,
+    ) -> result<raster, raster-error>;
+    /// ST_Rescale — resample to new pixel size (scale-x, scale-y).
+    st-rescale: func(
+        rast: borrow<raster>, scale-x: f64, scale-y: f64, algorithm: string,
+    ) -> result<raster, raster-error>;
+}
+
+/// Raster tiling SRFs (Feature 1, phase R10). PostGIS's `ST_Tile` /
+/// `ST_Retile` return SETOF raster — split a single raster into fixed
+/// tile-sized pieces (row-major). Each output tile is a MEM dataset
+/// carrying the correctly-shifted upper-left corner so the output
+/// mosaics back to the input.
+interface postgis-raster-tile {
+    use postgis-raster-types.{raster, raster-error};
+
+    /// ST_Tile — split `rast` into tiles of `tile-width` x `tile-height`.
+    /// Output order is row-major (left→right, top→bottom). Edge tiles at
+    /// the right / bottom shrink to the leftover extent (they are never
+    /// padded). Errors if the tile dims are zero.
+    st-tile: func(
+        rast: borrow<raster>, tile-width: u32, tile-height: u32,
+    ) -> result<list<raster>, raster-error>;
+
+    /// ST_Retile — retile `rast` to a new tile size. Semantically equivalent
+    /// to `st-tile` for a single-raster input (PostGIS's schema-level
+    /// `ST_Retile(schema, tab, col, sfx, sfy, tw, th, algo)` operates on a
+    /// coverage table, which has no analogue in a single-component call).
+    /// `algorithm` is currently informational (only nearest-neighbour is
+    /// applied); accepted values match `st-resize`.
+    st-retile: func(
+        rast: borrow<raster>,
+        tile-width: u32, tile-height: u32,
+        algorithm: string,
+    ) -> result<list<raster>, raster-error>;
+}
+
+/// Raster aggregates (Feature 1, phase R6). Match the shape of
+/// `postgis-aggregates` for geometry — accept a list of borrows,
+/// return a single combined raster.
+interface postgis-raster-aggregates {
+    use postgis-raster-types.{raster, raster-error};
+    use postgis-raster-stats.{summary-stats};
+
+    /// ST_Union(raster) — aggregate mosaic. All inputs must share
+    /// SRID, scale-x, scale-y, skew-x, skew-y; misalignment surfaces
+    /// as `type-mismatch`. The implementation snaps each input's
+    /// upper-left into the output's grid via nearest-cell rounding,
+    /// so small floating-point drift is forgiven. v1 unions band 1
+    /// only; output pixel type is f64; overlapping pixels are
+    /// last-write-wins (later raster in the input list overwrites
+    /// earlier where both non-nodata).
+    st-rast-union-aggregate: func(
+        rasters: list<borrow<raster>>,
+    ) -> result<raster, raster-error>;
+
+    /// ST_SummaryStatsAgg — count/sum/mean/stddev/min/max over `band` of
+    /// every input raster, considering non-nodata pixels only. Matches
+    /// PostGIS's aggregate `ST_SummaryStatsAgg(rast, nband, ...)`.
+    /// Stddev is population stddev (matches `st-summary-stats`).
+    st-summary-stats-agg: func(
+        rasters: list<borrow<raster>>, band: u32,
+    ) -> result<summary-stats, raster-error>;
+
+    /// ST_CountAgg — total count of non-nodata pixels in `band` across
+    /// every input raster.
+    st-count-agg: func(
+        rasters: list<borrow<raster>>, band: u32,
+    ) -> result<u64, raster-error>;
+
+    /// ST_ApproxCountAgg — sampled count. `sample-percent` is clamped to
+    /// (0, 1]; sample step is `ceil(1 / p)` per band (matches
+    /// `st-approx-summary-stats`).
+    st-approx-count-agg: func(
+        rasters: list<borrow<raster>>, band: u32, sample-percent: f64,
+    ) -> result<u64, raster-error>;
+}

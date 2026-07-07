@@ -1,0 +1,117 @@
+package postgis:wasm@0.1.0;
+
+/// Aggregate forms of common PostGIS functions. These are inherently
+/// set-valued: they accept a list of geometries (one per input row) and
+/// return a single aggregated result. The downstream accumulator stores
+/// per-row WKB and calls these at finalize, matching the postgis-batch
+/// pattern.
+interface postgis-aggregates {
+    use postgis-types.{geometry, postgis-error};
+
+    /// 3D bounding box.
+    record bbox3d {
+        min-x: f64,
+        min-y: f64,
+        min-z: f64,
+        max-x: f64,
+        max-y: f64,
+        max-z: f64,
+    }
+
+    /// P4 (2026-06-23) — 2D bounding box. Output of `st-extent`.
+    record bbox {
+        min-x: f64,
+        min-y: f64,
+        max-x: f64,
+        max-y: f64,
+    }
+
+    /// Aggregate union: dissolve all input geometries into one. Areal
+    /// inputs are unioned; mixed inputs fall back to a collection.
+    st-union-aggregate: func(geoms: list<borrow<geometry>>) -> result<geometry, postgis-error>;
+
+    /// Aggregate polygonize: closed rings among the input linestrings
+    /// become polygons, returned as a GEOMETRYCOLLECTION.
+    st-polygonize-aggregate: func(geoms: list<borrow<geometry>>) -> result<geometry, postgis-error>;
+
+    /// Aggregate make-line: input POINTs in order form a LINESTRING.
+    st-make-line-aggregate: func(points: list<borrow<geometry>>) -> result<geometry, postgis-error>;
+
+    /// Aggregate cluster-intersecting: each cluster of spatially
+    /// connected geometries is returned as one GEOMETRYCOLLECTION.
+    st-cluster-intersecting-aggregate: func(
+        geoms: list<borrow<geometry>>,
+    ) -> result<list<geometry>, postgis-error>;
+
+    /// Aggregate cluster-within: cluster by a proximity threshold.
+    st-cluster-within-aggregate: func(
+        geoms: list<borrow<geometry>>,
+        distance: f64,
+    ) -> result<list<geometry>, postgis-error>;
+
+    /// 3D bounding box over all inputs (Z defaults to 0 where absent).
+    ///
+    /// NB: spelled with the `-threed` suffix rather than `-threed-` so the
+    /// identifier conforms to the WIT spec (each hyphen-segment must
+    /// start with a letter). The strict guest-side wit-bindgen
+    /// (0.37+) rejected the previous `st-threed-extent` form; matching
+    /// suffix style is already used throughout `measurements.wit` /
+    /// `transformations.wit` / `predicates.wit` etc.
+    st-extent-threed: func(geoms: list<borrow<geometry>>) -> bbox3d;
+
+    /// P4 (2026-06-23) — 2D bbox aggregate. Native single-pass
+    /// version of `ST_Extent(geom)`. Returns the union of the
+    /// bounding rectangles of all input geometries. Replaces the
+    /// shim's prior `st_collect → st_envelope` workaround.
+    st-extent: func(geoms: list<borrow<geometry>>) -> bbox;
+
+    /// P7 (2026-06-23) — Coverage union aggregate. Inputs must form a
+    /// valid polygonal coverage (no overlaps, shared edges match
+    /// exactly). Inputs are first assembled into a single
+    /// GeometryCollection, then GEOS `coverage-union` is applied.
+    /// Falls back to the slower `st-union-aggregate` when inputs are
+    /// not a valid coverage.
+    st-coverage-union-aggregate: func(geoms: list<borrow<geometry>>) -> result<geometry, postgis-error>;
+
+    /// #664 — Memory-efficient union aggregate. Mirrors PostGIS's
+    /// `ST_MemUnion(geometry)`: accumulates polygonal inputs into a
+    /// running MultiPolygon via incremental pairwise union. Trades
+    /// throughput for lower peak memory vs. `st-union-aggregate`,
+    /// which materializes the full input set before unioning. Mixed
+    /// inputs (non-areal) fall back to a GEOMETRYCOLLECTION carrying
+    /// the unioned polygons alongside the rest, matching
+    /// `st-union-aggregate` semantics on heterogeneous input.
+    st-mem-union-aggregate: func(geoms: list<borrow<geometry>>) -> result<geometry, postgis-error>;
+
+    /// #736 — Aggregate ST_Collect. Collect all input geometries into
+    /// a single geometry: homogeneous inputs collapse to `MultiPoint`,
+    /// `MultiLineString`, or `MultiPolygon`; mixed inputs return a
+    /// `GEOMETRYCOLLECTION`. Mirrors PostGIS's aggregate
+    /// `ST_Collect(geometry set)` (distinct from `st-collect` in
+    /// `accessors.wit`, which unconditionally yields a collection).
+    st-collect-aggregate: func(geoms: list<borrow<geometry>>) -> result<geometry, postgis-error>;
+
+    /// #736 — Aggregate ST_Envelope. Bounding-box polygon over the
+    /// set. Geometry-shape counterpart to `st-extent` (which returns a
+    /// raw `bbox` record). Returns an error only on empty input.
+    st-envelope-aggregate: func(geoms: list<borrow<geometry>>) -> result<geometry, postgis-error>;
+
+    /// #736 — Aggregate form of ST_ClusterKMeans: returns one
+    /// GEOMETRYCOLLECTION per cluster. K-means groupings are computed
+    /// on centroid coordinates using the same k-means++ / Lloyd
+    /// iterations as the scalar `st-cluster-kmeans` window fn.
+    st-cluster-kmeans-aggregate: func(
+        geoms: list<borrow<geometry>>,
+        k: u32,
+    ) -> result<list<geometry>, postgis-error>;
+
+    /// #736 — Aggregate form of ST_ClusterDBSCAN. Returns one
+    /// GEOMETRYCOLLECTION per DBSCAN cluster. Noise points (labelled
+    /// `None` by the underlying DBSCAN) are emitted as singleton
+    /// collections at the tail so every input row is represented.
+    st-cluster-dbscan-aggregate: func(
+        geoms: list<borrow<geometry>>,
+        eps: f64,
+        min-points: u32,
+    ) -> result<list<geometry>, postgis-error>;
+}
