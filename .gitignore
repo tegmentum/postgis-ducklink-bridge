@@ -1,2 +1,4 @@
 target/
 Cargo.lock
+# Composed loadable (built via wac plug); not source-controlled.
+*.wasm
