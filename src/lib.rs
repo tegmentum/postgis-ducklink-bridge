@@ -100,6 +100,7 @@ mod bindings {
             "envelope",
             "error-code",
             "extopts",
+            "extremes",
             "f64-result",
             "factors",
             "feature",
@@ -138,6 +139,7 @@ mod bindings {
             "histogram",
             "icon-style",
             "index-hit",
+            "inscribed-circle",
             "intervalvalue",
             "inverse-result",
             "invokeinfo",
@@ -168,6 +170,7 @@ mod bindings {
             "parse-outcome",
             "parser-spec",
             "path-command",
+            "pixel-vec-entry",
             "placemark",
             "plan-node",
             "plan-shape",
@@ -223,6 +226,7 @@ mod bindings {
             "ts-filter-op",
             "ts-open-result",
             "uuidvalue",
+            "valid-detail",
             "value-type",
             "viewshed-mode",
             "viewshed-options",
@@ -251,6 +255,7 @@ use bindings::exports::duckdb::extension::guest;
 use bindings::postgis::wasm::postgis_accessors as pg_acc;
 use bindings::postgis::wasm::postgis_aggregates as pg_agg;
 use bindings::postgis::wasm::postgis_batch;
+use bindings::postgis::wasm::postgis_clustering as pg_cluster;
 use bindings::postgis::wasm::postgis_constructors as pg_ctor;
 use bindings::postgis::wasm::postgis_geocoder as pg_geo;
 use bindings::postgis::wasm::postgis_geodetic as pg_geog;
@@ -2068,68 +2073,6 @@ fn ret_to_witvalue_value_percent_entry(
     })?;
     Ok(types::Duckvalue::Complex(types::Complexvalue {
         type_expr: "postgis:wasm@0.1.0/postgis-raster-stats/value-percent-entry".into(),
-        json,
-    }))
-}
-
-fn arg_witvalue_pixel_vec_entry(
-    args: &[types::Duckvalue],
-    idx: usize,
-    name: &str,
-) -> Result<bindings::postgis::wasm::postgis_raster_vector::PixelVecEntry, types::Duckerror> {
-    let cmplx = match args.get(idx) {
-        Some(types::Duckvalue::Complex(c)) => c,
-        _ => {
-            return Err(types::Duckerror::Invalidargument(format!(
-                "{name}: arg {idx} must be COMPLEX (wit-value record)"
-            )))
-        }
-    };
-    serde_json::from_str::<bindings::postgis::wasm::postgis_raster_vector::PixelVecEntry>(
-        &cmplx.json,
-    )
-    .map_err(|e| types::Duckerror::Invalidargument(format!("{name}: decode arg {idx}: {}", e)))
-}
-
-fn parse_json_list_record_pixel_vec_entry(
-    args: &[types::Duckvalue],
-    idx: usize,
-    name: &str,
-) -> Result<Vec<bindings::postgis::wasm::postgis_raster_vector::PixelVecEntry>, types::Duckerror> {
-    let text = dv_text(args, idx, name)?;
-    serde_json::from_str::<Vec<bindings::postgis::wasm::postgis_raster_vector::PixelVecEntry>>(text)
-        .map_err(|e| {
-            types::Duckerror::Invalidargument(format!(
-                "{name}: arg {idx} must be JSON array of pixel-vec-entry ({e})"
-            ))
-        })
-}
-
-fn parse_json_list_list_record_pixel_vec_entry(
-    args: &[types::Duckvalue],
-    idx: usize,
-    name: &str,
-) -> Result<Vec<Vec<bindings::postgis::wasm::postgis_raster_vector::PixelVecEntry>>, types::Duckerror>
-{
-    let text = dv_text(args, idx, name)?;
-    serde_json::from_str::<Vec<Vec<bindings::postgis::wasm::postgis_raster_vector::PixelVecEntry>>>(
-        text,
-    )
-    .map_err(|e| {
-        types::Duckerror::Invalidargument(format!(
-            "{name}: arg {idx} must be JSON array of arrays of pixel-vec-entry ({e})"
-        ))
-    })
-}
-
-fn ret_to_witvalue_pixel_vec_entry(
-    upstream: bindings::postgis::wasm::postgis_raster_vector::PixelVecEntry,
-) -> Result<types::Duckvalue, types::Duckerror> {
-    let json = serde_json::to_string(&upstream).map_err(|e| {
-        types::Duckerror::Internal(format!("encode pixel_vec_entry wit-value: {}", e))
-    })?;
-    Ok(types::Duckvalue::Complex(types::Complexvalue {
-        type_expr: "postgis:wasm@0.1.0/postgis-raster-vector/pixel-vec-entry".into(),
         json,
     }))
 }
@@ -13350,26 +13293,6 @@ impl callback_dispatch::Guest for PostgisBridge {
             }
             816usize => {
                 let arg0 = from_raster_binary(
-                    dv_blob(&args, 0, "st_pixel_as_centroids")?,
-                    "st_pixel_as_centroids",
-                )?;
-                let arg1 = dv_i64(&args, 1, "st_pixel_as_centroids")? as u32;
-                {
-                    let __r = pg_rast_vec::st_pixel_as_centroids(&arg0, arg1).map_err(|e| {
-                        types::Duckerror::Invalidargument(format!(
-                            "st_pixel_as_centroids: {}",
-                            shim_err_string(e)
-                        ))
-                    })?;
-                    let mut __it = __r.into_iter();
-                    match __it.next() {
-                        Some(__rec) => ret_to_witvalue_pixel_vec_entry(__rec),
-                        None => Ok(types::Duckvalue::Null),
-                    }
-                }
-            }
-            817usize => {
-                let arg0 = from_raster_binary(
                     dv_blob(&args, 0, "st_pixel_as_point")?,
                     "st_pixel_as_point",
                 )?;
@@ -13385,27 +13308,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            818usize => {
-                let arg0 = from_raster_binary(
-                    dv_blob(&args, 0, "st_pixel_as_points")?,
-                    "st_pixel_as_points",
-                )?;
-                let arg1 = dv_i64(&args, 1, "st_pixel_as_points")? as u32;
-                {
-                    let __r = pg_rast_vec::st_pixel_as_points(&arg0, arg1).map_err(|e| {
-                        types::Duckerror::Invalidargument(format!(
-                            "st_pixel_as_points: {}",
-                            shim_err_string(e)
-                        ))
-                    })?;
-                    let mut __it = __r.into_iter();
-                    match __it.next() {
-                        Some(__rec) => ret_to_witvalue_pixel_vec_entry(__rec),
-                        None => Ok(types::Duckvalue::Null),
-                    }
-                }
-            }
-            819usize => {
+            817usize => {
                 let arg0 = from_raster_binary(
                     dv_blob(&args, 0, "st_pixel_as_polygon")?,
                     "st_pixel_as_polygon",
@@ -13422,7 +13325,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            820usize => {
+            818usize => {
                 let arg0 = from_raster_binary(
                     dv_blob(&args, 0, "st_pixel_as_polygons")?,
                     "st_pixel_as_polygons",
@@ -13460,14 +13363,14 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Text(__out))
                 }
             }
-            821usize => {
+            819usize => {
                 let arg0 =
                     from_raster_binary(dv_blob(&args, 0, "st_pixel_height")?, "st_pixel_height")?;
                 Ok(types::Duckvalue::Float64(pg_rast_acc::st_pixel_height(
                     &arg0,
                 )))
             }
-            822usize => {
+            820usize => {
                 let arg0 = from_raster_binary(
                     dv_blob(&args, 0, "st_pixel_of_value")?,
                     "st_pixel_of_value",
@@ -13488,14 +13391,14 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            823usize => {
+            821usize => {
                 let arg0 =
                     from_raster_binary(dv_blob(&args, 0, "st_pixel_width")?, "st_pixel_width")?;
                 Ok(types::Duckvalue::Float64(pg_rast_acc::st_pixel_width(
                     &arg0,
                 )))
             }
-            824usize => {
+            822usize => {
                 let arg0 = from_raster_binary(
                     dv_blob(&args, 0, "st_pixelascentroid")?,
                     "st_pixelascentroid",
@@ -13512,7 +13415,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            825usize => {
+            823usize => {
                 let arg0 =
                     from_raster_binary(dv_blob(&args, 0, "st_pixelaspoint")?, "st_pixelaspoint")?;
                 let arg1 = dv_i64(&args, 1, "st_pixelaspoint")? as u32;
@@ -13527,7 +13430,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            826usize => {
+            824usize => {
                 let arg0 = from_raster_binary(
                     dv_blob(&args, 0, "st_pixelaspolygon")?,
                     "st_pixelaspolygon",
@@ -13544,7 +13447,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            827usize => {
+            825usize => {
                 let arg0 = from_raster_binary(
                     dv_blob(&args, 0, "st_pixelaspolygons")?,
                     "st_pixelaspolygons",
@@ -13582,7 +13485,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Text(__out))
                 }
             }
-            828usize => {
+            826usize => {
                 let arg0 =
                     from_raster_binary(dv_blob(&args, 0, "st_pixelofvalue")?, "st_pixelofvalue")?;
                 let arg1 = dv_i64(&args, 1, "st_pixelofvalue")? as u32;
@@ -13601,7 +13504,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            829usize => {
+            827usize => {
                 let arg0 = from_raster_binary(
                     dv_blob(&args, 0, "st_pixels_of_values")?,
                     "st_pixels_of_values",
@@ -13622,14 +13525,14 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            830usize => {
+            828usize => {
                 let arg0 = dv_f64(&args, 0, "st_point")?;
                 let arg1 = dv_f64(&args, 1, "st_point")?;
                 Ok(types::Duckvalue::Blob(
                     pg_ctor::st_point(arg0, arg1).as_wkb().into(),
                 ))
             }
-            831usize => {
+            829usize => {
                 let arg0 = dv_text(&args, 0, "st_point_from_geohash")?;
                 {
                     let __r = pg_ctor::st_point_from_geohash(arg0, None).map_err(|e| {
@@ -13641,7 +13544,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            832usize => {
+            830usize => {
                 let arg0 = dv_text(&args, 0, "st_point_from_text")?;
                 {
                     let __r = pg_ctor::st_point_from_text(arg0).map_err(|e| {
@@ -13653,7 +13556,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            833usize => {
+            831usize => {
                 let arg0 = dv_text(&args, 0, "st_point_from_text_srid")?;
                 let arg1 = dv_i64(&args, 1, "st_point_from_text_srid")? as i32;
                 {
@@ -13666,7 +13569,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            834usize => {
+            832usize => {
                 let arg0 = dv_blob(&args, 0, "st_point_from_wkb")?;
                 {
                     let __r = pg_ctor::st_point_from_wkb(arg0).map_err(|e| {
@@ -13678,7 +13581,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            835usize => {
+            833usize => {
                 let arg0 = dv_blob(&args, 0, "st_point_from_wkb_srid")?;
                 let arg1 = dv_i64(&args, 1, "st_point_from_wkb_srid")? as i32;
                 {
@@ -13691,7 +13594,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            836usize => {
+            834usize => {
                 let arg0 = from_wkb(
                     dv_blob(&args, 0, "st_point_inside_circle")?,
                     "st_point_inside_circle",
@@ -13703,7 +13606,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     &arg0, arg1, arg2, arg3,
                 )))
             }
-            837usize => {
+            835usize => {
                 let arg0 = dv_f64(&args, 0, "st_point_m")?;
                 let arg1 = dv_f64(&args, 1, "st_point_m")?;
                 let arg2 = dv_f64(&args, 2, "st_point_m")?;
@@ -13711,7 +13614,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     pg_ctor::st_point_m(arg0, arg1, arg2).as_wkb().into(),
                 ))
             }
-            838usize => {
+            836usize => {
                 let arg0 = dv_f64(&args, 0, "st_point_m_srid")?;
                 let arg1 = dv_f64(&args, 1, "st_point_m_srid")?;
                 let arg2 = dv_f64(&args, 2, "st_point_m_srid")?;
@@ -13722,7 +13625,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                         .into(),
                 ))
             }
-            839usize => {
+            837usize => {
                 let arg0 = dv_blob(&args, 0, "st_point_m_threed")?;
                 Ok(types::Duckvalue::Float64(
                     pg_sfcgal::st_point_m_threed(arg0).map_err(|e| {
@@ -13733,7 +13636,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     })?,
                 ))
             }
-            840usize => {
+            838usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_point_n")?, "st_point_n")?;
                 let arg1 = dv_i64(&args, 1, "st_point_n")? as u32;
                 {
@@ -13746,7 +13649,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            841usize => {
+            839usize => {
                 let arg0: Vec<Vec<u8>> = parse_json_list_list_u8(&args, 0, "st_point_n_batch")?;
                 let arg1: Vec<i32> = parse_json_list_i32(&args, 1, "st_point_n_batch")?;
                 {
@@ -13757,7 +13660,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Text(__json))
                 }
             }
-            842usize => {
+            840usize => {
                 let arg0 = dv_blob(&args, 0, "st_point_n_threed")?;
                 let arg1 = dv_i64(&args, 1, "st_point_n_threed")? as i32;
                 Ok(types::Duckvalue::Blob(
@@ -13770,7 +13673,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     .into(),
                 ))
             }
-            843usize => {
+            841usize => {
                 let arg0 = from_wkb(
                     dv_blob(&args, 0, "st_point_on_surface")?,
                     "st_point_on_surface",
@@ -13785,7 +13688,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            844usize => {
+            842usize => {
                 let arg0: Vec<Vec<u8>> =
                     parse_json_list_list_u8(&args, 0, "st_point_on_surface_batch")?;
                 {
@@ -13799,7 +13702,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Text(__json))
                 }
             }
-            845usize => {
+            843usize => {
                 let arg0 = dv_f64(&args, 0, "st_point_srid")?;
                 let arg1 = dv_f64(&args, 1, "st_point_srid")?;
                 let arg2 = dv_i64(&args, 2, "st_point_srid")? as i32;
@@ -13807,7 +13710,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     pg_ctor::st_point_srid(arg0, arg1, arg2).as_wkb().into(),
                 ))
             }
-            846usize => {
+            844usize => {
                 let arg0 = dv_blob(&args, 0, "st_point_x_threed")?;
                 Ok(types::Duckvalue::Float64(
                     pg_sfcgal::st_point_x_threed(arg0).map_err(|e| {
@@ -13818,7 +13721,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     })?,
                 ))
             }
-            847usize => {
+            845usize => {
                 let arg0 = dv_blob(&args, 0, "st_point_y_threed")?;
                 Ok(types::Duckvalue::Float64(
                     pg_sfcgal::st_point_y_threed(arg0).map_err(|e| {
@@ -13829,7 +13732,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     })?,
                 ))
             }
-            848usize => {
+            846usize => {
                 let arg0 = dv_f64(&args, 0, "st_point_z")?;
                 let arg1 = dv_f64(&args, 1, "st_point_z")?;
                 let arg2 = dv_f64(&args, 2, "st_point_z")?;
@@ -13837,7 +13740,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     pg_ctor::st_point_z(arg0, arg1, arg2).as_wkb().into(),
                 ))
             }
-            849usize => {
+            847usize => {
                 let arg0 = dv_f64(&args, 0, "st_point_z_srid")?;
                 let arg1 = dv_f64(&args, 1, "st_point_z_srid")?;
                 let arg2 = dv_f64(&args, 2, "st_point_z_srid")?;
@@ -13848,7 +13751,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                         .into(),
                 ))
             }
-            850usize => {
+            848usize => {
                 let arg0 = dv_blob(&args, 0, "st_point_z_threed")?;
                 Ok(types::Duckvalue::Float64(
                     pg_sfcgal::st_point_z_threed(arg0).map_err(|e| {
@@ -13859,7 +13762,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     })?,
                 ))
             }
-            851usize => {
+            849usize => {
                 let arg0 = dv_f64(&args, 0, "st_point_zm")?;
                 let arg1 = dv_f64(&args, 1, "st_point_zm")?;
                 let arg2 = dv_f64(&args, 2, "st_point_zm")?;
@@ -13868,7 +13771,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     pg_ctor::st_point_zm(arg0, arg1, arg2, arg3).as_wkb().into(),
                 ))
             }
-            852usize => {
+            850usize => {
                 let arg0 = dv_f64(&args, 0, "st_point_zm_srid")?;
                 let arg1 = dv_f64(&args, 1, "st_point_zm_srid")?;
                 let arg2 = dv_f64(&args, 2, "st_point_zm_srid")?;
@@ -13880,7 +13783,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                         .into(),
                 ))
             }
-            853usize => {
+            851usize => {
                 let arg0 = dv_text(&args, 0, "st_pointfromgeohash")?;
                 {
                     let __r = pg_ctor::st_point_from_geohash(arg0, None).map_err(|e| {
@@ -13892,7 +13795,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            854usize => {
+            852usize => {
                 let arg0 = dv_text(&args, 0, "st_pointfromtext")?;
                 {
                     let __r = pg_ctor::st_point_from_text(arg0).map_err(|e| {
@@ -13904,7 +13807,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            855usize => {
+            853usize => {
                 let arg0 = dv_blob(&args, 0, "st_pointfromwkb")?;
                 {
                     let __r = pg_ctor::st_point_from_wkb(arg0).map_err(|e| {
@@ -13916,7 +13819,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            856usize => {
+            854usize => {
                 let arg0 = from_wkb(
                     dv_blob(&args, 0, "st_pointinsidecircle")?,
                     "st_pointinsidecircle",
@@ -13928,7 +13831,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     &arg0, arg1, arg2, arg3,
                 )))
             }
-            857usize => {
+            855usize => {
                 let arg0 = dv_f64(&args, 0, "st_pointm")?;
                 let arg1 = dv_f64(&args, 1, "st_pointm")?;
                 let arg2 = dv_f64(&args, 2, "st_pointm")?;
@@ -13936,7 +13839,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     pg_ctor::st_point_m(arg0, arg1, arg2).as_wkb().into(),
                 ))
             }
-            858usize => {
+            856usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_pointn")?, "st_pointn")?;
                 let arg1 = dv_i64(&args, 1, "st_pointn")? as u32;
                 {
@@ -13949,7 +13852,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            859usize => {
+            857usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_pointonsurface")?, "st_pointonsurface")?;
                 {
                     let __r = pg_acc::st_point_on_surface(&arg0).map_err(|e| {
@@ -13961,13 +13864,13 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            860usize => {
+            858usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_points")?, "st_points")?;
                 Ok(types::Duckvalue::Blob(
                     pg_acc::st_points(&arg0).as_wkb().into(),
                 ))
             }
-            861usize => {
+            859usize => {
                 let arg0 = dv_f64(&args, 0, "st_pointz")?;
                 let arg1 = dv_f64(&args, 1, "st_pointz")?;
                 let arg2 = dv_f64(&args, 2, "st_pointz")?;
@@ -13975,7 +13878,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     pg_ctor::st_point_z(arg0, arg1, arg2).as_wkb().into(),
                 ))
             }
-            862usize => {
+            860usize => {
                 let arg0 = dv_f64(&args, 0, "st_pointzm")?;
                 let arg1 = dv_f64(&args, 1, "st_pointzm")?;
                 let arg2 = dv_f64(&args, 2, "st_pointzm")?;
@@ -13984,7 +13887,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     pg_ctor::st_point_zm(arg0, arg1, arg2, arg3).as_wkb().into(),
                 ))
             }
-            863usize => {
+            861usize => {
                 let arg0 = from_raster_binary(dv_blob(&args, 0, "st_polygon")?, "st_polygon")?;
                 let arg1 = dv_i64(&args, 1, "st_polygon")? as u32;
                 {
@@ -13997,7 +13900,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            864usize => {
+            862usize => {
                 let arg0 = dv_text(&args, 0, "st_polygon_from_text")?;
                 {
                     let __r = pg_ctor::st_polygon_from_text(arg0).map_err(|e| {
@@ -14009,7 +13912,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            865usize => {
+            863usize => {
                 let arg0 = dv_text(&args, 0, "st_polygon_from_text_srid")?;
                 let arg1 = dv_i64(&args, 1, "st_polygon_from_text_srid")? as i32;
                 {
@@ -14022,7 +13925,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            866usize => {
+            864usize => {
                 let arg0 = dv_blob(&args, 0, "st_polygon_from_wkb")?;
                 {
                     let __r = pg_ctor::st_polygon_from_wkb(arg0).map_err(|e| {
@@ -14034,7 +13937,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            867usize => {
+            865usize => {
                 let arg0 = dv_blob(&args, 0, "st_polygon_from_wkb_srid")?;
                 let arg1 = dv_i64(&args, 1, "st_polygon_from_wkb_srid")? as i32;
                 {
@@ -14047,7 +13950,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            868usize => {
+            866usize => {
                 let arg0 = dv_text(&args, 0, "st_polygonfromtext")?;
                 {
                     let __r = pg_ctor::st_polygon_from_text(arg0).map_err(|e| {
@@ -14059,7 +13962,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            869usize => {
+            867usize => {
                 let arg0 = dv_blob(&args, 0, "st_polygonfromwkb")?;
                 {
                     let __r = pg_ctor::st_polygon_from_wkb(arg0).map_err(|e| {
@@ -14071,7 +13974,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            870usize => {
+            868usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_polygonize")?, "st_polygonize")?;
                 {
                     let __r = pg_proc::st_polygonize(&arg0).map_err(|e| {
@@ -14083,7 +13986,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            871usize => {
+            869usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "st_polygonize_as_raster")?,
                     "st_polygonize_as_raster",
@@ -14101,7 +14004,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            872usize => {
+            870usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "st_polygonize_topology")?,
                     "st_polygonize_topology",
@@ -14119,7 +14022,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            873usize => {
+            871usize => {
                 let arg0 = dv_text(&args, 0, "st_polyhedralsurface_from_text")?;
                 {
                     let __r = pg_ctor::st_polyhedralsurface_from_text(arg0).map_err(|e| {
@@ -14131,7 +14034,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            874usize => {
+            872usize => {
                 let arg0 = dv_blob(&args, 0, "st_polyhedralsurface_from_wkb")?;
                 {
                     let __r = pg_ctor::st_polyhedralsurface_from_wkb(arg0).map_err(|e| {
@@ -14143,7 +14046,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            875usize => {
+            873usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_project")?, "st_project")?;
                 let arg1 = dv_f64(&args, 1, "st_project")?;
                 let arg2 = dv_f64(&args, 2, "st_project")?;
@@ -14157,7 +14060,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            876usize => {
+            874usize => {
                 let arg0: Vec<Vec<u8>> = parse_json_list_list_u8(&args, 0, "st_project_batch")?;
                 let arg1: Vec<f64> = parse_json_list_f64(&args, 1, "st_project_batch")?;
                 let arg2: Vec<f64> = parse_json_list_f64(&args, 2, "st_project_batch")?;
@@ -14169,7 +14072,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Text(__json))
                 }
             }
-            877usize => {
+            875usize => {
                 let arg0 = from_raster_binary(dv_blob(&args, 0, "st_quantile")?, "st_quantile")?;
                 let arg1 = dv_i64(&args, 1, "st_quantile")? as u32;
                 let arg2 = dv_f64(&args, 2, "st_quantile")?;
@@ -14182,7 +14085,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     })?,
                 ))
             }
-            878usize => {
+            876usize => {
                 let arg0 = from_raster_binary(dv_blob(&args, 0, "st_quantiles")?, "st_quantiles")?;
                 let arg1 = dv_i64(&args, 1, "st_quantiles")? as u32;
                 let arg2: Vec<f64> = parse_json_list_f64(&args, 2, "st_quantiles")?;
@@ -14200,7 +14103,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            879usize => {
+            877usize => {
                 let arg0 = from_wkb(
                     dv_blob(&args, 0, "st_quantize_coordinates")?,
                     "st_quantize_coordinates",
@@ -14218,7 +14121,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            880usize => {
+            878usize => {
                 let arg0 = from_wkb(
                     dv_blob(&args, 0, "st_quantizecoordinates")?,
                     "st_quantizecoordinates",
@@ -14236,7 +14139,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            881usize => {
+            879usize => {
                 let arg0: Vec<Vec<u8>> =
                     parse_json_list_list_u8(&args, 0, "st_rast_height_dfer_batch")?;
                 {
@@ -14247,7 +14150,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            882usize => {
+            880usize => {
                 let arg0: Vec<Vec<u8>> =
                     parse_json_list_list_u8(&args, 0, "st_rast_scale_x_dfer_batch")?;
                 {
@@ -14258,7 +14161,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            883usize => {
+            881usize => {
                 let arg0: Vec<Vec<u8>> =
                     parse_json_list_list_u8(&args, 0, "st_rast_scale_y_dfer_batch")?;
                 {
@@ -14269,7 +14172,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            884usize => {
+            882usize => {
                 let arg0: Vec<Vec<u8>> =
                     parse_json_list_list_u8(&args, 0, "st_rast_skew_x_dfer_batch")?;
                 {
@@ -14280,7 +14183,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            885usize => {
+            883usize => {
                 let arg0: Vec<Vec<u8>> =
                     parse_json_list_list_u8(&args, 0, "st_rast_skew_y_dfer_batch")?;
                 {
@@ -14291,7 +14194,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            886usize => {
+            884usize => {
                 let arg0: Vec<Vec<u8>> =
                     parse_json_list_list_u8(&args, 0, "st_rast_srid_dfer_batch")?;
                 {
@@ -14302,7 +14205,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            887usize => {
+            885usize => {
                 let arg0: Vec<Vec<u8>> =
                     parse_json_list_list_u8(&args, 0, "st_rast_upper_left_x_dfer_batch")?;
                 {
@@ -14313,7 +14216,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            888usize => {
+            886usize => {
                 let arg0: Vec<Vec<u8>> =
                     parse_json_list_list_u8(&args, 0, "st_rast_upper_left_y_dfer_batch")?;
                 {
@@ -14324,7 +14227,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            889usize => {
+            887usize => {
                 let arg0: Vec<Vec<u8>> =
                     parse_json_list_list_u8(&args, 0, "st_rast_width_dfer_batch")?;
                 {
@@ -14335,7 +14238,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            890usize => {
+            888usize => {
                 let arg0 =
                     from_raster_binary(dv_blob(&args, 0, "st_rastenvelope")?, "st_rastenvelope")?;
                 {
@@ -14348,7 +14251,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            891usize => {
+            889usize => {
                 let arg0 = from_raster_binary(
                     dv_blob(&args, 0, "st_raster_contains")?,
                     "st_raster_contains",
@@ -14361,7 +14264,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     &arg0, &arg1,
                 )))
             }
-            892usize => {
+            890usize => {
                 let arg0 = from_raster_binary(
                     dv_blob(&args, 0, "st_raster_contains_geom")?,
                     "st_raster_contains_geom",
@@ -14374,7 +14277,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     pg_rast_pred::st_raster_contains_geom(&arg0, &arg1),
                 ))
             }
-            893usize => {
+            891usize => {
                 let arg0 = from_raster_binary(
                     dv_blob(&args, 0, "st_raster_convex_hull")?,
                     "st_raster_convex_hull",
@@ -14389,7 +14292,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            894usize => {
+            892usize => {
                 let arg0 =
                     from_raster_binary(dv_blob(&args, 0, "st_raster_covers")?, "st_raster_covers")?;
                 let arg1 =
@@ -14398,7 +14301,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     &arg0, &arg1,
                 )))
             }
-            895usize => {
+            893usize => {
                 let arg0 = from_raster_binary(
                     dv_blob(&args, 0, "st_raster_intersection_geom")?,
                     "st_raster_intersection_geom",
@@ -14441,7 +14344,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Text(__out))
                 }
             }
-            896usize => {
+            894usize => {
                 let arg0 = from_raster_binary(
                     dv_blob(&args, 0, "st_raster_intersects")?,
                     "st_raster_intersects",
@@ -14454,7 +14357,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     pg_rast_pred::st_raster_intersects(&arg0, &arg1),
                 ))
             }
-            897usize => {
+            895usize => {
                 let arg0 = from_raster_binary(
                     dv_blob(&args, 0, "st_raster_intersects_geom")?,
                     "st_raster_intersects_geom",
@@ -14467,7 +14370,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     pg_rast_pred::st_raster_intersects_geom(&arg0, &arg1),
                 ))
             }
-            898usize => {
+            896usize => {
                 let arg0 = from_raster_binary(
                     dv_blob(&args, 0, "st_raster_overlaps")?,
                     "st_raster_overlaps",
@@ -14480,7 +14383,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     &arg0, &arg1,
                 )))
             }
-            899usize => {
+            897usize => {
                 let arg0 = from_raster_binary(
                     dv_blob(&args, 0, "st_raster_to_world_coord_x")?,
                     "st_raster_to_world_coord_x",
@@ -14491,7 +14394,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     pg_rast_px::st_raster_to_world_coord_x(&arg0, arg1, arg2),
                 ))
             }
-            900usize => {
+            898usize => {
                 let arg0 = from_raster_binary(
                     dv_blob(&args, 0, "st_raster_to_world_coord_y")?,
                     "st_raster_to_world_coord_y",
@@ -14502,7 +14405,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     pg_rast_px::st_raster_to_world_coord_y(&arg0, arg1, arg2),
                 ))
             }
-            901usize => {
+            899usize => {
                 let arg0 =
                     from_raster_binary(dv_blob(&args, 0, "st_raster_within")?, "st_raster_within")?;
                 let arg1 =
@@ -14511,7 +14414,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     &arg0, &arg1,
                 )))
             }
-            902usize => {
+            900usize => {
                 let arg0 = from_raster_binary(
                     dv_blob(&args, 0, "st_rastercontains")?,
                     "st_rastercontains",
@@ -14524,7 +14427,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     &arg0, &arg1,
                 )))
             }
-            903usize => {
+            901usize => {
                 let arg0 = from_raster_binary(
                     dv_blob(&args, 0, "st_rastercontainsgeom")?,
                     "st_rastercontainsgeom",
@@ -14537,7 +14440,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     pg_rast_pred::st_raster_contains_geom(&arg0, &arg1),
                 ))
             }
-            904usize => {
+            902usize => {
                 let arg0 = from_raster_binary(
                     dv_blob(&args, 0, "st_rasterconvexhull")?,
                     "st_rasterconvexhull",
@@ -14552,7 +14455,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            905usize => {
+            903usize => {
                 let arg0 =
                     from_raster_binary(dv_blob(&args, 0, "st_rastercovers")?, "st_rastercovers")?;
                 let arg1 =
@@ -14561,7 +14464,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     &arg0, &arg1,
                 )))
             }
-            906usize => {
+            904usize => {
                 let arg0 = from_raster_binary(
                     dv_blob(&args, 0, "st_rasterintersects")?,
                     "st_rasterintersects",
@@ -14574,7 +14477,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     pg_rast_pred::st_raster_intersects(&arg0, &arg1),
                 ))
             }
-            907usize => {
+            905usize => {
                 let arg0 = from_raster_binary(
                     dv_blob(&args, 0, "st_rasterintersectsgeom")?,
                     "st_rasterintersectsgeom",
@@ -14587,7 +14490,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     pg_rast_pred::st_raster_intersects_geom(&arg0, &arg1),
                 ))
             }
-            908usize => {
+            906usize => {
                 let arg0 = from_raster_binary(
                     dv_blob(&args, 0, "st_rasteroverlaps")?,
                     "st_rasteroverlaps",
@@ -14600,7 +14503,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     &arg0, &arg1,
                 )))
             }
-            909usize => {
+            907usize => {
                 let arg0 = from_raster_binary(
                     dv_blob(&args, 0, "st_rastertoworldcoordx")?,
                     "st_rastertoworldcoordx",
@@ -14611,7 +14514,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     pg_rast_px::st_raster_to_world_coord_x(&arg0, arg1, arg2),
                 ))
             }
-            910usize => {
+            908usize => {
                 let arg0 = from_raster_binary(
                     dv_blob(&args, 0, "st_rastertoworldcoordy")?,
                     "st_rastertoworldcoordy",
@@ -14622,7 +14525,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     pg_rast_px::st_raster_to_world_coord_y(&arg0, arg1, arg2),
                 ))
             }
-            911usize => {
+            909usize => {
                 let arg0 =
                     from_raster_binary(dv_blob(&args, 0, "st_rasterwithin")?, "st_rasterwithin")?;
                 let arg1 =
@@ -14631,23 +14534,23 @@ impl callback_dispatch::Guest for PostgisBridge {
                     &arg0, &arg1,
                 )))
             }
-            912usize => {
+            910usize => {
                 let arg0 =
                     from_raster_binary(dv_blob(&args, 0, "st_rastheight")?, "st_rastheight")?;
                 Ok(types::Duckvalue::Int64(pg_rast_acc::st_height(&arg0) as i64))
             }
-            913usize => {
+            911usize => {
                 let arg0 =
                     from_raster_binary(dv_blob(&args, 0, "st_rastnumbands")?, "st_rastnumbands")?;
                 Ok(types::Duckvalue::Int64(
                     pg_rast_acc::st_num_bands(&arg0) as i64
                 ))
             }
-            914usize => {
+            912usize => {
                 let arg0 = from_raster_binary(dv_blob(&args, 0, "st_rastwidth")?, "st_rastwidth")?;
                 Ok(types::Duckvalue::Int64(pg_rast_acc::st_width(&arg0) as i64))
             }
-            915usize => {
+            913usize => {
                 let arg0 = from_raster_binary(dv_blob(&args, 0, "st_reclass")?, "st_reclass")?;
                 let arg1 = dv_i64(&args, 1, "st_reclass")? as u32;
                 let arg2 = dv_text(&args, 2, "st_reclass")?;
@@ -14678,7 +14581,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_binary().into()))
                 }
             }
-            916usize => {
+            914usize => {
                 let arg0 =
                     from_raster_binary(dv_blob(&args, 0, "st_reclass_exact")?, "st_reclass_exact")?;
                 let arg1 = dv_i64(&args, 1, "st_reclass_exact")? as u32;
@@ -14711,7 +14614,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_binary().into()))
                 }
             }
-            917usize => {
+            915usize => {
                 let arg0 = from_wkb(
                     dv_blob(&args, 0, "st_reduce_precision")?,
                     "st_reduce_precision",
@@ -14727,7 +14630,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            918usize => {
+            916usize => {
                 let arg0 = from_wkb(
                     dv_blob(&args, 0, "st_reduce_precision_flags")?,
                     "st_reduce_precision_flags",
@@ -14745,7 +14648,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            919usize => {
+            917usize => {
                 let arg0 = from_wkb(
                     dv_blob(&args, 0, "st_reduceprecision")?,
                     "st_reduceprecision",
@@ -14761,7 +14664,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            920usize => {
+            918usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_relate")?, "st_relate")?;
                 let arg1 = from_wkb(dv_blob(&args, 1, "st_relate")?, "st_relate")?;
                 Ok(types::Duckvalue::Text(
@@ -14774,7 +14677,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     .into(),
                 ))
             }
-            921usize => {
+            919usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_relate_bnr")?, "st_relate_bnr")?;
                 let arg1 = from_wkb(dv_blob(&args, 1, "st_relate_bnr")?, "st_relate_bnr")?;
                 let arg2 = dv_i64(&args, 2, "st_relate_bnr")? as u32;
@@ -14788,7 +14691,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     .into(),
                 ))
             }
-            922usize => {
+            920usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_relate_match")?, "st_relate_match")?;
                 let arg1 = from_wkb(dv_blob(&args, 1, "st_relate_match")?, "st_relate_match")?;
                 let arg2 = dv_text(&args, 2, "st_relate_match")?;
@@ -14801,7 +14704,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     })?,
                 ))
             }
-            923usize => {
+            921usize => {
                 let arg0 = from_wkb(
                     dv_blob(&args, 0, "st_relate_with_pattern")?,
                     "st_relate_with_pattern",
@@ -14820,7 +14723,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     })?,
                 ))
             }
-            924usize => {
+            922usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_relatematch")?, "st_relatematch")?;
                 let arg1 = from_wkb(dv_blob(&args, 1, "st_relatematch")?, "st_relatematch")?;
                 let arg2 = dv_text(&args, 2, "st_relatematch")?;
@@ -14833,7 +14736,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     })?,
                 ))
             }
-            925usize => {
+            923usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_remove_point")?, "st_remove_point")?;
                 let arg1 = dv_i64(&args, 1, "st_remove_point")? as u32;
                 {
@@ -14846,7 +14749,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            926usize => {
+            924usize => {
                 let arg0 = from_wkb(
                     dv_blob(&args, 0, "st_remove_repeated_points")?,
                     "st_remove_repeated_points",
@@ -14861,7 +14764,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            927usize => {
+            925usize => {
                 let arg0 = from_wkb(
                     dv_blob(&args, 0, "st_remove_small_parts")?,
                     "st_remove_small_parts",
@@ -14877,7 +14780,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            928usize => {
+            926usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_removepoint")?, "st_removepoint")?;
                 let arg1 = dv_i64(&args, 1, "st_removepoint")? as u32;
                 {
@@ -14890,7 +14793,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            929usize => {
+            927usize => {
                 let arg0 = from_wkb(
                     dv_blob(&args, 0, "st_removerepeatedpoints")?,
                     "st_removerepeatedpoints",
@@ -14905,7 +14808,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            930usize => {
+            928usize => {
                 let arg0 = from_wkb(
                     dv_blob(&args, 0, "st_removesmallparts")?,
                     "st_removesmallparts",
@@ -14921,7 +14824,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            931usize => {
+            929usize => {
                 let arg0 = from_raster_binary(dv_blob(&args, 0, "st_rescale")?, "st_rescale")?;
                 let arg1 = dv_f64(&args, 1, "st_rescale")?;
                 let arg2 = dv_f64(&args, 2, "st_rescale")?;
@@ -14936,7 +14839,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_binary().into()))
                 }
             }
-            932usize => {
+            930usize => {
                 let arg0 = from_raster_binary(dv_blob(&args, 0, "st_resize")?, "st_resize")?;
                 let arg1 = dv_i64(&args, 1, "st_resize")? as u32;
                 let arg2 = dv_i64(&args, 2, "st_resize")? as u32;
@@ -14951,7 +14854,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_binary().into()))
                 }
             }
-            933usize => {
+            931usize => {
                 let arg0 = from_raster_binary(dv_blob(&args, 0, "st_retile")?, "st_retile")?;
                 let arg1 = dv_i64(&args, 1, "st_retile")? as u32;
                 let arg2 = dv_i64(&args, 2, "st_retile")? as u32;
@@ -14970,7 +14873,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            934usize => {
+            932usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_reverse")?, "st_reverse")?;
                 {
                     let __r = pg_proc::st_reverse(&arg0).map_err(|e| {
@@ -14982,7 +14885,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            935usize => {
+            933usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_reverse_threed")?, "st_reverse_threed")?;
                 {
                     let __r = pg_threed::st_reverse_threed(&arg0).map_err(|e| {
@@ -14994,7 +14897,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            936usize => {
+            934usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_reversethreed")?, "st_reversethreed")?;
                 {
                     let __r = pg_threed::st_reverse_threed(&arg0).map_err(|e| {
@@ -15006,7 +14909,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            937usize => {
+            935usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_rotate")?, "st_rotate")?;
                 let arg1 = dv_f64(&args, 1, "st_rotate")?;
                 {
@@ -15019,7 +14922,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            938usize => {
+            936usize => {
                 let arg0 = from_wkb(
                     dv_blob(&args, 0, "st_rotate_around_point")?,
                     "st_rotate_around_point",
@@ -15040,7 +14943,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            939usize => {
+            937usize => {
                 let arg0 = from_wkb(
                     dv_blob(&args, 0, "st_rotate_around_xy")?,
                     "st_rotate_around_xy",
@@ -15059,7 +14962,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            940usize => {
+            938usize => {
                 let arg0 = dv_blob(&args, 0, "st_rotate_threed")?;
                 let arg1 = dv_f64(&args, 1, "st_rotate_threed")?;
                 let arg2 = dv_f64(&args, 2, "st_rotate_threed")?;
@@ -15075,7 +14978,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     .into(),
                 ))
             }
-            941usize => {
+            939usize => {
                 let arg0 = dv_blob(&args, 0, "st_rotate_threed_around_center")?;
                 let arg1 = dv_f64(&args, 1, "st_rotate_threed_around_center")?;
                 let arg2 = dv_f64(&args, 2, "st_rotate_threed_around_center")?;
@@ -15097,7 +15000,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     .into(),
                 ))
             }
-            942usize => {
+            940usize => {
                 let arg0 = dv_blob(&args, 0, "st_rotate_twod_around_center")?;
                 let arg1 = dv_f64(&args, 1, "st_rotate_twod_around_center")?;
                 let arg2 = dv_f64(&args, 2, "st_rotate_twod_around_center")?;
@@ -15114,7 +15017,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     .into(),
                 ))
             }
-            943usize => {
+            941usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_rotate_x")?, "st_rotate_x")?;
                 let arg1 = dv_f64(&args, 1, "st_rotate_x")?;
                 {
@@ -15127,7 +15030,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            944usize => {
+            942usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_rotate_y")?, "st_rotate_y")?;
                 let arg1 = dv_f64(&args, 1, "st_rotate_y")?;
                 {
@@ -15140,7 +15043,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            945usize => {
+            943usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_rotate_z")?, "st_rotate_z")?;
                 let arg1 = dv_f64(&args, 1, "st_rotate_z")?;
                 {
@@ -15153,7 +15056,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            946usize => {
+            944usize => {
                 let arg0 = dv_blob(&args, 0, "st_rotatethreed")?;
                 let arg1 = dv_f64(&args, 1, "st_rotatethreed")?;
                 let arg2 = dv_f64(&args, 2, "st_rotatethreed")?;
@@ -15169,7 +15072,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     .into(),
                 ))
             }
-            947usize => {
+            945usize => {
                 let arg0 = dv_blob(&args, 0, "st_rotatex")?;
                 let arg1 = dv_f64(&args, 1, "st_rotatex")?;
                 Ok(types::Duckvalue::Blob(
@@ -15182,7 +15085,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     .into(),
                 ))
             }
-            948usize => {
+            946usize => {
                 let arg0 = dv_blob(&args, 0, "st_rotatey")?;
                 let arg1 = dv_f64(&args, 1, "st_rotatey")?;
                 Ok(types::Duckvalue::Blob(
@@ -15195,7 +15098,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     .into(),
                 ))
             }
-            949usize => {
+            947usize => {
                 let arg0 = dv_blob(&args, 0, "st_rotatez")?;
                 let arg1 = dv_f64(&args, 1, "st_rotatez")?;
                 Ok(types::Duckvalue::Blob(
@@ -15208,11 +15111,11 @@ impl callback_dispatch::Guest for PostgisBridge {
                     .into(),
                 ))
             }
-            950usize => {
+            948usize => {
                 let arg0 = from_raster_binary(dv_blob(&args, 0, "st_rotation")?, "st_rotation")?;
                 Ok(types::Duckvalue::Float64(pg_rast_acc::st_rotation(&arg0)))
             }
-            951usize => {
+            949usize => {
                 let arg0 = from_raster_binary(dv_blob(&args, 0, "st_roughness")?, "st_roughness")?;
                 let arg1 = dv_i64(&args, 1, "st_roughness")? as u32;
                 {
@@ -15225,7 +15128,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_binary().into()))
                 }
             }
-            952usize => {
+            950usize => {
                 let arg0 = dv_blob(&args, 0, "st_round")?;
                 let arg1 = dv_i64(&args, 1, "st_round")? as i32;
                 Ok(types::Duckvalue::Blob(
@@ -15238,7 +15141,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     .into(),
                 ))
             }
-            953usize => {
+            951usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_scale")?, "st_scale")?;
                 let arg1 = dv_f64(&args, 1, "st_scale")?;
                 let arg2 = dv_f64(&args, 2, "st_scale")?;
@@ -15252,7 +15155,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            954usize => {
+            952usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_scale_threed")?, "st_scale_threed")?;
                 let arg1 = dv_f64(&args, 1, "st_scale_threed")?;
                 let arg2 = dv_f64(&args, 2, "st_scale_threed")?;
@@ -15267,7 +15170,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            955usize => {
+            953usize => {
                 let arg0 = dv_blob(&args, 0, "st_scale_threed_around_center")?;
                 let arg1 = dv_f64(&args, 1, "st_scale_threed_around_center")?;
                 let arg2 = dv_f64(&args, 2, "st_scale_threed_around_center")?;
@@ -15288,7 +15191,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     .into(),
                 ))
             }
-            956usize => {
+            954usize => {
                 let arg0 = from_wkb(
                     dv_blob(&args, 0, "st_scale_with_origin")?,
                     "st_scale_with_origin",
@@ -15311,7 +15214,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            957usize => {
+            955usize => {
                 let arg0 = from_wkb(
                     dv_blob(&args, 0, "st_scale_with_vector")?,
                     "st_scale_with_vector",
@@ -15330,15 +15233,15 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            958usize => {
+            956usize => {
                 let arg0 = from_raster_binary(dv_blob(&args, 0, "st_scale_x")?, "st_scale_x")?;
                 Ok(types::Duckvalue::Float64(pg_rast_acc::st_scale_x(&arg0)))
             }
-            959usize => {
+            957usize => {
                 let arg0 = from_raster_binary(dv_blob(&args, 0, "st_scale_y")?, "st_scale_y")?;
                 Ok(types::Duckvalue::Float64(pg_rast_acc::st_scale_y(&arg0)))
             }
-            960usize => {
+            958usize => {
                 let arg0 = dv_blob(&args, 0, "st_scalethreed")?;
                 let arg1 = dv_f64(&args, 1, "st_scalethreed")?;
                 let arg2 = dv_f64(&args, 2, "st_scalethreed")?;
@@ -15353,15 +15256,15 @@ impl callback_dispatch::Guest for PostgisBridge {
                     .into(),
                 ))
             }
-            961usize => {
+            959usize => {
                 let arg0 = from_raster_binary(dv_blob(&args, 0, "st_scalex")?, "st_scalex")?;
                 Ok(types::Duckvalue::Float64(pg_rast_acc::st_scale_x(&arg0)))
             }
-            962usize => {
+            960usize => {
                 let arg0 = from_raster_binary(dv_blob(&args, 0, "st_scaley")?, "st_scaley")?;
                 Ok(types::Duckvalue::Float64(pg_rast_acc::st_scale_y(&arg0)))
             }
-            963usize => {
+            961usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_scroll")?, "st_scroll")?;
                 let arg1 = from_wkb(dv_blob(&args, 1, "st_scroll")?, "st_scroll")?;
                 {
@@ -15374,7 +15277,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            964usize => {
+            962usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_segmentize")?, "st_segmentize")?;
                 let arg1 = dv_f64(&args, 1, "st_segmentize")?;
                 {
@@ -15387,7 +15290,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            965usize => {
+            963usize => {
                 let arg0 = from_raster_binary(
                     dv_blob(&args, 0, "st_set_band_is_nodata")?,
                     "st_set_band_is_nodata",
@@ -15403,7 +15306,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_binary().into()))
                 }
             }
-            966usize => {
+            964usize => {
                 let arg0 = from_raster_binary(
                     dv_blob(&args, 0, "st_set_band_nodata_value")?,
                     "st_set_band_nodata_value",
@@ -15420,7 +15323,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_binary().into()))
                 }
             }
-            967usize => {
+            965usize => {
                 let arg0 = from_wkb(
                     dv_blob(&args, 0, "st_set_effective_area")?,
                     "st_set_effective_area",
@@ -15435,7 +15338,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            968usize => {
+            966usize => {
                 let arg0 = from_raster_binary(
                     dv_blob(&args, 0, "st_set_geo_reference")?,
                     "st_set_geo_reference",
@@ -15459,7 +15362,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_binary().into()))
                 }
             }
-            969usize => {
+            967usize => {
                 let arg0 = from_raster_binary(
                     dv_blob(&args, 0, "st_set_geo_reference_string")?,
                     "st_set_geo_reference_string",
@@ -15477,7 +15380,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_binary().into()))
                 }
             }
-            970usize => {
+            968usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_set_point")?, "st_set_point")?;
                 let arg1 = dv_i64(&args, 1, "st_set_point")? as u32;
                 let arg2 = from_wkb(dv_blob(&args, 2, "st_set_point")?, "st_set_point")?;
@@ -15491,7 +15394,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            971usize => {
+            969usize => {
                 let arg0 =
                     from_raster_binary(dv_blob(&args, 0, "st_set_rotation")?, "st_set_rotation")?;
                 let arg1 = dv_f64(&args, 1, "st_set_rotation")?;
@@ -15505,7 +15408,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_binary().into()))
                 }
             }
-            972usize => {
+            970usize => {
                 let arg0 = from_raster_binary(dv_blob(&args, 0, "st_set_scale")?, "st_set_scale")?;
                 let arg1 = dv_f64(&args, 1, "st_set_scale")?;
                 let arg2 = dv_f64(&args, 2, "st_set_scale")?;
@@ -15519,7 +15422,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_binary().into()))
                 }
             }
-            973usize => {
+            971usize => {
                 let arg0 =
                     from_raster_binary(dv_blob(&args, 0, "st_set_scale_xy")?, "st_set_scale_xy")?;
                 let arg1 = dv_f64(&args, 1, "st_set_scale_xy")?;
@@ -15533,7 +15436,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_binary().into()))
                 }
             }
-            974usize => {
+            972usize => {
                 let arg0 = from_raster_binary(dv_blob(&args, 0, "st_set_skew")?, "st_set_skew")?;
                 let arg1 = dv_f64(&args, 1, "st_set_skew")?;
                 let arg2 = dv_f64(&args, 2, "st_set_skew")?;
@@ -15547,7 +15450,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_binary().into()))
                 }
             }
-            975usize => {
+            973usize => {
                 let arg0 =
                     from_raster_binary(dv_blob(&args, 0, "st_set_skew_xy")?, "st_set_skew_xy")?;
                 let arg1 = dv_f64(&args, 1, "st_set_skew_xy")?;
@@ -15561,7 +15464,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_binary().into()))
                 }
             }
-            976usize => {
+            974usize => {
                 let arg0 = from_raster_binary(dv_blob(&args, 0, "st_set_srid")?, "st_set_srid")?;
                 let arg1 = dv_i64(&args, 1, "st_set_srid")? as i32;
                 {
@@ -15574,7 +15477,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_binary().into()))
                 }
             }
-            977usize => {
+            975usize => {
                 let arg0 = from_raster_binary(
                     dv_blob(&args, 0, "st_set_upper_left")?,
                     "st_set_upper_left",
@@ -15591,7 +15494,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_binary().into()))
                 }
             }
-            978usize => {
+            976usize => {
                 let arg0 = from_raster_binary(dv_blob(&args, 0, "st_set_value")?, "st_set_value")?;
                 let arg1 = dv_i64(&args, 1, "st_set_value")? as u32;
                 let arg2 = dv_i64(&args, 2, "st_set_value")? as u32;
@@ -15608,7 +15511,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_binary().into()))
                 }
             }
-            979usize => {
+            977usize => {
                 let arg0 = from_raster_binary(
                     dv_blob(&args, 0, "st_set_value_at_point")?,
                     "st_set_value_at_point",
@@ -15631,7 +15534,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_binary().into()))
                 }
             }
-            980usize => {
+            978usize => {
                 let arg0 =
                     from_raster_binary(dv_blob(&args, 0, "st_set_values")?, "st_set_values")?;
                 let arg1 = dv_i64(&args, 1, "st_set_values")? as u32;
@@ -15649,7 +15552,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_binary().into()))
                 }
             }
-            981usize => {
+            979usize => {
                 let arg0 = from_raster_binary(
                     dv_blob(&args, 0, "st_set_values_rect")?,
                     "st_set_values_rect",
@@ -15672,7 +15575,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_binary().into()))
                 }
             }
-            982usize => {
+            980usize => {
                 let arg0 = from_wkb(
                     dv_blob(&args, 0, "st_seteffectivearea")?,
                     "st_seteffectivearea",
@@ -15687,7 +15590,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            983usize => {
+            981usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_setendm")?, "st_setendm")?;
                 let arg1 = dv_f64(&args, 1, "st_setendm")?;
                 {
@@ -15700,7 +15603,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            984usize => {
+            982usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_setendz")?, "st_setendz")?;
                 let arg1 = dv_f64(&args, 1, "st_setendz")?;
                 {
@@ -15713,7 +15616,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            985usize => {
+            983usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_setm")?, "st_setm")?;
                 let arg1 = dv_f64(&args, 1, "st_setm")?;
                 {
@@ -15726,7 +15629,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            986usize => {
+            984usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_setpoint")?, "st_setpoint")?;
                 let arg1 = dv_i64(&args, 1, "st_setpoint")? as u32;
                 let arg2 = from_wkb(dv_blob(&args, 2, "st_setpoint")?, "st_setpoint")?;
@@ -15740,14 +15643,14 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            987usize => {
+            985usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_setsrid")?, "st_setsrid")?;
                 let arg1 = dv_i64(&args, 1, "st_setsrid")? as i32;
                 Ok(types::Duckvalue::Blob(
                     pg_acc::st_set_srid(&arg0, arg1).as_wkb().into(),
                 ))
             }
-            988usize => {
+            986usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_setstartm")?, "st_setstartm")?;
                 let arg1 = dv_f64(&args, 1, "st_setstartm")?;
                 {
@@ -15760,7 +15663,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            989usize => {
+            987usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_setstartz")?, "st_setstartz")?;
                 let arg1 = dv_f64(&args, 1, "st_setstartz")?;
                 {
@@ -15773,7 +15676,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            990usize => {
+            988usize => {
                 let arg0 = from_raster_binary(dv_blob(&args, 0, "st_setvalue")?, "st_setvalue")?;
                 let arg1 = dv_i64(&args, 1, "st_setvalue")? as u32;
                 let arg2 = dv_i64(&args, 2, "st_setvalue")? as u32;
@@ -15790,7 +15693,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_binary().into()))
                 }
             }
-            991usize => {
+            989usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_setx")?, "st_setx")?;
                 let arg1 = dv_f64(&args, 1, "st_setx")?;
                 {
@@ -15803,7 +15706,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            992usize => {
+            990usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_sety")?, "st_sety")?;
                 let arg1 = dv_f64(&args, 1, "st_sety")?;
                 {
@@ -15816,7 +15719,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            993usize => {
+            991usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_setz")?, "st_setz")?;
                 let arg1 = dv_f64(&args, 1, "st_setz")?;
                 {
@@ -15829,7 +15732,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            994usize => {
+            992usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_shared_paths")?, "st_shared_paths")?;
                 let arg1 = from_wkb(dv_blob(&args, 1, "st_shared_paths")?, "st_shared_paths")?;
                 {
@@ -15842,7 +15745,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            995usize => {
+            993usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_sharedpaths")?, "st_sharedpaths")?;
                 let arg1 = from_wkb(dv_blob(&args, 1, "st_sharedpaths")?, "st_sharedpaths")?;
                 {
@@ -15855,7 +15758,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            996usize => {
+            994usize => {
                 let arg0 = from_wkb(
                     dv_blob(&args, 0, "st_shift_longitude")?,
                     "st_shift_longitude",
@@ -15870,7 +15773,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            997usize => {
+            995usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_shiftlongitude")?, "st_shiftlongitude")?;
                 {
                     let __r = pg_xform::st_shift_longitude(&arg0).map_err(|e| {
@@ -15882,7 +15785,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            998usize => {
+            996usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_shortest_line")?, "st_shortest_line")?;
                 let arg1 = from_wkb(dv_blob(&args, 1, "st_shortest_line")?, "st_shortest_line")?;
                 {
@@ -15895,7 +15798,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            999usize => {
+            997usize => {
                 let arg0 = from_wkb(
                     dv_blob(&args, 0, "st_shortest_line_3d")?,
                     "st_shortest_line_3d",
@@ -15914,7 +15817,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1000usize => {
+            998usize => {
                 let arg0 = from_wkb(
                     dv_blob(&args, 0, "st_shortest_line_threed")?,
                     "st_shortest_line_threed",
@@ -15933,7 +15836,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1001usize => {
+            999usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_shortestline")?, "st_shortestline")?;
                 let arg1 = from_wkb(dv_blob(&args, 1, "st_shortestline")?, "st_shortestline")?;
                 {
@@ -15946,7 +15849,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1002usize => {
+            1000usize => {
                 let arg0 = from_topology_bytes(dv_blob(&args, 0, "st_simplify")?, "st_simplify")?;
                 let arg1 = dv_f64(&args, 1, "st_simplify")?;
                 Ok(types::Duckvalue::Int64(
@@ -15958,7 +15861,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     })? as i64,
                 ))
             }
-            1003usize => {
+            1001usize => {
                 let arg0: Vec<Vec<u8>> = parse_json_list_list_u8(&args, 0, "st_simplify_batch")?;
                 let arg1: Vec<f64> = parse_json_list_f64(&args, 1, "st_simplify_batch")?;
                 {
@@ -15969,7 +15872,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Text(__json))
                 }
             }
-            1004usize => {
+            1002usize => {
                 let arg0 = from_wkb(
                     dv_blob(&args, 0, "st_simplify_polygon_hull")?,
                     "st_simplify_polygon_hull",
@@ -15987,7 +15890,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1005usize => {
+            1003usize => {
                 let arg0 = from_wkb(
                     dv_blob(&args, 0, "st_simplify_preserve_collapse")?,
                     "st_simplify_preserve_collapse",
@@ -16005,7 +15908,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1006usize => {
+            1004usize => {
                 let arg0 = from_wkb(
                     dv_blob(&args, 0, "st_simplify_preserve_topology")?,
                     "st_simplify_preserve_topology",
@@ -16021,7 +15924,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1007usize => {
+            1005usize => {
                 let arg0: Vec<Vec<u8>> =
                     parse_json_list_list_u8(&args, 0, "st_simplify_preserve_topology_batch")?;
                 let arg1: Vec<f64> =
@@ -16037,7 +15940,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Text(__json))
                 }
             }
-            1008usize => {
+            1006usize => {
                 let arg0 = dv_blob(&args, 0, "st_simplify_preserve_topology_threed")?;
                 let arg1 = dv_f64(&args, 1, "st_simplify_preserve_topology_threed")?;
                 Ok(types::Duckvalue::Blob(
@@ -16050,7 +15953,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     .into(),
                 ))
             }
-            1009usize => {
+            1007usize => {
                 let arg0 = dv_blob(&args, 0, "st_simplify_threed")?;
                 let arg1 = dv_f64(&args, 1, "st_simplify_threed")?;
                 Ok(types::Duckvalue::Blob(
@@ -16063,7 +15966,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     .into(),
                 ))
             }
-            1010usize => {
+            1008usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_simplify_vw")?, "st_simplify_vw")?;
                 let arg1 = dv_f64(&args, 1, "st_simplify_vw")?;
                 {
@@ -16076,7 +15979,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1011usize => {
+            1009usize => {
                 let arg0 = from_wkb(
                     dv_blob(&args, 0, "st_simplify_vw_preserve_collapse")?,
                     "st_simplify_vw_preserve_collapse",
@@ -16094,7 +15997,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1012usize => {
+            1010usize => {
                 let arg0 = from_wkb(
                     dv_blob(&args, 0, "st_simplifypolygonhull")?,
                     "st_simplifypolygonhull",
@@ -16112,7 +16015,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1013usize => {
+            1011usize => {
                 let arg0 = from_wkb(
                     dv_blob(&args, 0, "st_simplifypreservetopology")?,
                     "st_simplifypreservetopology",
@@ -16128,7 +16031,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1014usize => {
+            1012usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_simplifyvw")?, "st_simplifyvw")?;
                 let arg1 = dv_f64(&args, 1, "st_simplifyvw")?;
                 {
@@ -16141,23 +16044,23 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1015usize => {
+            1013usize => {
                 let arg0 = from_raster_binary(dv_blob(&args, 0, "st_skew_x")?, "st_skew_x")?;
                 Ok(types::Duckvalue::Float64(pg_rast_acc::st_skew_x(&arg0)))
             }
-            1016usize => {
+            1014usize => {
                 let arg0 = from_raster_binary(dv_blob(&args, 0, "st_skew_y")?, "st_skew_y")?;
                 Ok(types::Duckvalue::Float64(pg_rast_acc::st_skew_y(&arg0)))
             }
-            1017usize => {
+            1015usize => {
                 let arg0 = from_raster_binary(dv_blob(&args, 0, "st_skewx")?, "st_skewx")?;
                 Ok(types::Duckvalue::Float64(pg_rast_acc::st_skew_x(&arg0)))
             }
-            1018usize => {
+            1016usize => {
                 let arg0 = from_raster_binary(dv_blob(&args, 0, "st_skewy")?, "st_skewy")?;
                 Ok(types::Duckvalue::Float64(pg_rast_acc::st_skew_y(&arg0)))
             }
-            1019usize => {
+            1017usize => {
                 let arg0 = from_raster_binary(dv_blob(&args, 0, "st_slope")?, "st_slope")?;
                 let arg1 = dv_i64(&args, 1, "st_slope")? as u32;
                 {
@@ -16170,7 +16073,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_binary().into()))
                 }
             }
-            1020usize => {
+            1018usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_snap")?, "st_snap")?;
                 let arg1 = from_wkb(dv_blob(&args, 1, "st_snap")?, "st_snap")?;
                 let arg2 = dv_f64(&args, 2, "st_snap")?;
@@ -16184,7 +16087,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1021usize => {
+            1019usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_snap_to_grid")?, "st_snap_to_grid")?;
                 let arg1 = dv_f64(&args, 1, "st_snap_to_grid")?;
                 {
@@ -16197,7 +16100,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1022usize => {
+            1020usize => {
                 let arg0 = from_wkb(
                     dv_blob(&args, 0, "st_snap_to_grid_fourd")?,
                     "st_snap_to_grid_fourd",
@@ -16220,7 +16123,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1023usize => {
+            1021usize => {
                 let arg0 = from_wkb(
                     dv_blob(&args, 0, "st_snap_to_grid_origin")?,
                     "st_snap_to_grid_origin",
@@ -16240,7 +16143,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1024usize => {
+            1022usize => {
                 let arg0 = from_wkb(
                     dv_blob(&args, 0, "st_snap_to_grid_xy")?,
                     "st_snap_to_grid_xy",
@@ -16257,7 +16160,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1025usize => {
+            1023usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_snaptogrid")?, "st_snaptogrid")?;
                 let arg1 = dv_f64(&args, 1, "st_snaptogrid")?;
                 {
@@ -16270,7 +16173,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1026usize => {
+            1024usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_split")?, "st_split")?;
                 let arg1 = from_wkb(dv_blob(&args, 1, "st_split")?, "st_split")?;
                 {
@@ -16283,7 +16186,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1027usize => {
+            1025usize => {
                 let arg0 = dv_f64(&args, 0, "st_square")?;
                 let arg1 = dv_f64(&args, 1, "st_square")?;
                 let arg2 = dv_f64(&args, 2, "st_square")?;
@@ -16299,11 +16202,11 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1028usize => {
+            1026usize => {
                 let arg0 = from_raster_binary(dv_blob(&args, 0, "st_srid")?, "st_srid")?;
                 Ok(types::Duckvalue::Int64(pg_rast_acc::st_srid(&arg0) as i64))
             }
-            1029usize => {
+            1027usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_start_point")?, "st_start_point")?;
                 {
                     let __r = pg_acc::st_start_point(&arg0).map_err(|e| {
@@ -16315,7 +16218,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1030usize => {
+            1028usize => {
                 let arg0: Vec<Vec<u8>> = parse_json_list_list_u8(&args, 0, "st_start_point_batch")?;
                 {
                     let __r = postgis_batch::st_start_point_batch(&arg0);
@@ -16328,7 +16231,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Text(__json))
                 }
             }
-            1031usize => {
+            1029usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_startpoint")?, "st_startpoint")?;
                 {
                     let __r = pg_acc::st_start_point(&arg0).map_err(|e| {
@@ -16340,7 +16243,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1032usize => {
+            1030usize => {
                 let arg0 = dv_blob(&args, 0, "st_straight_skeleton")?;
                 Ok(types::Duckvalue::Blob(
                     (pg_sfcgal::st_straight_skeleton(arg0).map_err(|e| {
@@ -16352,7 +16255,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     .into(),
                 ))
             }
-            1033usize => {
+            1031usize => {
                 let arg0 = dv_blob(&args, 0, "st_straight_skeleton_distance")?;
                 Ok(types::Duckvalue::Blob(
                     (pg_sfcgal::st_straight_skeleton_distance(arg0).map_err(|e| {
@@ -16364,7 +16267,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     .into(),
                 ))
             }
-            1034usize => {
+            1032usize => {
                 let arg0 = dv_blob(&args, 0, "st_straight_skeleton_partition")?;
                 let arg1 = dv_bool(&args, 1, "st_straight_skeleton_partition")?;
                 Ok(types::Duckvalue::Blob(
@@ -16377,7 +16280,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     .into(),
                 ))
             }
-            1035usize => {
+            1033usize => {
                 let arg0 = dv_blob(&args, 0, "st_straightskeleton")?;
                 Ok(types::Duckvalue::Blob(
                     (pg_sfcgal::st_straight_skeleton(arg0).map_err(|e| {
@@ -16389,7 +16292,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     .into(),
                 ))
             }
-            1036usize => {
+            1034usize => {
                 let arg0 = from_wkb(
                     dv_blob(&args, 0, "st_subdivide_gridsize")?,
                     "st_subdivide_gridsize",
@@ -16410,11 +16313,11 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            1037usize => {
+            1035usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_summary")?, "st_summary")?;
                 Ok(types::Duckvalue::Text((pg_out::st_summary(&arg0)).into()))
             }
-            1038usize => {
+            1036usize => {
                 let arg0 =
                     from_raster_binary(dv_blob(&args, 0, "st_summary_stats")?, "st_summary_stats")?;
                 let arg1 = dv_i64(&args, 1, "st_summary_stats")? as u32;
@@ -16427,7 +16330,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     })?,
                 )
             }
-            1039usize => {
+            1037usize => {
                 let arg0 =
                     from_raster_binary(dv_blob(&args, 0, "st_summarystats")?, "st_summarystats")?;
                 let arg1 = dv_i64(&args, 1, "st_summarystats")? as u32;
@@ -16440,7 +16343,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     })?,
                 )
             }
-            1040usize => {
+            1038usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_swap_ordinates")?, "st_swap_ordinates")?;
                 let arg1 = dv_text(&args, 1, "st_swap_ordinates")?;
                 {
@@ -16453,7 +16356,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1041usize => {
+            1039usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_swapordinates")?, "st_swapordinates")?;
                 let arg1 = dv_text(&args, 1, "st_swapordinates")?;
                 {
@@ -16466,7 +16369,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1042usize => {
+            1040usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_sym_difference")?, "st_sym_difference")?;
                 let arg1 = from_wkb(dv_blob(&args, 1, "st_sym_difference")?, "st_sym_difference")?;
                 {
@@ -16479,7 +16382,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1043usize => {
+            1041usize => {
                 let arg0: Vec<Vec<u8>> =
                     parse_json_list_list_u8(&args, 0, "st_sym_difference_batch")?;
                 let arg1: Vec<Vec<u8>> =
@@ -16495,7 +16398,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Text(__json))
                 }
             }
-            1044usize => {
+            1042usize => {
                 let arg0 = from_wkb(
                     dv_blob(&args, 0, "st_sym_difference_gridsize")?,
                     "st_sym_difference_gridsize",
@@ -16516,7 +16419,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1045usize => {
+            1043usize => {
                 let arg0 = dv_blob(&args, 0, "st_sym_difference_threed")?;
                 let arg1 = dv_blob(&args, 1, "st_sym_difference_threed")?;
                 Ok(types::Duckvalue::Blob(
@@ -16529,7 +16432,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     .into(),
                 ))
             }
-            1046usize => {
+            1044usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_symdifference")?, "st_symdifference")?;
                 let arg1 = from_wkb(dv_blob(&args, 1, "st_symdifference")?, "st_symdifference")?;
                 {
@@ -16542,7 +16445,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1047usize => {
+            1045usize => {
                 let arg0 = dv_blob(&args, 0, "st_tesselate")?;
                 Ok(types::Duckvalue::Blob(
                     (pg_sfcgal::st_tesselate(arg0).map_err(|e| {
@@ -16554,7 +16457,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     .into(),
                 ))
             }
-            1048usize => {
+            1046usize => {
                 let arg0 = from_raster_binary(dv_blob(&args, 0, "st_tile")?, "st_tile")?;
                 let arg1 = dv_i64(&args, 1, "st_tile")? as u32;
                 let arg2 = dv_i64(&args, 2, "st_tile")? as u32;
@@ -16571,7 +16474,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            1049usize => {
+            1047usize => {
                 let arg0 = dv_i64(&args, 0, "st_tile_envelope")? as u32;
                 let arg1 = dv_i64(&args, 1, "st_tile_envelope")? as u32;
                 let arg2 = dv_i64(&args, 2, "st_tile_envelope")? as u32;
@@ -16586,7 +16489,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1050usize => {
+            1048usize => {
                 let arg0 = dv_i64(&args, 0, "st_tileenvelope")? as u32;
                 let arg1 = dv_i64(&args, 1, "st_tileenvelope")? as u32;
                 let arg2 = dv_i64(&args, 2, "st_tileenvelope")? as u32;
@@ -16601,7 +16504,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1051usize => {
+            1049usize => {
                 let arg0 = dv_text(&args, 0, "st_tin_from_text")?;
                 {
                     let __r = pg_ctor::st_tin_from_text(arg0).map_err(|e| {
@@ -16613,7 +16516,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1052usize => {
+            1050usize => {
                 let arg0 = dv_blob(&args, 0, "st_tin_from_wkb")?;
                 {
                     let __r = pg_ctor::st_tin_from_wkb(arg0).map_err(|e| {
@@ -16625,14 +16528,14 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1053usize => {
+            1051usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "st_topology_edge_count")?,
                     "st_topology_edge_count",
                 )?;
                 Ok(types::Duckvalue::Int64(arg0.edge_count() as i64))
             }
-            1054usize => {
+            1052usize => {
                 let arg0: Vec<Vec<u8>> =
                     parse_json_list_list_u8(&args, 0, "st_topology_edge_count_batch")?;
                 {
@@ -16643,14 +16546,14 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            1055usize => {
+            1053usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "st_topology_face_count")?,
                     "st_topology_face_count",
                 )?;
                 Ok(types::Duckvalue::Int64(arg0.face_count() as i64))
             }
-            1056usize => {
+            1054usize => {
                 let arg0: Vec<Vec<u8>> =
                     parse_json_list_list_u8(&args, 0, "st_topology_face_count_batch")?;
                 {
@@ -16661,7 +16564,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            1057usize => {
+            1055usize => {
                 let arg0 = dv_blob(&args, 0, "st_topology_from_bytes")?;
                 {
                     let __r = pg_topo_types::from_bytes(arg0).map_err(|e| {
@@ -16673,14 +16576,14 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.to_bytes().into()))
                 }
             }
-            1058usize => {
+            1056usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "st_topology_name")?,
                     "st_topology_name",
                 )?;
                 Ok(types::Duckvalue::Text((arg0.name()).into()))
             }
-            1059usize => {
+            1057usize => {
                 let arg0: Vec<Vec<u8>> =
                     parse_json_list_list_u8(&args, 0, "st_topology_name_batch")?;
                 {
@@ -16691,14 +16594,14 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            1060usize => {
+            1058usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "st_topology_node_count")?,
                     "st_topology_node_count",
                 )?;
                 Ok(types::Duckvalue::Int64(arg0.node_count() as i64))
             }
-            1061usize => {
+            1059usize => {
                 let arg0: Vec<Vec<u8>> =
                     parse_json_list_list_u8(&args, 0, "st_topology_node_count_batch")?;
                 {
@@ -16709,14 +16612,14 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            1062usize => {
+            1060usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "st_topology_precision")?,
                     "st_topology_precision",
                 )?;
                 Ok(types::Duckvalue::Float64(arg0.precision()))
             }
-            1063usize => {
+            1061usize => {
                 let arg0: Vec<Vec<u8>> =
                     parse_json_list_list_u8(&args, 0, "st_topology_precision_batch")?;
                 {
@@ -16727,14 +16630,14 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            1064usize => {
+            1062usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "st_topology_srid")?,
                     "st_topology_srid",
                 )?;
                 Ok(types::Duckvalue::Int64(arg0.srid() as i64))
             }
-            1065usize => {
+            1063usize => {
                 let arg0: Vec<Vec<u8>> =
                     parse_json_list_list_u8(&args, 0, "st_topology_srid_batch")?;
                 {
@@ -16745,28 +16648,28 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            1066usize => {
+            1064usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "st_topology_to_bytes")?,
                     "st_topology_to_bytes",
                 )?;
                 Ok(types::Duckvalue::Blob((arg0.to_bytes()).into()))
             }
-            1067usize => {
+            1065usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "st_topologyedgecount")?,
                     "st_topologyedgecount",
                 )?;
                 Ok(types::Duckvalue::Int64(arg0.edge_count() as i64))
             }
-            1068usize => {
+            1066usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "st_topologyfacecount")?,
                     "st_topologyfacecount",
                 )?;
                 Ok(types::Duckvalue::Int64(arg0.face_count() as i64))
             }
-            1069usize => {
+            1067usize => {
                 let arg0 = dv_blob(&args, 0, "st_topologyfrombytes")?;
                 {
                     let __r = pg_topo_types::from_bytes(arg0).map_err(|e| {
@@ -16778,38 +16681,38 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.to_bytes().into()))
                 }
             }
-            1070usize => {
+            1068usize => {
                 let arg0 =
                     from_topology_bytes(dv_blob(&args, 0, "st_topologyname")?, "st_topologyname")?;
                 Ok(types::Duckvalue::Text((arg0.name()).into()))
             }
-            1071usize => {
+            1069usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "st_topologynodecount")?,
                     "st_topologynodecount",
                 )?;
                 Ok(types::Duckvalue::Int64(arg0.node_count() as i64))
             }
-            1072usize => {
+            1070usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "st_topologyprecision")?,
                     "st_topologyprecision",
                 )?;
                 Ok(types::Duckvalue::Float64(arg0.precision()))
             }
-            1073usize => {
+            1071usize => {
                 let arg0 =
                     from_topology_bytes(dv_blob(&args, 0, "st_topologysrid")?, "st_topologysrid")?;
                 Ok(types::Duckvalue::Int64(arg0.srid() as i64))
             }
-            1074usize => {
+            1072usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "st_topologytobytes")?,
                     "st_topologytobytes",
                 )?;
                 Ok(types::Duckvalue::Blob((arg0.to_bytes()).into()))
             }
-            1075usize => {
+            1073usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_touches")?, "st_touches")?;
                 let arg1 = from_wkb(dv_blob(&args, 1, "st_touches")?, "st_touches")?;
                 Ok(types::Duckvalue::Boolean(
@@ -16821,7 +16724,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     })?,
                 ))
             }
-            1076usize => {
+            1074usize => {
                 let arg0: Vec<Vec<u8>> = parse_json_list_list_u8(&args, 0, "st_touches_batch")?;
                 let arg1: Vec<Vec<u8>> = parse_json_list_list_u8(&args, 1, "st_touches_batch")?;
                 {
@@ -16832,7 +16735,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Text(__json))
                 }
             }
-            1077usize => {
+            1075usize => {
                 let arg0 = from_raster_binary(dv_blob(&args, 0, "st_tpi")?, "st_tpi")?;
                 let arg1 = dv_i64(&args, 1, "st_tpi")? as u32;
                 {
@@ -16842,7 +16745,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_binary().into()))
                 }
             }
-            1078usize => {
+            1076usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_transform")?, "st_transform")?;
                 let arg1 = dv_i64(&args, 1, "st_transform")? as i32;
                 {
@@ -16855,7 +16758,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1079usize => {
+            1077usize => {
                 let arg0 = from_wkb(
                     dv_blob(&args, 0, "st_transform_pipeline")?,
                     "st_transform_pipeline",
@@ -16871,7 +16774,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1080usize => {
+            1078usize => {
                 let arg0 = from_wkb(
                     dv_blob(&args, 0, "st_transform_pipeline_to_srid")?,
                     "st_transform_pipeline_to_srid",
@@ -16890,7 +16793,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1081usize => {
+            1079usize => {
                 let arg0 = from_wkb(
                     dv_blob(&args, 0, "st_transformpipeline")?,
                     "st_transformpipeline",
@@ -16906,7 +16809,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1082usize => {
+            1080usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_translate")?, "st_translate")?;
                 let arg1 = dv_f64(&args, 1, "st_translate")?;
                 let arg2 = dv_f64(&args, 2, "st_translate")?;
@@ -16920,7 +16823,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1083usize => {
+            1081usize => {
                 let arg0 = from_wkb(
                     dv_blob(&args, 0, "st_translate_threed")?,
                     "st_translate_threed",
@@ -16939,7 +16842,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1084usize => {
+            1082usize => {
                 let arg0 = dv_blob(&args, 0, "st_translatethreed")?;
                 let arg1 = dv_f64(&args, 1, "st_translatethreed")?;
                 let arg2 = dv_f64(&args, 2, "st_translatethreed")?;
@@ -16954,7 +16857,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     .into(),
                 ))
             }
-            1085usize => {
+            1083usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_transscale")?, "st_transscale")?;
                 let arg1 = dv_f64(&args, 1, "st_transscale")?;
                 let arg2 = dv_f64(&args, 2, "st_transscale")?;
@@ -16971,7 +16874,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1086usize => {
+            1084usize => {
                 let arg0 = from_raster_binary(dv_blob(&args, 0, "st_tri")?, "st_tri")?;
                 let arg1 = dv_i64(&args, 1, "st_tri")? as u32;
                 {
@@ -16981,7 +16884,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_binary().into()))
                 }
             }
-            1087usize => {
+            1085usize => {
                 let arg0 = dv_text(&args, 0, "st_triangle_from_text")?;
                 {
                     let __r = pg_ctor::st_triangle_from_text(arg0).map_err(|e| {
@@ -16993,7 +16896,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1088usize => {
+            1086usize => {
                 let arg0 = dv_blob(&args, 0, "st_triangle_from_wkb")?;
                 {
                     let __r = pg_ctor::st_triangle_from_wkb(arg0).map_err(|e| {
@@ -17005,7 +16908,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1089usize => {
+            1087usize => {
                 let arg0 = from_wkb(
                     dv_blob(&args, 0, "st_triangulate_polygon")?,
                     "st_triangulate_polygon",
@@ -17020,7 +16923,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1090usize => {
+            1088usize => {
                 let arg0 = dv_blob(&args, 0, "st_triangulate_twod")?;
                 Ok(types::Duckvalue::Blob(
                     (pg_sfcgal::st_triangulate_twod(arg0).map_err(|e| {
@@ -17032,7 +16935,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     .into(),
                 ))
             }
-            1091usize => {
+            1089usize => {
                 let arg0 = from_wkb(
                     dv_blob(&args, 0, "st_triangulatepolygon")?,
                     "st_triangulatepolygon",
@@ -17047,7 +16950,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1092usize => {
+            1090usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_unary_union")?, "st_unary_union")?;
                 {
                     let __r = pg_proc::st_unary_union(&arg0).map_err(|e| {
@@ -17059,7 +16962,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1093usize => {
+            1091usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_unaryunion")?, "st_unaryunion")?;
                 {
                     let __r = pg_proc::st_unary_union(&arg0).map_err(|e| {
@@ -17071,7 +16974,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1094usize => {
+            1092usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_union")?, "st_union")?;
                 let arg1 = from_wkb(dv_blob(&args, 1, "st_union")?, "st_union")?;
                 {
@@ -17084,7 +16987,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1095usize => {
+            1093usize => {
                 let arg0: Vec<Vec<u8>> = parse_json_list_list_u8(&args, 0, "st_union_batch")?;
                 let arg1: Vec<Vec<u8>> = parse_json_list_list_u8(&args, 1, "st_union_batch")?;
                 {
@@ -17095,7 +16998,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Text(__json))
                 }
             }
-            1096usize => {
+            1094usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_union_gridsize")?, "st_union_gridsize")?;
                 let arg1 = from_wkb(dv_blob(&args, 1, "st_union_gridsize")?, "st_union_gridsize")?;
                 let arg2 = dv_f64(&args, 2, "st_union_gridsize")?;
@@ -17109,7 +17012,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1097usize => {
+            1095usize => {
                 let arg0 = dv_blob(&args, 0, "st_union_threed")?;
                 let arg1 = dv_blob(&args, 1, "st_union_threed")?;
                 Ok(types::Duckvalue::Blob(
@@ -17122,7 +17025,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     .into(),
                 ))
             }
-            1098usize => {
+            1096usize => {
                 let arg0 = dv_blob(&args, 0, "st_unionthreed")?;
                 let arg1 = dv_blob(&args, 1, "st_unionthreed")?;
                 Ok(types::Duckvalue::Blob(
@@ -17135,35 +17038,35 @@ impl callback_dispatch::Guest for PostgisBridge {
                     .into(),
                 ))
             }
-            1099usize => {
+            1097usize => {
                 let arg0 =
                     from_raster_binary(dv_blob(&args, 0, "st_upper_left_x")?, "st_upper_left_x")?;
                 Ok(types::Duckvalue::Float64(pg_rast_acc::st_upper_left_x(
                     &arg0,
                 )))
             }
-            1100usize => {
+            1098usize => {
                 let arg0 =
                     from_raster_binary(dv_blob(&args, 0, "st_upper_left_y")?, "st_upper_left_y")?;
                 Ok(types::Duckvalue::Float64(pg_rast_acc::st_upper_left_y(
                     &arg0,
                 )))
             }
-            1101usize => {
+            1099usize => {
                 let arg0 =
                     from_raster_binary(dv_blob(&args, 0, "st_upperleftx")?, "st_upperleftx")?;
                 Ok(types::Duckvalue::Float64(pg_rast_acc::st_upper_left_x(
                     &arg0,
                 )))
             }
-            1102usize => {
+            1100usize => {
                 let arg0 =
                     from_raster_binary(dv_blob(&args, 0, "st_upperlefty")?, "st_upperlefty")?;
                 Ok(types::Duckvalue::Float64(pg_rast_acc::st_upper_left_y(
                     &arg0,
                 )))
             }
-            1103usize => {
+            1101usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "st_validate_topology")?,
                     "st_validate_topology",
@@ -17176,7 +17079,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            1104usize => {
+            1102usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "st_validatetopology")?,
                     "st_validatetopology",
@@ -17189,7 +17092,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            1105usize => {
+            1103usize => {
                 let arg0 = from_raster_binary(dv_blob(&args, 0, "st_value")?, "st_value")?;
                 let arg1 = dv_i64(&args, 1, "st_value")? as u32;
                 let arg2 = dv_i64(&args, 2, "st_value")? as u32;
@@ -17203,7 +17106,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     })?,
                 ))
             }
-            1106usize => {
+            1104usize => {
                 let arg0 =
                     from_raster_binary(dv_blob(&args, 0, "st_value_count")?, "st_value_count")?;
                 let arg1 = dv_i64(&args, 1, "st_value_count")? as u32;
@@ -17221,7 +17124,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            1107usize => {
+            1105usize => {
                 let arg0 = from_raster_binary(
                     dv_blob(&args, 0, "st_value_count_of_value")?,
                     "st_value_count_of_value",
@@ -17237,7 +17140,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     })? as i64,
                 ))
             }
-            1108usize => {
+            1106usize => {
                 let arg0 =
                     from_raster_binary(dv_blob(&args, 0, "st_value_counts")?, "st_value_counts")?;
                 let arg1 = dv_i64(&args, 1, "st_value_counts")? as u32;
@@ -17258,7 +17161,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            1109usize => {
+            1107usize => {
                 let arg0 =
                     from_raster_binary(dv_blob(&args, 0, "st_value_percent")?, "st_value_percent")?;
                 let arg1 = dv_i64(&args, 1, "st_value_percent")? as u32;
@@ -17272,7 +17175,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     })?,
                 ))
             }
-            1110usize => {
+            1108usize => {
                 let arg0 = from_raster_binary(
                     dv_blob(&args, 0, "st_value_percents")?,
                     "st_value_percents",
@@ -17296,7 +17199,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            1111usize => {
+            1109usize => {
                 let arg0 =
                     from_raster_binary(dv_blob(&args, 0, "st_valuecount")?, "st_valuecount")?;
                 let arg1 = dv_i64(&args, 1, "st_valuecount")? as u32;
@@ -17314,7 +17217,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            1112usize => {
+            1110usize => {
                 let arg0 = dv_blob(&args, 0, "st_visibility_point")?;
                 let arg1 = dv_blob(&args, 1, "st_visibility_point")?;
                 Ok(types::Duckvalue::Blob(
@@ -17327,7 +17230,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     .into(),
                 ))
             }
-            1113usize => {
+            1111usize => {
                 let arg0 = dv_blob(&args, 0, "st_visibility_segment")?;
                 let arg1 = dv_blob(&args, 1, "st_visibility_segment")?;
                 let arg2 = dv_blob(&args, 2, "st_visibility_segment")?;
@@ -17341,11 +17244,11 @@ impl callback_dispatch::Guest for PostgisBridge {
                     .into(),
                 ))
             }
-            1114usize => {
+            1112usize => {
                 let arg0 = dv_blob(&args, 0, "st_volume")?;
                 Ok(types::Duckvalue::Float64(pg_sfcgal::st_volume(arg0)))
             }
-            1115usize => {
+            1113usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_voronoi_lines")?, "st_voronoi_lines")?;
                 let arg1 = dv_f64(&args, 1, "st_voronoi_lines")?;
                 {
@@ -17358,7 +17261,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1116usize => {
+            1114usize => {
                 let arg0 = from_wkb(
                     dv_blob(&args, 0, "st_voronoi_polygons")?,
                     "st_voronoi_polygons",
@@ -17374,7 +17277,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1117usize => {
+            1115usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_voronoilines")?, "st_voronoilines")?;
                 let arg1 = dv_f64(&args, 1, "st_voronoilines")?;
                 {
@@ -17387,7 +17290,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1118usize => {
+            1116usize => {
                 let arg0 = from_wkb(
                     dv_blob(&args, 0, "st_voronoipolygons")?,
                     "st_voronoipolygons",
@@ -17403,11 +17306,11 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1119usize => {
+            1117usize => {
                 let arg0 = from_raster_binary(dv_blob(&args, 0, "st_width")?, "st_width")?;
                 Ok(types::Duckvalue::Int64(pg_rast_acc::st_width(&arg0) as i64))
             }
-            1120usize => {
+            1118usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_within")?, "st_within")?;
                 let arg1 = from_wkb(dv_blob(&args, 1, "st_within")?, "st_within")?;
                 Ok(types::Duckvalue::Boolean(
@@ -17419,7 +17322,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     })?,
                 ))
             }
-            1121usize => {
+            1119usize => {
                 let arg0: Vec<Vec<u8>> = parse_json_list_list_u8(&args, 0, "st_within_batch")?;
                 let arg1: Vec<Vec<u8>> = parse_json_list_list_u8(&args, 1, "st_within_batch")?;
                 {
@@ -17430,7 +17333,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Text(__json))
                 }
             }
-            1122usize => {
+            1120usize => {
                 let arg0 = dv_blob(&args, 0, "st_wkb_to_sql")?;
                 {
                     let __r = pg_ctor::st_wkb_to_sql(arg0).map_err(|e| {
@@ -17442,7 +17345,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1123usize => {
+            1121usize => {
                 let arg0 = dv_blob(&args, 0, "st_wkbtosql")?;
                 {
                     let __r = pg_ctor::st_geom_from_wkb(arg0).map_err(|e| {
@@ -17454,7 +17357,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1124usize => {
+            1122usize => {
                 let arg0 = dv_text(&args, 0, "st_wkt_to_sql")?;
                 {
                     let __r = pg_ctor::st_wkt_to_sql(arg0).map_err(|e| {
@@ -17466,7 +17369,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1125usize => {
+            1123usize => {
                 let arg0 = dv_text(&args, 0, "st_wkttosql")?;
                 {
                     let __r = pg_ctor::st_geom_from_text(arg0).map_err(|e| {
@@ -17478,7 +17381,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1126usize => {
+            1124usize => {
                 let arg0 = from_raster_binary(
                     dv_blob(&args, 0, "st_world_to_raster_coord")?,
                     "st_world_to_raster_coord",
@@ -17496,7 +17399,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Text(__json))
                 }
             }
-            1127usize => {
+            1125usize => {
                 let arg0 = from_raster_binary(
                     dv_blob(&args, 0, "st_world_to_raster_coord_col")?,
                     "st_world_to_raster_coord_col",
@@ -17508,7 +17411,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Int64(__r.0 as i64))
                 }
             }
-            1128usize => {
+            1126usize => {
                 let arg0 = from_raster_binary(
                     dv_blob(&args, 0, "st_world_to_raster_coord_row")?,
                     "st_world_to_raster_coord_row",
@@ -17520,7 +17423,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Int64(__r.1 as i64))
                 }
             }
-            1129usize => {
+            1127usize => {
                 let arg0 = from_raster_binary(
                     dv_blob(&args, 0, "st_worldtorastercoord")?,
                     "st_worldtorastercoord",
@@ -17538,7 +17441,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Text(__json))
                 }
             }
-            1130usize => {
+            1128usize => {
                 let arg0 = from_raster_binary(
                     dv_blob(&args, 0, "st_worldtorastercoordcol")?,
                     "st_worldtorastercoordcol",
@@ -17550,7 +17453,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Int64(__r.0 as i64))
                 }
             }
-            1131usize => {
+            1129usize => {
                 let arg0 = from_raster_binary(
                     dv_blob(&args, 0, "st_worldtorastercoordrow")?,
                     "st_worldtorastercoordrow",
@@ -17562,7 +17465,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Int64(__r.1 as i64))
                 }
             }
-            1132usize => {
+            1130usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_wrap_x")?, "st_wrap_x")?;
                 let arg1 = dv_f64(&args, 1, "st_wrap_x")?;
                 let arg2 = dv_f64(&args, 2, "st_wrap_x")?;
@@ -17576,7 +17479,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1133usize => {
+            1131usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_wrapx")?, "st_wrapx")?;
                 let arg1 = dv_f64(&args, 1, "st_wrapx")?;
                 let arg2 = dv_f64(&args, 2, "st_wrapx")?;
@@ -17590,13 +17493,13 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1134usize => {
+            1132usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_x")?, "st_x")?;
                 Ok(types::Duckvalue::Float64(pg_acc::st_x(&arg0).map_err(
                     |e| types::Duckerror::Invalidargument(format!("st_x: {}", shim_err_string(e))),
                 )?))
             }
-            1135usize => {
+            1133usize => {
                 let arg0: Vec<Vec<u8>> = parse_json_list_list_u8(&args, 0, "st_x_batch")?;
                 {
                     let __r = postgis_batch::st_x_batch(&arg0);
@@ -17606,7 +17509,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            1136usize => {
+            1134usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_xmax")?, "st_xmax")?;
                 Ok(types::Duckvalue::Float64(pg_acc::st_xmax(&arg0).map_err(
                     |e| {
@@ -17617,7 +17520,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     },
                 )?))
             }
-            1137usize => {
+            1135usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_xmin")?, "st_xmin")?;
                 Ok(types::Duckvalue::Float64(pg_acc::st_xmin(&arg0).map_err(
                     |e| {
@@ -17628,13 +17531,13 @@ impl callback_dispatch::Guest for PostgisBridge {
                     },
                 )?))
             }
-            1138usize => {
+            1136usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_y")?, "st_y")?;
                 Ok(types::Duckvalue::Float64(pg_acc::st_y(&arg0).map_err(
                     |e| types::Duckerror::Invalidargument(format!("st_y: {}", shim_err_string(e))),
                 )?))
             }
-            1139usize => {
+            1137usize => {
                 let arg0: Vec<Vec<u8>> = parse_json_list_list_u8(&args, 0, "st_y_batch")?;
                 {
                     let __r = postgis_batch::st_y_batch(&arg0);
@@ -17644,7 +17547,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            1140usize => {
+            1138usize => {
                 let arg0 = dv_blob(&args, 0, "st_y_monotone_partition")?;
                 Ok(types::Duckvalue::Blob(
                     (pg_sfcgal::st_y_monotone_partition(arg0).map_err(|e| {
@@ -17656,7 +17559,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     .into(),
                 ))
             }
-            1141usize => {
+            1139usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_ymax")?, "st_ymax")?;
                 Ok(types::Duckvalue::Float64(pg_acc::st_ymax(&arg0).map_err(
                     |e| {
@@ -17667,7 +17570,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     },
                 )?))
             }
-            1142usize => {
+            1140usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_ymin")?, "st_ymin")?;
                 Ok(types::Duckvalue::Float64(pg_acc::st_ymin(&arg0).map_err(
                     |e| {
@@ -17678,7 +17581,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     },
                 )?))
             }
-            1143usize => {
+            1141usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_z")?, "st_z")?;
                 Ok(
                     match pg_acc::st_z(&arg0).map_err(|e| {
@@ -17689,7 +17592,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     },
                 )
             }
-            1144usize => {
+            1142usize => {
                 let arg0: Vec<Vec<u8>> = parse_json_list_list_u8(&args, 0, "st_z_batch")?;
                 {
                     let __r = postgis_batch::st_z_batch(&arg0);
@@ -17699,7 +17602,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            1145usize => {
+            1143usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_zmax")?, "st_zmax")?;
                 Ok(
                     match pg_acc::st_zmax(&arg0).map_err(|e| {
@@ -17713,11 +17616,11 @@ impl callback_dispatch::Guest for PostgisBridge {
                     },
                 )
             }
-            1146usize => {
+            1144usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_zmflag")?, "st_zmflag")?;
                 Ok(types::Duckvalue::Int64(pg_acc::st_zmflag(&arg0) as i64))
             }
-            1147usize => {
+            1145usize => {
                 let arg0 = from_wkb(dv_blob(&args, 0, "st_zmin")?, "st_zmin")?;
                 Ok(
                     match pg_acc::st_zmin(&arg0).map_err(|e| {
@@ -17731,14 +17634,14 @@ impl callback_dispatch::Guest for PostgisBridge {
                     },
                 )
             }
-            1148usize => {
+            1146usize => {
                 let arg0 = dv_text(&args, 0, "state_extract")?;
                 Ok(match pg_geo::state_extract(arg0) {
                     Some(v) => types::Duckvalue::Text(v.into()),
                     None => types::Duckvalue::Null,
                 })
             }
-            1149usize => {
+            1147usize => {
                 let arg0 = from_topology_bytes(dv_blob(&args, 0, "to_topogeom")?, "to_topogeom")?;
                 let arg1 = from_wkb(dv_blob(&args, 1, "to_topogeom")?, "to_topogeom")?;
                 let arg2 = dv_f64(&args, 2, "to_topogeom")?;
@@ -17752,26 +17655,28 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.geometry().as_wkb().into()))
                 }
             }
-            1150usize => {
+            1148usize => {
                 let arg0 =
                     parse_json_list_record_topo_element(&args, 0, "topo_element_array_append")?;
                 let arg1 = arg_witvalue_topo_element(&args, 1, "topo_element_array_append")?;
                 {
                     let __r = pg_topogeom::topo_element_array_append(&arg0, arg1);
-                    let mut __it = __r.into_iter();
-                    match __it.next() {
-                        Some(__rec) => ret_to_witvalue_topo_element(__rec),
-                        None => Ok(types::Duckvalue::Null),
-                    }
+                    let __json = serde_json::to_string(&__r).map_err(|e| {
+                        types::Duckerror::Internal(format!(
+                            "topo_element_array_append: encode JSON: {}",
+                            e
+                        ))
+                    })?;
+                    Ok(types::Duckvalue::Text(__json))
                 }
             }
-            1151usize => {
+            1149usize => {
                 let arg0: Vec<Vec<u8>> = parse_json_list_list_u8(&args, 0, "topo_pgtp_all_batch")?;
                 Ok(types::Duckvalue::Boolean(
                     postgis_batch::topo_pgtp_all_batch(&arg0),
                 ))
             }
-            1152usize => {
+            1150usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topogeo_add_geometry")?,
                     "topogeo_add_geometry",
@@ -17795,7 +17700,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            1153usize => {
+            1151usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topogeo_add_linestring")?,
                     "topogeo_add_linestring",
@@ -17819,7 +17724,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            1154usize => {
+            1152usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topogeo_add_point")?,
                     "topogeo_add_point",
@@ -17835,7 +17740,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     })? as i64,
                 ))
             }
-            1155usize => {
+            1153usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topogeo_add_polygon")?,
                     "topogeo_add_polygon",
@@ -17859,7 +17764,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            1156usize => {
+            1154usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topogeo_load_geometry")?,
                     "topogeo_load_geometry",
@@ -17878,7 +17783,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     })? as i64,
                 ))
             }
-            1157usize => {
+            1155usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_add_edge")?,
                     "topology_add_edge",
@@ -17893,7 +17798,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     })? as i64,
                 ))
             }
-            1158usize => {
+            1156usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_add_edge_mod_face")?,
                     "topology_add_edge_mod_face",
@@ -17913,7 +17818,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     })? as i64,
                 ))
             }
-            1159usize => {
+            1157usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_add_edge_new_faces")?,
                     "topology_add_edge_new_faces",
@@ -17933,7 +17838,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     })? as i64,
                 ))
             }
-            1160usize => {
+            1158usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_add_face")?,
                     "topology_add_face",
@@ -17949,7 +17854,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     })? as i64,
                 ))
             }
-            1161usize => {
+            1159usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_add_iso_edge")?,
                     "topology_add_iso_edge",
@@ -17969,7 +17874,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     })? as i64,
                 ))
             }
-            1162usize => {
+            1160usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_add_iso_node")?,
                     "topology_add_iso_node",
@@ -17987,7 +17892,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     })? as i64,
                 ))
             }
-            1163usize => {
+            1161usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_add_node")?,
                     "topology_add_node",
@@ -18003,7 +17908,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     })? as i64,
                 ))
             }
-            1164usize => {
+            1162usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_add_topogeom_column")?,
                     "topology_add_topogeom_column",
@@ -18015,7 +17920,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     &arg0, arg1, arg2, arg3,
                 ) as i64))
             }
-            1165usize => {
+            1163usize => {
                 let arg0 =
                     from_topology_bytes(dv_blob(&args, 0, "topology_as_gml")?, "topology_as_gml")?;
                 let arg1 = dv_text(&args, 1, "topology_as_gml")?;
@@ -18024,7 +17929,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     (pg_topo_out::as_gml(&arg0, arg1, arg2)).into(),
                 ))
             }
-            1166usize => {
+            1164usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_as_topojson")?,
                     "topology_as_topojson",
@@ -18033,7 +17938,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     (pg_topo_out::as_topojson(&arg0)).into(),
                 ))
             }
-            1167usize => {
+            1165usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_as_topojson_with_edge_map")?,
                     "topology_as_topojson_with_edge_map",
@@ -18043,7 +17948,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     (pg_topo_out::as_topojson_with_edge_map(&arg0, arg1)).into(),
                 ))
             }
-            1168usize => {
+            1166usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_change_edge_geom")?,
                     "topology_change_edge_geom",
@@ -18061,7 +17966,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                 })?;
                 Ok(types::Duckvalue::Null)
             }
-            1169usize => {
+            1167usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_copy_topology")?,
                     "topology_copy_topology",
@@ -18071,7 +17976,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     pg_topo_types::copy_topology(&arg0, arg1).to_bytes().into(),
                 ))
             }
-            1170usize => {
+            1168usize => {
                 let arg0 = dv_text(&args, 0, "topology_create")?;
                 let arg1 = dv_i64(&args, 1, "topology_create")? as i32;
                 let arg2 = dv_f64(&args, 2, "topology_create")?;
@@ -18079,7 +17984,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Topology::new(arg0, arg1, arg2).to_bytes().into(),
                 ))
             }
-            1171usize => {
+            1169usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_create_topo_geom")?,
                     "topology_create_topo_geom",
@@ -18097,7 +18002,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.geometry().as_wkb().into()))
                 }
             }
-            1172usize => {
+            1170usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_drop_topogeom_column")?,
                     "topology_drop_topogeom_column",
@@ -18108,7 +18013,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     (pg_topo_edit::drop_topogeom_column(&arg0, arg1, arg2)).into(),
                 ))
             }
-            1173usize => {
+            1171usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_drop_topology")?,
                     "topology_drop_topology",
@@ -18117,21 +18022,21 @@ impl callback_dispatch::Guest for PostgisBridge {
                     (pg_topo_edit::drop_topology(&arg0)).into(),
                 ))
             }
-            1174usize => {
+            1172usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_edge_count")?,
                     "topology_edge_count",
                 )?;
                 Ok(types::Duckvalue::Int64(arg0.edge_count() as i64))
             }
-            1175usize => {
+            1173usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_face_count")?,
                     "topology_face_count",
                 )?;
                 Ok(types::Duckvalue::Int64(arg0.face_count() as i64))
             }
-            1176usize => {
+            1174usize => {
                 let arg0 = dv_blob(&args, 0, "topology_from_bytes")?;
                 {
                     let __r = pg_topo_types::from_bytes(arg0).map_err(|e| {
@@ -18143,7 +18048,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.to_bytes().into()))
                 }
             }
-            1177usize => {
+            1175usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_get_edge_by_point")?,
                     "topology_get_edge_by_point",
@@ -18162,7 +18067,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     })? as i64,
                 ))
             }
-            1178usize => {
+            1176usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_get_edge_geometry")?,
                     "topology_get_edge_geometry",
@@ -18178,7 +18083,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1179usize => {
+            1177usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_get_face_by_point")?,
                     "topology_get_face_by_point",
@@ -18197,7 +18102,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     })? as i64,
                 ))
             }
-            1180usize => {
+            1178usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_get_face_containing_point")?,
                     "topology_get_face_containing_point",
@@ -18215,7 +18120,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     })? as i64,
                 ))
             }
-            1181usize => {
+            1179usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_get_face_edges")?,
                     "topology_get_face_edges",
@@ -18234,7 +18139,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            1182usize => {
+            1180usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_get_face_geometry")?,
                     "topology_get_face_geometry",
@@ -18250,7 +18155,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1183usize => {
+            1181usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_get_node_by_point")?,
                     "topology_get_node_by_point",
@@ -18269,7 +18174,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     })? as i64,
                 ))
             }
-            1184usize => {
+            1182usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_get_node_edges")?,
                     "topology_get_node_edges",
@@ -18288,7 +18193,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            1185usize => {
+            1183usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_get_node_geometry")?,
                     "topology_get_node_geometry",
@@ -18304,7 +18209,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1186usize => {
+            1184usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_get_ring_edges")?,
                     "topology_get_ring_edges",
@@ -18323,7 +18228,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            1187usize => {
+            1185usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_get_topology_id")?,
                     "topology_get_topology_id",
@@ -18332,7 +18237,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     pg_topo_query::get_topology_id(&arg0) as i64,
                 ))
             }
-            1188usize => {
+            1186usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_get_topology_name")?,
                     "topology_get_topology_name",
@@ -18341,7 +18246,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     (pg_topo_query::get_topology_name(&arg0)).into(),
                 ))
             }
-            1189usize => {
+            1187usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_get_topology_srid")?,
                     "topology_get_topology_srid",
@@ -18350,7 +18255,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     pg_topo_query::get_topology_srid(&arg0) as i64,
                 ))
             }
-            1190usize => {
+            1188usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_make_topology_precise")?,
                     "topology_make_topology_precise",
@@ -18360,7 +18265,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     pg_topo_edit::make_topology_precise(&arg0, arg1) as i64,
                 ))
             }
-            1191usize => {
+            1189usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_mod_edge_heal")?,
                     "topology_mod_edge_heal",
@@ -18376,7 +18281,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     })? as i64,
                 ))
             }
-            1192usize => {
+            1190usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_mod_edge_split")?,
                     "topology_mod_edge_split",
@@ -18395,7 +18300,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     })? as i64,
                 ))
             }
-            1193usize => {
+            1191usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_move_iso_node")?,
                     "topology_move_iso_node",
@@ -18413,12 +18318,12 @@ impl callback_dispatch::Guest for PostgisBridge {
                 })?;
                 Ok(types::Duckvalue::Null)
             }
-            1194usize => {
+            1192usize => {
                 let arg0 =
                     from_topology_bytes(dv_blob(&args, 0, "topology_name")?, "topology_name")?;
                 Ok(types::Duckvalue::Text((arg0.name()).into()))
             }
-            1195usize => {
+            1193usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_new_edge_heal")?,
                     "topology_new_edge_heal",
@@ -18434,7 +18339,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     })? as i64,
                 ))
             }
-            1196usize => {
+            1194usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_new_edges_split")?,
                     "topology_new_edges_split",
@@ -18453,14 +18358,14 @@ impl callback_dispatch::Guest for PostgisBridge {
                     })? as i64,
                 ))
             }
-            1197usize => {
+            1195usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_node_count")?,
                     "topology_node_count",
                 )?;
                 Ok(types::Duckvalue::Int64(arg0.node_count() as i64))
             }
-            1198usize => {
+            1196usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_polygonize")?,
                     "topology_polygonize",
@@ -18478,14 +18383,14 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            1199usize => {
+            1197usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_precision")?,
                     "topology_precision",
                 )?;
                 Ok(types::Duckvalue::Float64(arg0.precision()))
             }
-            1200usize => {
+            1198usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_rem_edge_mod_face")?,
                     "topology_rem_edge_mod_face",
@@ -18500,7 +18405,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     })? as i64,
                 ))
             }
-            1201usize => {
+            1199usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_rem_edge_new_face")?,
                     "topology_rem_edge_new_face",
@@ -18515,7 +18420,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     })? as i64,
                 ))
             }
-            1202usize => {
+            1200usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_remove_face")?,
                     "topology_remove_face",
@@ -18529,7 +18434,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                 })?;
                 Ok(types::Duckvalue::Null)
             }
-            1203usize => {
+            1201usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_remove_iso_edge")?,
                     "topology_remove_iso_edge",
@@ -18543,7 +18448,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                 })?;
                 Ok(types::Duckvalue::Null)
             }
-            1204usize => {
+            1202usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_remove_iso_node")?,
                     "topology_remove_iso_node",
@@ -18557,7 +18462,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                 })?;
                 Ok(types::Duckvalue::Null)
             }
-            1205usize => {
+            1203usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_remove_unused_primitives")?,
                     "topology_remove_unused_primitives",
@@ -18566,7 +18471,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     pg_topo_edit::remove_unused_primitives(&arg0) as i64,
                 ))
             }
-            1206usize => {
+            1204usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_rename_topology")?,
                     "topology_rename_topology",
@@ -18576,12 +18481,12 @@ impl callback_dispatch::Guest for PostgisBridge {
                     (pg_topo_edit::rename_topology(&arg0, arg1)).into(),
                 ))
             }
-            1207usize => {
+            1205usize => {
                 let arg0 =
                     from_topology_bytes(dv_blob(&args, 0, "topology_srid")?, "topology_srid")?;
                 Ok(types::Duckvalue::Int64(arg0.srid() as i64))
             }
-            1208usize => {
+            1206usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_summary")?,
                     "topology_summary",
@@ -18590,14 +18495,14 @@ impl callback_dispatch::Guest for PostgisBridge {
                     (pg_topo_query::topology_summary(&arg0)).into(),
                 ))
             }
-            1209usize => {
+            1207usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_to_bytes")?,
                     "topology_to_bytes",
                 )?;
                 Ok(types::Duckvalue::Blob((arg0.to_bytes()).into()))
             }
-            1210usize => {
+            1208usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_to_topogeom")?,
                     "topology_to_topogeom",
@@ -18617,7 +18522,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.geometry().as_wkb().into()))
                 }
             }
-            1211usize => {
+            1209usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_topogeo_add_geometry")?,
                     "topology_topogeo_add_geometry",
@@ -18641,7 +18546,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            1212usize => {
+            1210usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_topogeo_add_linestring")?,
                     "topology_topogeo_add_linestring",
@@ -18665,7 +18570,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            1213usize => {
+            1211usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_topogeo_add_point")?,
                     "topology_topogeo_add_point",
@@ -18684,7 +18589,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     })? as i64,
                 ))
             }
-            1214usize => {
+            1212usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_topogeo_add_polygon")?,
                     "topology_topogeo_add_polygon",
@@ -18708,7 +18613,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            1215usize => {
+            1213usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_topogeo_load_geometry")?,
                     "topology_topogeo_load_geometry",
@@ -18727,7 +18632,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     })? as i64,
                 ))
             }
-            1216usize => {
+            1214usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_total_topology_size")?,
                     "topology_total_topology_size",
@@ -18736,7 +18641,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     pg_topo_query::total_topology_size(&arg0) as i64,
                 ))
             }
-            1217usize => {
+            1215usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_upgrade_topology")?,
                     "topology_upgrade_topology",
@@ -18745,7 +18650,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     (pg_topo_edit::upgrade_topology(&arg0)).into(),
                 ))
             }
-            1218usize => {
+            1216usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_validate")?,
                     "topology_validate",
@@ -18758,7 +18663,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            1219usize => {
+            1217usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_validate_topology")?,
                     "topology_validate_topology",
@@ -18771,7 +18676,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            1220usize => {
+            1218usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "topology_validate_topology_precision")?,
                     "topology_validate_topology_precision",
@@ -18785,7 +18690,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            1221usize => {
+            1219usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "total_topology_size")?,
                     "total_topology_size",
@@ -18794,7 +18699,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     pg_topo_query::total_topology_size(&arg0) as i64,
                 ))
             }
-            1222usize => {
+            1220usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "upgrade_topology")?,
                     "upgrade_topology",
@@ -18803,7 +18708,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     (pg_topo_edit::upgrade_topology(&arg0)).into(),
                 ))
             }
-            1223usize => {
+            1221usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "validate_topology")?,
                     "validate_topology",
@@ -18816,7 +18721,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            1224usize => {
+            1222usize => {
                 let arg0 = from_topology_bytes(
                     dv_blob(&args, 0, "validate_topology_precision")?,
                     "validate_topology_precision",
@@ -18830,7 +18735,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     }
                 }
             }
-            1225usize => {
+            1223usize => {
                 let arg0_owned: Vec<Geometry> = args[0..]
                     .iter()
                     .enumerate()
@@ -18870,7 +18775,7 @@ impl callback_dispatch::Guest for PostgisBridge {
                     Ok(types::Duckvalue::Blob(__r.as_wkb().into()))
                 }
             }
-            1226usize => {
+            1224usize => {
                 let arg0_one = from_wkb(dv_blob(&args, 0, "st_asmvt")?, "st_asmvt")?;
                 let arg0_owned: Vec<Geometry> = alloc::vec![arg0_one];
                 let arg0: Vec<&Geometry> = arg0_owned.iter().collect();
@@ -43202,36 +43107,6 @@ fn register_scalars() -> Result<(), types::Duckerror> {
                 name: Some("arg1".into()),
                 logical: types::Logicaltype::Int64,
             },
-        ];
-        let opts = runtime::Funcopts {
-            description: Some("st_pixel_as_centroids (sqlink-shim-codegen)".into()),
-            tags: vec!["st_pixel_as_centroids".into()],
-            attributes: types::Funcflags::DETERMINISTIC | types::Funcflags::STATELESS,
-        };
-        registry.register(
-            "st_pixel_as_centroids",
-            &args,
-            &types::Logicaltype::Complex("pixel-vec-entry".into()),
-            callback,
-            Some(&opts),
-        )?;
-    }
-    {
-        let handle = NEXT_HANDLE.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
-        handle_table()
-            .lock()
-            .expect("scalar handle mutex poisoned")
-            .insert(handle, 817usize);
-        let callback = runtime::ScalarCallback::new(handle);
-        let args: Vec<runtime::Funcarg> = vec![
-            runtime::Funcarg {
-                name: Some("arg0".into()),
-                logical: types::Logicaltype::Blob,
-            },
-            runtime::Funcarg {
-                name: Some("arg1".into()),
-                logical: types::Logicaltype::Int64,
-            },
             runtime::Funcarg {
                 name: Some("arg2".into()),
                 logical: types::Logicaltype::Int64,
@@ -43255,37 +43130,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 818usize);
-        let callback = runtime::ScalarCallback::new(handle);
-        let args: Vec<runtime::Funcarg> = vec![
-            runtime::Funcarg {
-                name: Some("arg0".into()),
-                logical: types::Logicaltype::Blob,
-            },
-            runtime::Funcarg {
-                name: Some("arg1".into()),
-                logical: types::Logicaltype::Int64,
-            },
-        ];
-        let opts = runtime::Funcopts {
-            description: Some("st_pixel_as_points (sqlink-shim-codegen)".into()),
-            tags: vec!["st_pixel_as_points".into()],
-            attributes: types::Funcflags::DETERMINISTIC | types::Funcflags::STATELESS,
-        };
-        registry.register(
-            "st_pixel_as_points",
-            &args,
-            &types::Logicaltype::Complex("pixel-vec-entry".into()),
-            callback,
-            Some(&opts),
-        )?;
-    }
-    {
-        let handle = NEXT_HANDLE.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
-        handle_table()
-            .lock()
-            .expect("scalar handle mutex poisoned")
-            .insert(handle, 819usize);
+            .insert(handle, 817usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -43319,7 +43164,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 820usize);
+            .insert(handle, 818usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -43349,7 +43194,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 821usize);
+            .insert(handle, 819usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -43373,7 +43218,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 822usize);
+            .insert(handle, 820usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -43407,7 +43252,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 823usize);
+            .insert(handle, 821usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -43431,7 +43276,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 824usize);
+            .insert(handle, 822usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -43465,7 +43310,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 825usize);
+            .insert(handle, 823usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -43499,7 +43344,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 826usize);
+            .insert(handle, 824usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -43533,7 +43378,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 827usize);
+            .insert(handle, 825usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -43563,7 +43408,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 828usize);
+            .insert(handle, 826usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -43597,7 +43442,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 829usize);
+            .insert(handle, 827usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -43631,7 +43476,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 830usize);
+            .insert(handle, 828usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -43661,7 +43506,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 831usize);
+            .insert(handle, 829usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -43691,7 +43536,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 832usize);
+            .insert(handle, 830usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -43715,7 +43560,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 833usize);
+            .insert(handle, 831usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -43745,7 +43590,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 834usize);
+            .insert(handle, 832usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -43769,7 +43614,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 835usize);
+            .insert(handle, 833usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -43799,7 +43644,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 836usize);
+            .insert(handle, 834usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -43837,7 +43682,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 837usize);
+            .insert(handle, 835usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -43871,7 +43716,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 838usize);
+            .insert(handle, 836usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -43909,7 +43754,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 839usize);
+            .insert(handle, 837usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -43933,7 +43778,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 840usize);
+            .insert(handle, 838usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -43963,7 +43808,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 841usize);
+            .insert(handle, 839usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -43993,7 +43838,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 842usize);
+            .insert(handle, 840usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -44023,7 +43868,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 843usize);
+            .insert(handle, 841usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -44047,7 +43892,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 844usize);
+            .insert(handle, 842usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -44071,7 +43916,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 845usize);
+            .insert(handle, 843usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -44105,7 +43950,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 846usize);
+            .insert(handle, 844usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -44129,7 +43974,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 847usize);
+            .insert(handle, 845usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -44153,7 +43998,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 848usize);
+            .insert(handle, 846usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -44187,7 +44032,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 849usize);
+            .insert(handle, 847usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -44225,7 +44070,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 850usize);
+            .insert(handle, 848usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -44249,7 +44094,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 851usize);
+            .insert(handle, 849usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -44287,7 +44132,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 852usize);
+            .insert(handle, 850usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -44329,7 +44174,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 853usize);
+            .insert(handle, 851usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -44359,7 +44204,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 854usize);
+            .insert(handle, 852usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -44383,7 +44228,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 855usize);
+            .insert(handle, 853usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -44407,7 +44252,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 856usize);
+            .insert(handle, 854usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -44445,7 +44290,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 857usize);
+            .insert(handle, 855usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -44479,7 +44324,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 858usize);
+            .insert(handle, 856usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -44509,7 +44354,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 859usize);
+            .insert(handle, 857usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -44533,7 +44378,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 860usize);
+            .insert(handle, 858usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -44557,7 +44402,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 861usize);
+            .insert(handle, 859usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -44591,7 +44436,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 862usize);
+            .insert(handle, 860usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -44629,7 +44474,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 863usize);
+            .insert(handle, 861usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -44659,7 +44504,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 864usize);
+            .insert(handle, 862usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -44683,7 +44528,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 865usize);
+            .insert(handle, 863usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -44713,7 +44558,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 866usize);
+            .insert(handle, 864usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -44737,7 +44582,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 867usize);
+            .insert(handle, 865usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -44767,7 +44612,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 868usize);
+            .insert(handle, 866usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -44791,7 +44636,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 869usize);
+            .insert(handle, 867usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -44815,7 +44660,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 870usize);
+            .insert(handle, 868usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -44839,7 +44684,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 871usize);
+            .insert(handle, 869usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -44863,7 +44708,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 872usize);
+            .insert(handle, 870usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -44887,7 +44732,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 873usize);
+            .insert(handle, 871usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -44911,7 +44756,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 874usize);
+            .insert(handle, 872usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -44935,7 +44780,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 875usize);
+            .insert(handle, 873usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -44969,7 +44814,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 876usize);
+            .insert(handle, 874usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -45003,7 +44848,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 877usize);
+            .insert(handle, 875usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -45037,7 +44882,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 878usize);
+            .insert(handle, 876usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -45071,7 +44916,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 879usize);
+            .insert(handle, 877usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -45105,7 +44950,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 880usize);
+            .insert(handle, 878usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -45139,7 +44984,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 881usize);
+            .insert(handle, 879usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -45163,7 +45008,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 882usize);
+            .insert(handle, 880usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -45187,7 +45032,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 883usize);
+            .insert(handle, 881usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -45211,7 +45056,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 884usize);
+            .insert(handle, 882usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -45235,7 +45080,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 885usize);
+            .insert(handle, 883usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -45259,7 +45104,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 886usize);
+            .insert(handle, 884usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -45283,7 +45128,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 887usize);
+            .insert(handle, 885usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -45307,7 +45152,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 888usize);
+            .insert(handle, 886usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -45331,7 +45176,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 889usize);
+            .insert(handle, 887usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -45355,7 +45200,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 890usize);
+            .insert(handle, 888usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -45379,7 +45224,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 891usize);
+            .insert(handle, 889usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -45409,7 +45254,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 892usize);
+            .insert(handle, 890usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -45439,7 +45284,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 893usize);
+            .insert(handle, 891usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -45463,7 +45308,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 894usize);
+            .insert(handle, 892usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -45493,7 +45338,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 895usize);
+            .insert(handle, 893usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -45527,7 +45372,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 896usize);
+            .insert(handle, 894usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -45557,7 +45402,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 897usize);
+            .insert(handle, 895usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -45587,7 +45432,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 898usize);
+            .insert(handle, 896usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -45617,7 +45462,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 899usize);
+            .insert(handle, 897usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -45651,7 +45496,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 900usize);
+            .insert(handle, 898usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -45685,7 +45530,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 901usize);
+            .insert(handle, 899usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -45715,7 +45560,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 902usize);
+            .insert(handle, 900usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -45745,7 +45590,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 903usize);
+            .insert(handle, 901usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -45775,7 +45620,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 904usize);
+            .insert(handle, 902usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -45799,7 +45644,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 905usize);
+            .insert(handle, 903usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -45829,7 +45674,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 906usize);
+            .insert(handle, 904usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -45859,7 +45704,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 907usize);
+            .insert(handle, 905usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -45889,7 +45734,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 908usize);
+            .insert(handle, 906usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -45919,7 +45764,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 909usize);
+            .insert(handle, 907usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -45953,7 +45798,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 910usize);
+            .insert(handle, 908usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -45987,7 +45832,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 911usize);
+            .insert(handle, 909usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -46017,7 +45862,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 912usize);
+            .insert(handle, 910usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -46041,7 +45886,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 913usize);
+            .insert(handle, 911usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -46065,7 +45910,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 914usize);
+            .insert(handle, 912usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -46089,7 +45934,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 915usize);
+            .insert(handle, 913usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -46127,7 +45972,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 916usize);
+            .insert(handle, 914usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -46165,7 +46010,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 917usize);
+            .insert(handle, 915usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -46195,7 +46040,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 918usize);
+            .insert(handle, 916usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -46229,7 +46074,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 919usize);
+            .insert(handle, 917usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -46259,7 +46104,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 920usize);
+            .insert(handle, 918usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -46289,7 +46134,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 921usize);
+            .insert(handle, 919usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -46323,7 +46168,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 922usize);
+            .insert(handle, 920usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -46357,7 +46202,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 923usize);
+            .insert(handle, 921usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -46391,7 +46236,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 924usize);
+            .insert(handle, 922usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -46425,7 +46270,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 925usize);
+            .insert(handle, 923usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -46455,7 +46300,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 926usize);
+            .insert(handle, 924usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -46485,7 +46330,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 927usize);
+            .insert(handle, 925usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -46519,7 +46364,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 928usize);
+            .insert(handle, 926usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -46549,7 +46394,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 929usize);
+            .insert(handle, 927usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -46579,7 +46424,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 930usize);
+            .insert(handle, 928usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -46613,7 +46458,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 931usize);
+            .insert(handle, 929usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -46651,7 +46496,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 932usize);
+            .insert(handle, 930usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -46689,7 +46534,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 933usize);
+            .insert(handle, 931usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -46727,7 +46572,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 934usize);
+            .insert(handle, 932usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -46751,7 +46596,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 935usize);
+            .insert(handle, 933usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -46775,7 +46620,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 936usize);
+            .insert(handle, 934usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -46799,7 +46644,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 937usize);
+            .insert(handle, 935usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -46829,7 +46674,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 938usize);
+            .insert(handle, 936usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -46863,7 +46708,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 939usize);
+            .insert(handle, 937usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -46901,7 +46746,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 940usize);
+            .insert(handle, 938usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -46943,7 +46788,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 941usize);
+            .insert(handle, 939usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -46997,7 +46842,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 942usize);
+            .insert(handle, 940usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -47035,7 +46880,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 943usize);
+            .insert(handle, 941usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -47065,7 +46910,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 944usize);
+            .insert(handle, 942usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -47095,7 +46940,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 945usize);
+            .insert(handle, 943usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -47125,7 +46970,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 946usize);
+            .insert(handle, 944usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -47167,7 +47012,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 947usize);
+            .insert(handle, 945usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -47197,7 +47042,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 948usize);
+            .insert(handle, 946usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -47227,7 +47072,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 949usize);
+            .insert(handle, 947usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -47257,7 +47102,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 950usize);
+            .insert(handle, 948usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -47281,7 +47126,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 951usize);
+            .insert(handle, 949usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -47311,7 +47156,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 952usize);
+            .insert(handle, 950usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -47341,7 +47186,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 953usize);
+            .insert(handle, 951usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -47375,7 +47220,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 954usize);
+            .insert(handle, 952usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -47413,7 +47258,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 955usize);
+            .insert(handle, 953usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -47463,7 +47308,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 956usize);
+            .insert(handle, 954usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -47497,7 +47342,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 957usize);
+            .insert(handle, 955usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -47527,7 +47372,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 958usize);
+            .insert(handle, 956usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -47551,7 +47396,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 959usize);
+            .insert(handle, 957usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -47575,7 +47420,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 960usize);
+            .insert(handle, 958usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -47613,7 +47458,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 961usize);
+            .insert(handle, 959usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -47637,7 +47482,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 962usize);
+            .insert(handle, 960usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -47661,7 +47506,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 963usize);
+            .insert(handle, 961usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -47691,7 +47536,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 964usize);
+            .insert(handle, 962usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -47721,7 +47566,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 965usize);
+            .insert(handle, 963usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -47751,7 +47596,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 966usize);
+            .insert(handle, 964usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -47785,7 +47630,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 967usize);
+            .insert(handle, 965usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -47815,7 +47660,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 968usize);
+            .insert(handle, 966usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -47865,7 +47710,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 969usize);
+            .insert(handle, 967usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -47899,7 +47744,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 970usize);
+            .insert(handle, 968usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -47933,7 +47778,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 971usize);
+            .insert(handle, 969usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -47963,7 +47808,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 972usize);
+            .insert(handle, 970usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -47997,7 +47842,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 973usize);
+            .insert(handle, 971usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -48027,7 +47872,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 974usize);
+            .insert(handle, 972usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -48061,7 +47906,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 975usize);
+            .insert(handle, 973usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -48091,7 +47936,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 976usize);
+            .insert(handle, 974usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -48121,7 +47966,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 977usize);
+            .insert(handle, 975usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -48155,7 +48000,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 978usize);
+            .insert(handle, 976usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -48197,7 +48042,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 979usize);
+            .insert(handle, 977usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -48235,7 +48080,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 980usize);
+            .insert(handle, 978usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -48277,7 +48122,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 981usize);
+            .insert(handle, 979usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -48327,7 +48172,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 982usize);
+            .insert(handle, 980usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -48357,7 +48202,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 983usize);
+            .insert(handle, 981usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -48387,7 +48232,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 984usize);
+            .insert(handle, 982usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -48417,7 +48262,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 985usize);
+            .insert(handle, 983usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -48447,7 +48292,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 986usize);
+            .insert(handle, 984usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -48481,7 +48326,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 987usize);
+            .insert(handle, 985usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -48511,7 +48356,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 988usize);
+            .insert(handle, 986usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -48541,7 +48386,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 989usize);
+            .insert(handle, 987usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -48571,7 +48416,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 990usize);
+            .insert(handle, 988usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -48613,7 +48458,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 991usize);
+            .insert(handle, 989usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -48643,7 +48488,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 992usize);
+            .insert(handle, 990usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -48673,7 +48518,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 993usize);
+            .insert(handle, 991usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -48703,7 +48548,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 994usize);
+            .insert(handle, 992usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -48733,7 +48578,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 995usize);
+            .insert(handle, 993usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -48763,7 +48608,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 996usize);
+            .insert(handle, 994usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -48787,7 +48632,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 997usize);
+            .insert(handle, 995usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -48811,7 +48656,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 998usize);
+            .insert(handle, 996usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -48841,7 +48686,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 999usize);
+            .insert(handle, 997usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -48871,7 +48716,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1000usize);
+            .insert(handle, 998usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -48901,7 +48746,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1001usize);
+            .insert(handle, 999usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -48931,7 +48776,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1002usize);
+            .insert(handle, 1000usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -48961,7 +48806,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1003usize);
+            .insert(handle, 1001usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -48991,7 +48836,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1004usize);
+            .insert(handle, 1002usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -49025,7 +48870,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1005usize);
+            .insert(handle, 1003usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -49059,7 +48904,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1006usize);
+            .insert(handle, 1004usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -49089,7 +48934,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1007usize);
+            .insert(handle, 1005usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -49119,7 +48964,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1008usize);
+            .insert(handle, 1006usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -49149,7 +48994,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1009usize);
+            .insert(handle, 1007usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -49179,7 +49024,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1010usize);
+            .insert(handle, 1008usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -49209,7 +49054,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1011usize);
+            .insert(handle, 1009usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -49243,7 +49088,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1012usize);
+            .insert(handle, 1010usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -49277,7 +49122,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1013usize);
+            .insert(handle, 1011usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -49307,7 +49152,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1014usize);
+            .insert(handle, 1012usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -49337,7 +49182,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1015usize);
+            .insert(handle, 1013usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -49361,7 +49206,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1016usize);
+            .insert(handle, 1014usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -49385,7 +49230,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1017usize);
+            .insert(handle, 1015usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -49409,7 +49254,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1018usize);
+            .insert(handle, 1016usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -49433,7 +49278,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1019usize);
+            .insert(handle, 1017usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -49463,7 +49308,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1020usize);
+            .insert(handle, 1018usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -49497,7 +49342,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1021usize);
+            .insert(handle, 1019usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -49527,7 +49372,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1022usize);
+            .insert(handle, 1020usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -49577,7 +49422,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1023usize);
+            .insert(handle, 1021usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -49619,7 +49464,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1024usize);
+            .insert(handle, 1022usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -49653,7 +49498,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1025usize);
+            .insert(handle, 1023usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -49683,7 +49528,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1026usize);
+            .insert(handle, 1024usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -49713,7 +49558,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1027usize);
+            .insert(handle, 1025usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -49755,7 +49600,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1028usize);
+            .insert(handle, 1026usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -49779,7 +49624,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1029usize);
+            .insert(handle, 1027usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -49803,7 +49648,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1030usize);
+            .insert(handle, 1028usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -49827,7 +49672,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1031usize);
+            .insert(handle, 1029usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -49851,7 +49696,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1032usize);
+            .insert(handle, 1030usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -49875,7 +49720,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1033usize);
+            .insert(handle, 1031usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -49899,7 +49744,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1034usize);
+            .insert(handle, 1032usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -49929,7 +49774,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1035usize);
+            .insert(handle, 1033usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -49953,7 +49798,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1036usize);
+            .insert(handle, 1034usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -49987,7 +49832,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1037usize);
+            .insert(handle, 1035usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -50011,7 +49856,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1038usize);
+            .insert(handle, 1036usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -50041,7 +49886,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1039usize);
+            .insert(handle, 1037usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -50071,7 +49916,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1040usize);
+            .insert(handle, 1038usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -50101,7 +49946,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1041usize);
+            .insert(handle, 1039usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -50131,7 +49976,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1042usize);
+            .insert(handle, 1040usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -50161,7 +50006,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1043usize);
+            .insert(handle, 1041usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -50191,7 +50036,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1044usize);
+            .insert(handle, 1042usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -50225,7 +50070,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1045usize);
+            .insert(handle, 1043usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -50255,7 +50100,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1046usize);
+            .insert(handle, 1044usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -50285,7 +50130,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1047usize);
+            .insert(handle, 1045usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -50309,7 +50154,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1048usize);
+            .insert(handle, 1046usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -50343,7 +50188,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1049usize);
+            .insert(handle, 1047usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -50385,7 +50230,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1050usize);
+            .insert(handle, 1048usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -50427,7 +50272,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1051usize);
+            .insert(handle, 1049usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -50451,7 +50296,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1052usize);
+            .insert(handle, 1050usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -50475,7 +50320,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1053usize);
+            .insert(handle, 1051usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -50499,7 +50344,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1054usize);
+            .insert(handle, 1052usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -50523,7 +50368,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1055usize);
+            .insert(handle, 1053usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -50547,7 +50392,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1056usize);
+            .insert(handle, 1054usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -50571,7 +50416,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1057usize);
+            .insert(handle, 1055usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -50595,7 +50440,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1058usize);
+            .insert(handle, 1056usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -50619,7 +50464,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1059usize);
+            .insert(handle, 1057usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -50643,7 +50488,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1060usize);
+            .insert(handle, 1058usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -50667,7 +50512,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1061usize);
+            .insert(handle, 1059usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -50691,7 +50536,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1062usize);
+            .insert(handle, 1060usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -50715,7 +50560,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1063usize);
+            .insert(handle, 1061usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -50739,7 +50584,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1064usize);
+            .insert(handle, 1062usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -50763,7 +50608,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1065usize);
+            .insert(handle, 1063usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -50787,7 +50632,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1066usize);
+            .insert(handle, 1064usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -50811,7 +50656,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1067usize);
+            .insert(handle, 1065usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -50835,7 +50680,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1068usize);
+            .insert(handle, 1066usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -50859,7 +50704,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1069usize);
+            .insert(handle, 1067usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -50883,7 +50728,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1070usize);
+            .insert(handle, 1068usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -50907,7 +50752,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1071usize);
+            .insert(handle, 1069usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -50931,7 +50776,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1072usize);
+            .insert(handle, 1070usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -50955,7 +50800,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1073usize);
+            .insert(handle, 1071usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -50979,7 +50824,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1074usize);
+            .insert(handle, 1072usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -51003,7 +50848,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1075usize);
+            .insert(handle, 1073usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -51033,7 +50878,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1076usize);
+            .insert(handle, 1074usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -51063,7 +50908,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1077usize);
+            .insert(handle, 1075usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -51093,7 +50938,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1078usize);
+            .insert(handle, 1076usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -51123,7 +50968,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1079usize);
+            .insert(handle, 1077usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -51153,7 +50998,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1080usize);
+            .insert(handle, 1078usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -51187,7 +51032,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1081usize);
+            .insert(handle, 1079usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -51217,7 +51062,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1082usize);
+            .insert(handle, 1080usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -51251,7 +51096,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1083usize);
+            .insert(handle, 1081usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -51289,7 +51134,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1084usize);
+            .insert(handle, 1082usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -51327,7 +51172,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1085usize);
+            .insert(handle, 1083usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -51369,7 +51214,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1086usize);
+            .insert(handle, 1084usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -51399,7 +51244,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1087usize);
+            .insert(handle, 1085usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -51423,7 +51268,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1088usize);
+            .insert(handle, 1086usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -51447,7 +51292,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1089usize);
+            .insert(handle, 1087usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -51471,7 +51316,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1090usize);
+            .insert(handle, 1088usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -51495,7 +51340,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1091usize);
+            .insert(handle, 1089usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -51519,7 +51364,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1092usize);
+            .insert(handle, 1090usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -51543,7 +51388,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1093usize);
+            .insert(handle, 1091usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -51567,7 +51412,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1094usize);
+            .insert(handle, 1092usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -51597,7 +51442,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1095usize);
+            .insert(handle, 1093usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -51627,7 +51472,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1096usize);
+            .insert(handle, 1094usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -51661,7 +51506,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1097usize);
+            .insert(handle, 1095usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -51691,7 +51536,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1098usize);
+            .insert(handle, 1096usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -51721,7 +51566,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1099usize);
+            .insert(handle, 1097usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -51745,7 +51590,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1100usize);
+            .insert(handle, 1098usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -51769,7 +51614,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1101usize);
+            .insert(handle, 1099usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -51793,7 +51638,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1102usize);
+            .insert(handle, 1100usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -51817,7 +51662,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1103usize);
+            .insert(handle, 1101usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -51841,7 +51686,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1104usize);
+            .insert(handle, 1102usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -51865,7 +51710,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1105usize);
+            .insert(handle, 1103usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -51903,7 +51748,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1106usize);
+            .insert(handle, 1104usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -51933,7 +51778,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1107usize);
+            .insert(handle, 1105usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -51967,7 +51812,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1108usize);
+            .insert(handle, 1106usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -52005,7 +51850,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1109usize);
+            .insert(handle, 1107usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -52039,7 +51884,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1110usize);
+            .insert(handle, 1108usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -52077,7 +51922,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1111usize);
+            .insert(handle, 1109usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -52107,7 +51952,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1112usize);
+            .insert(handle, 1110usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -52137,7 +51982,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1113usize);
+            .insert(handle, 1111usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -52171,7 +52016,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1114usize);
+            .insert(handle, 1112usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -52195,7 +52040,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1115usize);
+            .insert(handle, 1113usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -52225,7 +52070,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1116usize);
+            .insert(handle, 1114usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -52255,7 +52100,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1117usize);
+            .insert(handle, 1115usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -52285,7 +52130,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1118usize);
+            .insert(handle, 1116usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -52315,7 +52160,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1119usize);
+            .insert(handle, 1117usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -52339,7 +52184,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1120usize);
+            .insert(handle, 1118usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -52369,7 +52214,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1121usize);
+            .insert(handle, 1119usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -52399,7 +52244,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1122usize);
+            .insert(handle, 1120usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -52423,7 +52268,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1123usize);
+            .insert(handle, 1121usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -52447,7 +52292,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1124usize);
+            .insert(handle, 1122usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -52471,7 +52316,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1125usize);
+            .insert(handle, 1123usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -52495,7 +52340,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1126usize);
+            .insert(handle, 1124usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -52529,7 +52374,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1127usize);
+            .insert(handle, 1125usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -52563,7 +52408,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1128usize);
+            .insert(handle, 1126usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -52597,7 +52442,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1129usize);
+            .insert(handle, 1127usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -52631,7 +52476,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1130usize);
+            .insert(handle, 1128usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -52665,7 +52510,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1131usize);
+            .insert(handle, 1129usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -52699,7 +52544,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1132usize);
+            .insert(handle, 1130usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -52733,7 +52578,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1133usize);
+            .insert(handle, 1131usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -52767,7 +52612,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1134usize);
+            .insert(handle, 1132usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -52791,7 +52636,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1135usize);
+            .insert(handle, 1133usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -52815,7 +52660,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1136usize);
+            .insert(handle, 1134usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -52839,7 +52684,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1137usize);
+            .insert(handle, 1135usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -52863,7 +52708,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1138usize);
+            .insert(handle, 1136usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -52887,7 +52732,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1139usize);
+            .insert(handle, 1137usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -52911,7 +52756,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1140usize);
+            .insert(handle, 1138usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -52935,7 +52780,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1141usize);
+            .insert(handle, 1139usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -52959,7 +52804,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1142usize);
+            .insert(handle, 1140usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -52983,7 +52828,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1143usize);
+            .insert(handle, 1141usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -53007,7 +52852,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1144usize);
+            .insert(handle, 1142usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -53031,7 +52876,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1145usize);
+            .insert(handle, 1143usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -53055,7 +52900,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1146usize);
+            .insert(handle, 1144usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -53079,7 +52924,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1147usize);
+            .insert(handle, 1145usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -53103,7 +52948,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1148usize);
+            .insert(handle, 1146usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -53127,7 +52972,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1149usize);
+            .insert(handle, 1147usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -53161,7 +53006,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1150usize);
+            .insert(handle, 1148usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -53181,7 +53026,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         registry.register(
             "topo_element_array_append",
             &args,
-            &types::Logicaltype::Complex("topo-element".into()),
+            &types::Logicaltype::Text,
             callback,
             Some(&opts),
         )?;
@@ -53191,7 +53036,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1151usize);
+            .insert(handle, 1149usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -53215,7 +53060,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1152usize);
+            .insert(handle, 1150usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -53249,7 +53094,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1153usize);
+            .insert(handle, 1151usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -53283,7 +53128,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1154usize);
+            .insert(handle, 1152usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -53317,7 +53162,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1155usize);
+            .insert(handle, 1153usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -53351,7 +53196,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1156usize);
+            .insert(handle, 1154usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -53385,7 +53230,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1157usize);
+            .insert(handle, 1155usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -53415,7 +53260,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1158usize);
+            .insert(handle, 1156usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -53453,7 +53298,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1159usize);
+            .insert(handle, 1157usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -53491,7 +53336,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1160usize);
+            .insert(handle, 1158usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -53525,7 +53370,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1161usize);
+            .insert(handle, 1159usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -53563,7 +53408,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1162usize);
+            .insert(handle, 1160usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -53597,7 +53442,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1163usize);
+            .insert(handle, 1161usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -53631,7 +53476,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1164usize);
+            .insert(handle, 1162usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -53669,7 +53514,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1165usize);
+            .insert(handle, 1163usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -53703,7 +53548,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1166usize);
+            .insert(handle, 1164usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -53727,7 +53572,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1167usize);
+            .insert(handle, 1165usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -53757,7 +53602,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1168usize);
+            .insert(handle, 1166usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -53791,7 +53636,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1169usize);
+            .insert(handle, 1167usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -53821,7 +53666,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1170usize);
+            .insert(handle, 1168usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -53855,7 +53700,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1171usize);
+            .insert(handle, 1169usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -53889,7 +53734,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1172usize);
+            .insert(handle, 1170usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -53923,7 +53768,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1173usize);
+            .insert(handle, 1171usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -53947,7 +53792,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1174usize);
+            .insert(handle, 1172usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -53971,7 +53816,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1175usize);
+            .insert(handle, 1173usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -53995,7 +53840,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1176usize);
+            .insert(handle, 1174usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -54019,7 +53864,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1177usize);
+            .insert(handle, 1175usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -54053,7 +53898,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1178usize);
+            .insert(handle, 1176usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -54083,7 +53928,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1179usize);
+            .insert(handle, 1177usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -54117,7 +53962,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1180usize);
+            .insert(handle, 1178usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -54147,7 +53992,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1181usize);
+            .insert(handle, 1179usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -54177,7 +54022,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1182usize);
+            .insert(handle, 1180usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -54207,7 +54052,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1183usize);
+            .insert(handle, 1181usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -54241,7 +54086,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1184usize);
+            .insert(handle, 1182usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -54271,7 +54116,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1185usize);
+            .insert(handle, 1183usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -54301,7 +54146,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1186usize);
+            .insert(handle, 1184usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -54331,7 +54176,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1187usize);
+            .insert(handle, 1185usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -54355,7 +54200,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1188usize);
+            .insert(handle, 1186usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -54379,7 +54224,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1189usize);
+            .insert(handle, 1187usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -54403,7 +54248,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1190usize);
+            .insert(handle, 1188usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -54433,7 +54278,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1191usize);
+            .insert(handle, 1189usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -54467,7 +54312,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1192usize);
+            .insert(handle, 1190usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -54501,7 +54346,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1193usize);
+            .insert(handle, 1191usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -54535,7 +54380,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1194usize);
+            .insert(handle, 1192usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -54559,7 +54404,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1195usize);
+            .insert(handle, 1193usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -54593,7 +54438,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1196usize);
+            .insert(handle, 1194usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -54627,7 +54472,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1197usize);
+            .insert(handle, 1195usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -54651,7 +54496,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1198usize);
+            .insert(handle, 1196usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -54675,7 +54520,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1199usize);
+            .insert(handle, 1197usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -54699,7 +54544,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1200usize);
+            .insert(handle, 1198usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -54729,7 +54574,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1201usize);
+            .insert(handle, 1199usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -54759,7 +54604,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1202usize);
+            .insert(handle, 1200usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -54789,7 +54634,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1203usize);
+            .insert(handle, 1201usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -54819,7 +54664,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1204usize);
+            .insert(handle, 1202usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -54849,7 +54694,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1205usize);
+            .insert(handle, 1203usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -54873,7 +54718,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1206usize);
+            .insert(handle, 1204usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -54903,7 +54748,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1207usize);
+            .insert(handle, 1205usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -54927,7 +54772,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1208usize);
+            .insert(handle, 1206usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -54951,7 +54796,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1209usize);
+            .insert(handle, 1207usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -54975,7 +54820,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1210usize);
+            .insert(handle, 1208usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -55009,7 +54854,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1211usize);
+            .insert(handle, 1209usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -55043,7 +54888,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1212usize);
+            .insert(handle, 1210usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -55077,7 +54922,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1213usize);
+            .insert(handle, 1211usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -55111,7 +54956,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1214usize);
+            .insert(handle, 1212usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -55145,7 +54990,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1215usize);
+            .insert(handle, 1213usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -55179,7 +55024,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1216usize);
+            .insert(handle, 1214usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -55203,7 +55048,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1217usize);
+            .insert(handle, 1215usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -55227,7 +55072,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1218usize);
+            .insert(handle, 1216usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -55251,7 +55096,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1219usize);
+            .insert(handle, 1217usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -55275,7 +55120,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1220usize);
+            .insert(handle, 1218usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -55305,7 +55150,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1221usize);
+            .insert(handle, 1219usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -55329,7 +55174,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1222usize);
+            .insert(handle, 1220usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -55353,7 +55198,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1223usize);
+            .insert(handle, 1221usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -55377,7 +55222,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1224usize);
+            .insert(handle, 1222usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -55407,7 +55252,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1225usize);
+            .insert(handle, 1223usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![runtime::Funcarg {
             name: Some("arg0".into()),
@@ -55431,7 +55276,7 @@ fn register_scalars() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1226usize);
+            .insert(handle, 1224usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             runtime::Funcarg {
@@ -56654,7 +56499,7 @@ fn register_casts() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1225usize);
+            .insert(handle, 1223usize);
         let callback = runtime::CastCallback::new(handle);
         let spec = catalog::CastSpec {
             from: "BLOB".into(),
@@ -56786,7 +56631,7 @@ fn register_casts() -> Result<(), types::Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1226usize);
+            .insert(handle, 1224usize);
         let callback = runtime::CastCallback::new(handle);
         let spec = catalog::CastSpec {
             from: "BLOB".into(),
