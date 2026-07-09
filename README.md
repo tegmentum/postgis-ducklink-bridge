@@ -21,7 +21,7 @@ SQLite-target wires via sqlink-loader (#559).
 
 | extension | version | scalars | aggregates | UDTFs | windows | types | operators | casts | preprocessors | catalog | indexes |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| postgis | 0.1.0 | 1243 | 33 | 12 | 17 | 29 | 43 | 32 | 5 | 0 | 3 |
+| postgis | 0.1.0 | 1245 | 33 | 12 | 17 | 29 | 43 | 32 | 9 | 0 | 3 |
 
 ## Build
 
