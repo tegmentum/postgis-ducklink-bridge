@@ -1,5 +1,0 @@
-package geozero:convert@0.1.0;
-
-world geozero-component {
-    export geozero-api;
-}
