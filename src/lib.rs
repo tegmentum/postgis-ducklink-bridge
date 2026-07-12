@@ -501,1057 +501,1065 @@ fn scalar_name_by_arm_idx(arm: usize) -> Option<&'static str> {
         11 => Some("build"),
         12 => Some("change_edge_geom"),
         13 => Some("copy_topology"),
-        14 => Some("create_raster"),
-        15 => Some("create_topo_geom"),
-        16 => Some("create_topology"),
-        17 => Some("drop_topogeom_column"),
-        18 => Some("drop_topology"),
-        19 => Some("from_bytes"),
-        20 => Some("get_edge_by_point"),
-        21 => Some("get_edge_geometry"),
-        22 => Some("get_face_by_point"),
-        23 => Some("get_face_containing_point"),
-        24 => Some("get_face_edges"),
-        25 => Some("get_face_geometry"),
-        26 => Some("get_node_by_point"),
-        27 => Some("get_node_edges"),
-        28 => Some("get_node_geometry"),
-        29 => Some("get_ring_edges"),
-        30 => Some("get_topology_id"),
-        31 => Some("get_topology_name"),
-        32 => Some("get_topology_srid"),
-        33 => Some("list_cast_rewrites"),
-        34 => Some("list_operator_rewrites"),
-        35 => Some("list_preprocessor_patterns"),
-        36 => Some("make_topo_element"),
-        37 => Some("make_topology_precise"),
-        38 => Some("mod_edge_heal"),
-        39 => Some("mod_edge_split"),
-        40 => Some("move_iso_node"),
-        41 => Some("new_edge_heal"),
-        42 => Some("new_edges_split"),
-        43 => Some("op_bbox_distance"),
-        44 => Some("op_bbox_intersects_nd"),
-        45 => Some("op_bbox_intersects_twod"),
-        46 => Some("op_equals_spatially"),
-        47 => Some("op_knn_distance"),
-        48 => Some("polygonize"),
-        49 => Some("postgis_addbbox"),
-        50 => Some("postgis_dropbbox"),
-        51 => Some("postgis_full_version"),
-        52 => Some("postgis_geos_compiled_version"),
-        53 => Some("postgis_geos_noop"),
-        54 => Some("postgis_geos_version"),
-        55 => Some("postgis_getbbox"),
-        56 => Some("postgis_hasbbox"),
-        57 => Some("postgis_lib_build_date"),
-        58 => Some("postgis_lib_revision"),
-        59 => Some("postgis_lib_version"),
-        60 => Some("postgis_libjson_version"),
-        61 => Some("postgis_liblwgeom_version"),
-        62 => Some("postgis_libprotobuf_version"),
-        63 => Some("postgis_libxml_version"),
-        64 => Some("postgis_noop"),
-        65 => Some("postgis_proj_compiled_version"),
-        66 => Some("postgis_proj_version"),
-        67 => Some("postgis_scripts_build_date"),
-        68 => Some("postgis_scripts_installed"),
-        69 => Some("postgis_scripts_released"),
-        70 => Some("postgis_svn_version"),
-        71 => Some("postgis_topology_scripts_installed"),
-        72 => Some("postgis_type_name"),
-        73 => Some("postgis_version"),
-        74 => Some("postgis_wagyu_version"),
-        75 => Some("rem_edge_mod_face"),
-        76 => Some("rem_edge_new_face"),
-        77 => Some("remove_face"),
-        78 => Some("remove_iso_edge"),
-        79 => Some("remove_iso_node"),
-        80 => Some("remove_unused_primitives"),
-        81 => Some("rename_topology"),
-        82 => Some("st_3d_closest_point"),
-        83 => Some("st_3d_contains"),
-        84 => Some("st_3d_d_within"),
-        85 => Some("st_3d_dwithin"),
-        86 => Some("st_3d_intersects"),
-        87 => Some("st_3d_line_interpolate_point"),
-        88 => Some("st_3d_longest_line"),
-        89 => Some("st_3d_make_box"),
-        90 => Some("st_3d_max_distance"),
-        91 => Some("st_3d_shortest_line"),
-        92 => Some("st_3dboundary"),
-        93 => Some("st_3dcentroid"),
-        94 => Some("st_3dclosestpoint"),
-        95 => Some("st_3dcontains"),
-        96 => Some("st_3dconvexhull"),
-        97 => Some("st_3ddifference"),
-        98 => Some("st_3ddistance"),
-        99 => Some("st_3ddwithin"),
-        100 => Some("st_3denvelope"),
-        101 => Some("st_3dintersection"),
-        102 => Some("st_3dintersects"),
-        103 => Some("st_3dlength"),
-        104 => Some("st_3dlineinterpolatepoint"),
-        105 => Some("st_3dlongestline"),
-        106 => Some("st_3dmakebox"),
-        107 => Some("st_3dmaxdistance"),
-        108 => Some("st_3dperimeter"),
-        109 => Some("st_3dreverse"),
-        110 => Some("st_3drotate"),
-        111 => Some("st_3dscale"),
-        112 => Some("st_3dshortestline"),
-        113 => Some("st_3dtranslate"),
-        114 => Some("st_3dunion"),
-        115 => Some("st_add_band"),
-        116 => Some("st_add_face"),
-        117 => Some("st_add_iso_edge"),
-        118 => Some("st_add_iso_node"),
-        119 => Some("st_add_measure"),
-        120 => Some("st_add_point"),
-        121 => Some("st_addband"),
-        122 => Some("st_addface"),
-        123 => Some("st_addisoedge"),
-        124 => Some("st_addisonode"),
-        125 => Some("st_addmeasure"),
-        126 => Some("st_addpoint"),
-        127 => Some("st_affine"),
-        128 => Some("st_angle"),
-        129 => Some("st_approx_histogram"),
-        130 => Some("st_approx_quantile"),
-        131 => Some("st_approx_quantiles"),
-        132 => Some("st_approx_summary_stats"),
-        133 => Some("st_approx_value_count"),
-        134 => Some("st_approx_value_counts"),
-        135 => Some("st_approx_value_percent"),
-        136 => Some("st_approx_value_percents"),
-        137 => Some("st_approximate_medial_axis"),
-        138 => Some("st_approximatemedialaxis"),
-        139 => Some("st_area"),
-        140 => Some("st_area_threed"),
-        141 => Some("st_area_twod"),
-        142 => Some("st_areathreed"),
-        143 => Some("st_as_binary"),
-        144 => Some("st_as_encoded_polyline"),
-        145 => Some("st_as_ewkb"),
-        146 => Some("st_as_ewkt"),
-        147 => Some("st_as_ewkt_precision"),
-        148 => Some("st_as_flatgeobuf"),
-        149 => Some("st_as_gdal_raster"),
-        150 => Some("st_as_geobuf"),
-        151 => Some("st_as_geojson"),
-        152 => Some("st_as_geojson_full"),
-        153 => Some("st_as_gml"),
-        154 => Some("st_as_gml_full"),
-        155 => Some("st_as_hexewkb"),
-        156 => Some("st_as_jpeg"),
-        157 => Some("st_as_kml"),
-        158 => Some("st_as_kml_full"),
-        159 => Some("st_as_lat_lon_text"),
-        160 => Some("st_as_marc21"),
-        161 => Some("st_as_marc21_fmt"),
-        162 => Some("st_as_mvt"),
-        163 => Some("st_as_mvt_geom"),
-        164 => Some("st_as_png"),
-        165 => Some("st_as_svg"),
-        166 => Some("st_as_svg_full"),
-        167 => Some("st_as_text"),
-        168 => Some("st_as_text_precision"),
-        169 => Some("st_as_tiff"),
-        170 => Some("st_as_topo_json"),
-        171 => Some("st_as_twkb"),
-        172 => Some("st_as_x3d"),
-        173 => Some("st_as_x3d_full"),
-        174 => Some("st_asbinary"),
-        175 => Some("st_asencodedpolyline"),
-        176 => Some("st_asewkb"),
-        177 => Some("st_asewkt"),
-        178 => Some("st_asgeojson"),
-        179 => Some("st_asgml"),
-        180 => Some("st_ashexewkb"),
-        181 => Some("st_askml"),
-        182 => Some("st_aslatlontext"),
-        183 => Some("st_asmarc21"),
-        184 => Some("st_asmvt"),
-        185 => Some("st_asmvtgeom"),
-        186 => Some("st_aspect"),
-        187 => Some("st_aspng"),
-        188 => Some("st_assvg"),
-        189 => Some("st_astext"),
-        190 => Some("st_astiff"),
-        191 => Some("st_astopojson"),
-        192 => Some("st_astwkb"),
-        193 => Some("st_asx3d"),
-        194 => Some("st_azimuth"),
-        195 => Some("st_band_count"),
-        196 => Some("st_band_max"),
-        197 => Some("st_band_mean"),
-        198 => Some("st_band_metadata"),
-        199 => Some("st_band_min"),
-        200 => Some("st_band_nodata_value"),
-        201 => Some("st_band_pixel_type"),
-        202 => Some("st_band_stddev"),
-        203 => Some("st_band_sum"),
-        204 => Some("st_bandnodatavalue"),
-        205 => Some("st_bandpixeltype"),
-        206 => Some("st_bands_metadata"),
-        207 => Some("st_bboxdistance"),
-        208 => Some("st_bboxintersects"),
-        209 => Some("st_bboxintersectsnd"),
-        210 => Some("st_bd_mpoly_from_text"),
-        211 => Some("st_bd_poly_from_text"),
-        212 => Some("st_bdmpolyfromtext"),
-        213 => Some("st_bdpolyfromtext"),
-        214 => Some("st_boundary"),
-        215 => Some("st_boundary_threed"),
-        216 => Some("st_boundarythreed"),
-        217 => Some("st_bounding_diagonal"),
-        218 => Some("st_boundingdiagonal"),
-        219 => Some("st_box2d_from_geohash"),
-        220 => Some("st_box2dfromgeohash"),
-        221 => Some("st_box_from_geohash"),
-        222 => Some("st_boxfromgeohash"),
-        223 => Some("st_buffer"),
-        224 => Some("st_buffer_quad_segs"),
-        225 => Some("st_buffer_with_style"),
-        226 => Some("st_build_area"),
-        227 => Some("st_buildarea"),
-        228 => Some("st_centroid"),
-        229 => Some("st_centroid_threed"),
-        230 => Some("st_centroidthreed"),
-        231 => Some("st_chaikin_smoothing"),
-        232 => Some("st_chaikinsmoothing"),
-        233 => Some("st_clip_by_box2d"),
-        234 => Some("st_clipbybox2d"),
-        235 => Some("st_closest_point"),
-        236 => Some("st_closest_point_3d"),
-        237 => Some("st_closest_point_of_approach"),
-        238 => Some("st_closest_point_threed"),
-        239 => Some("st_closestpoint"),
-        240 => Some("st_collect"),
-        241 => Some("st_collection_extract"),
-        242 => Some("st_collection_homogenize"),
-        243 => Some("st_collectionextract"),
-        244 => Some("st_collectionhomogenize"),
-        245 => Some("st_concave_hull"),
-        246 => Some("st_concave_hull_holes"),
-        247 => Some("st_concavehull"),
-        248 => Some("st_constrained_delaunay_triangles"),
-        249 => Some("st_constraineddelaunaytriangles"),
-        250 => Some("st_constrainedelaunaytriangles"),
-        251 => Some("st_contains"),
-        252 => Some("st_contains_3d"),
-        253 => Some("st_contains_properly"),
-        254 => Some("st_contains_threed"),
-        255 => Some("st_containsproperly"),
-        256 => Some("st_convex_hull"),
-        257 => Some("st_convexhull"),
-        258 => Some("st_coord_dim"),
-        259 => Some("st_coorddim"),
-        260 => Some("st_count"),
-        261 => Some("st_coverage_clean"),
-        262 => Some("st_coverage_invalid_edges"),
-        263 => Some("st_coverage_simplify"),
-        264 => Some("st_coverage_union"),
-        265 => Some("st_coverageclean"),
-        266 => Some("st_coverageinvalidedges"),
-        267 => Some("st_coveragesimplify"),
-        268 => Some("st_covered_by"),
-        269 => Some("st_coveredby"),
-        270 => Some("st_covers"),
-        271 => Some("st_covers_threed"),
-        272 => Some("st_cpa_within"),
-        273 => Some("st_cpawithin"),
-        274 => Some("st_create_topo_geo"),
-        275 => Some("st_create_topology"),
-        276 => Some("st_createtopology"),
-        277 => Some("st_crosses"),
-        278 => Some("st_curve_n"),
-        279 => Some("st_curve_to_line"),
-        280 => Some("st_curven"),
-        281 => Some("st_curvetoline"),
-        282 => Some("st_d_within"),
-        283 => Some("st_delaunay_triangles"),
-        284 => Some("st_delaunaytriangles"),
-        285 => Some("st_dfully_within"),
-        286 => Some("st_dfully_within_threed"),
-        287 => Some("st_dfullywithin"),
-        288 => Some("st_difference"),
-        289 => Some("st_difference_gridsize"),
-        290 => Some("st_dimension"),
-        291 => Some("st_disjoint"),
-        292 => Some("st_distance"),
-        293 => Some("st_distance_cpa"),
-        294 => Some("st_distance_sphere"),
-        295 => Some("st_distance_sphere_radius"),
-        296 => Some("st_distance_spheroid"),
-        297 => Some("st_distance_threed"),
-        298 => Some("st_distancecpa"),
-        299 => Some("st_distancesphere"),
-        300 => Some("st_distancespheroid"),
-        301 => Some("st_distancethreed"),
-        302 => Some("st_dump_as_polygons"),
-        303 => Some("st_dump_values"),
-        304 => Some("st_dump_values_multi"),
-        305 => Some("st_dumpaspolygons"),
-        306 => Some("st_dumpvalues"),
-        307 => Some("st_dwithin"),
-        308 => Some("st_dwithin_3d"),
-        309 => Some("st_dwithin_threed"),
-        310 => Some("st_end_point"),
-        311 => Some("st_endpoint"),
-        312 => Some("st_envelope"),
-        313 => Some("st_envelope_threed"),
-        314 => Some("st_envelopethreed"),
-        315 => Some("st_equals"),
-        316 => Some("st_equals_exact"),
-        317 => Some("st_equalsexact"),
-        318 => Some("st_expand"),
-        319 => Some("st_expand_xy"),
-        320 => Some("st_expand_xyz"),
-        321 => Some("st_expand_xyzm"),
-        322 => Some("st_exterior_ring"),
-        323 => Some("st_exteriorring"),
-        324 => Some("st_filter_by_m"),
-        325 => Some("st_filterbym"),
-        326 => Some("st_flip_coordinates"),
-        327 => Some("st_flipcoordinates"),
-        328 => Some("st_force2d"),
-        329 => Some("st_force3d"),
-        330 => Some("st_force3dm"),
-        331 => Some("st_force3dz"),
-        332 => Some("st_force4d"),
-        333 => Some("st_force_2d"),
-        334 => Some("st_force_3d"),
-        335 => Some("st_force_3dm"),
-        336 => Some("st_force_4d"),
-        337 => Some("st_force_collection"),
-        338 => Some("st_force_curve"),
-        339 => Some("st_force_fourd"),
-        340 => Some("st_force_polygon_ccw"),
-        341 => Some("st_force_polygon_cw"),
-        342 => Some("st_force_rhr"),
-        343 => Some("st_force_sfs"),
-        344 => Some("st_force_threed"),
-        345 => Some("st_force_threedm"),
-        346 => Some("st_force_threedz"),
-        347 => Some("st_force_twod"),
-        348 => Some("st_forcecollection"),
-        349 => Some("st_forcecurve"),
-        350 => Some("st_forcefourd"),
-        351 => Some("st_forcepolygonccw"),
-        352 => Some("st_forcepolygoncw"),
-        353 => Some("st_forcerhr"),
-        354 => Some("st_forcesfs"),
-        355 => Some("st_forcethreed"),
-        356 => Some("st_forcethreedm"),
-        357 => Some("st_forcethreedz"),
-        358 => Some("st_forcetwod"),
-        359 => Some("st_frechet_distance"),
-        360 => Some("st_frechetdistance"),
-        361 => Some("st_from_flatgeobuf"),
-        362 => Some("st_fromflatgeobuf"),
-        363 => Some("st_generate_points"),
-        364 => Some("st_generatepoints"),
-        365 => Some("st_geo_reference"),
-        366 => Some("st_geog_area"),
-        367 => Some("st_geog_azimuth"),
-        368 => Some("st_geog_buffer"),
-        369 => Some("st_geog_buffer_with_segs"),
-        370 => Some("st_geog_centroid"),
-        371 => Some("st_geog_closest_point"),
-        372 => Some("st_geog_convex_hull"),
-        373 => Some("st_geog_covered_by"),
-        374 => Some("st_geog_covers"),
-        375 => Some("st_geog_difference"),
-        376 => Some("st_geog_distance"),
-        377 => Some("st_geog_dwithin"),
-        378 => Some("st_geog_expand"),
-        379 => Some("st_geog_from_ewkt"),
-        380 => Some("st_geog_from_text"),
-        381 => Some("st_geog_from_wkb"),
-        382 => Some("st_geog_geometry_type"),
-        383 => Some("st_geog_intersection"),
-        384 => Some("st_geog_intersects"),
-        385 => Some("st_geog_is_closed"),
-        386 => Some("st_geog_is_empty"),
-        387 => Some("st_geog_is_simple"),
-        388 => Some("st_geog_length"),
-        389 => Some("st_geog_line_substring"),
-        390 => Some("st_geog_npoints"),
-        391 => Some("st_geog_perimeter"),
-        392 => Some("st_geog_point"),
-        393 => Some("st_geog_project"),
-        394 => Some("st_geog_segmentize"),
-        395 => Some("st_geog_summary"),
-        396 => Some("st_geog_sym_difference"),
-        397 => Some("st_geog_to_geom"),
-        398 => Some("st_geog_union"),
-        399 => Some("st_geogarea"),
-        400 => Some("st_geogazimuth"),
-        401 => Some("st_geogbuffer"),
-        402 => Some("st_geogbufferwithsegs"),
-        403 => Some("st_geogcentroid"),
-        404 => Some("st_geogcoveredby"),
-        405 => Some("st_geogcovers"),
-        406 => Some("st_geogdistance"),
-        407 => Some("st_geogdwithin"),
-        408 => Some("st_geogexpand"),
-        409 => Some("st_geogfromtext"),
-        410 => Some("st_geogfromwkb"),
-        411 => Some("st_geoggeometrytype"),
-        412 => Some("st_geogintersects"),
-        413 => Some("st_geogisclosed"),
-        414 => Some("st_geogisempty"),
-        415 => Some("st_geogissimple"),
-        416 => Some("st_geoglength"),
-        417 => Some("st_geognpoints"),
-        418 => Some("st_geogperimeter"),
-        419 => Some("st_geogpoint"),
-        420 => Some("st_geography_from_text"),
-        421 => Some("st_geographyfromtext"),
-        422 => Some("st_geogsummary"),
-        423 => Some("st_geohash"),
-        424 => Some("st_geom_from_ewkb"),
-        425 => Some("st_geom_from_ewkt"),
-        426 => Some("st_geom_from_geobuf"),
-        427 => Some("st_geom_from_geohash"),
-        428 => Some("st_geom_from_geojson"),
-        429 => Some("st_geom_from_gml"),
-        430 => Some("st_geom_from_gml_srid"),
-        431 => Some("st_geom_from_hexewkb"),
-        432 => Some("st_geom_from_kml"),
-        433 => Some("st_geom_from_marc21"),
-        434 => Some("st_geom_from_text"),
-        435 => Some("st_geom_from_text_srid"),
-        436 => Some("st_geom_from_twkb"),
-        437 => Some("st_geom_from_wkb"),
-        438 => Some("st_geomcoll_from_text"),
-        439 => Some("st_geomcoll_from_text_srid"),
-        440 => Some("st_geomcoll_from_wkb"),
-        441 => Some("st_geomcoll_from_wkb_srid"),
-        442 => Some("st_geomcollfromtext"),
-        443 => Some("st_geomcollfromwkb"),
-        444 => Some("st_geomequal"),
-        445 => Some("st_geometric_median"),
-        446 => Some("st_geometricmedian"),
-        447 => Some("st_geometry_from_text"),
-        448 => Some("st_geometry_n"),
-        449 => Some("st_geometry_type"),
-        450 => Some("st_geometryfromtext"),
-        451 => Some("st_geometryn"),
-        452 => Some("st_geometrytype"),
-        453 => Some("st_geomfromewkb"),
-        454 => Some("st_geomfromewkt"),
-        455 => Some("st_geomfromgeobuf"),
-        456 => Some("st_geomfromgeohash"),
-        457 => Some("st_geomfromgeojson"),
-        458 => Some("st_geomfromgml"),
-        459 => Some("st_geomfromgmlsrid"),
-        460 => Some("st_geomfromhexewkb"),
-        461 => Some("st_geomfromkml"),
-        462 => Some("st_geomfrommarc21"),
-        463 => Some("st_geomfromtext"),
-        464 => Some("st_geomfromtextsrid"),
-        465 => Some("st_geomfromtwkb"),
-        466 => Some("st_geomfromwkb"),
-        467 => Some("st_get_edge_by_point"),
-        468 => Some("st_get_edge_geometry"),
-        469 => Some("st_get_face_geometry"),
-        470 => Some("st_get_node_by_point"),
-        471 => Some("st_get_node_geometry"),
-        472 => Some("st_getedgebypoint"),
-        473 => Some("st_getedgegeometry"),
-        474 => Some("st_getfacegeometry"),
-        475 => Some("st_getnodebypoint"),
-        476 => Some("st_getnodegeometry"),
-        477 => Some("st_gml_to_sql"),
-        478 => Some("st_gmltosql"),
-        479 => Some("st_has_arc"),
-        480 => Some("st_has_m"),
-        481 => Some("st_has_no_band"),
-        482 => Some("st_has_z"),
-        483 => Some("st_hasarc"),
-        484 => Some("st_hasm"),
-        485 => Some("st_hasnoband"),
-        486 => Some("st_hasz"),
-        487 => Some("st_hausdorff_distance"),
-        488 => Some("st_hausdorffdistance"),
-        489 => Some("st_height"),
-        490 => Some("st_hexagon"),
-        491 => Some("st_hill_shade"),
-        492 => Some("st_hillshade"),
-        493 => Some("st_histogram"),
-        494 => Some("st_init_topo_geo"),
-        495 => Some("st_interior_ring_n"),
-        496 => Some("st_interiorringn"),
-        497 => Some("st_interpolate_point"),
-        498 => Some("st_intersection"),
-        499 => Some("st_intersection_gridsize"),
-        500 => Some("st_intersects"),
-        501 => Some("st_intersects_3d"),
-        502 => Some("st_intersects_threed"),
-        503 => Some("st_inverse_transform_pipeline"),
-        504 => Some("st_inversetransformpipeline"),
-        505 => Some("st_is_closed"),
-        506 => Some("st_is_collection"),
-        507 => Some("st_is_empty"),
-        508 => Some("st_is_measured"),
-        509 => Some("st_is_polygon_ccw"),
-        510 => Some("st_is_polygon_cw"),
-        511 => Some("st_is_ring"),
-        512 => Some("st_is_simple"),
-        513 => Some("st_is_valid"),
-        514 => Some("st_is_valid_detail"),
-        515 => Some("st_is_valid_detail_flags"),
-        516 => Some("st_is_valid_flags"),
-        517 => Some("st_is_valid_reason"),
-        518 => Some("st_is_valid_reason_flags"),
-        519 => Some("st_is_valid_trajectory"),
-        520 => Some("st_isclosed"),
-        521 => Some("st_iscollection"),
-        522 => Some("st_isempty"),
-        523 => Some("st_ispolygonccw"),
-        524 => Some("st_ispolygoncw"),
-        525 => Some("st_isring"),
-        526 => Some("st_issimple"),
-        527 => Some("st_isvalid"),
-        528 => Some("st_isvaliddetail"),
-        529 => Some("st_isvalidreason"),
-        530 => Some("st_isvalidtrajectory"),
-        531 => Some("st_knndistance"),
-        532 => Some("st_largest_empty_circle"),
-        533 => Some("st_largestemptycircle"),
-        534 => Some("st_length"),
-        535 => Some("st_length2d"),
-        536 => Some("st_length_2d"),
-        537 => Some("st_length_spheroid"),
-        538 => Some("st_length_threed"),
-        539 => Some("st_length_twod"),
-        540 => Some("st_length_twod_spheroid"),
-        541 => Some("st_lengthspheroid"),
-        542 => Some("st_lengththreed"),
-        543 => Some("st_letters"),
-        544 => Some("st_line_crossing_direction"),
-        545 => Some("st_line_extend"),
-        546 => Some("st_line_from_encoded_polyline"),
-        547 => Some("st_line_from_multi_point"),
-        548 => Some("st_line_from_text"),
-        549 => Some("st_line_from_text_srid"),
-        550 => Some("st_line_from_wkb"),
-        551 => Some("st_line_from_wkb_srid"),
-        552 => Some("st_line_interpolate_point"),
-        553 => Some("st_line_interpolate_point_3d"),
-        554 => Some("st_line_interpolate_point_threed"),
-        555 => Some("st_line_interpolate_points"),
-        556 => Some("st_line_locate_point"),
-        557 => Some("st_line_merge"),
-        558 => Some("st_line_merge_directed"),
-        559 => Some("st_line_to_curve"),
-        560 => Some("st_linecrossingdirection"),
-        561 => Some("st_lineextend"),
-        562 => Some("st_linefromencodedpolyline"),
-        563 => Some("st_linefrommultipoint"),
-        564 => Some("st_linefromtext"),
-        565 => Some("st_linefromwkb"),
-        566 => Some("st_lineinterpolatepoint"),
-        567 => Some("st_lineinterpolatepoints"),
-        568 => Some("st_linelocatepoint"),
-        569 => Some("st_linemerge"),
-        570 => Some("st_linetocurve"),
-        571 => Some("st_locate_along"),
-        572 => Some("st_locate_between"),
-        573 => Some("st_locate_between_elevations"),
-        574 => Some("st_locatealong"),
-        575 => Some("st_locatebetween"),
-        576 => Some("st_locatebetweenelevations"),
-        577 => Some("st_longest_line"),
-        578 => Some("st_longest_line_3d"),
-        579 => Some("st_longest_line_threed"),
-        580 => Some("st_longestline"),
-        581 => Some("st_m"),
-        582 => Some("st_make_box2d"),
-        583 => Some("st_make_box3d"),
-        584 => Some("st_make_box_threed"),
-        585 => Some("st_make_empty_coverage"),
-        586 => Some("st_make_empty_raster"),
-        587 => Some("st_make_envelope"),
-        588 => Some("st_make_envelope_srid"),
-        589 => Some("st_make_line"),
-        590 => Some("st_make_line_threed"),
-        591 => Some("st_make_line_two"),
-        592 => Some("st_make_point"),
-        593 => Some("st_make_point_m"),
-        594 => Some("st_make_point_z"),
-        595 => Some("st_make_point_zm"),
-        596 => Some("st_make_polygon"),
-        597 => Some("st_make_valid"),
-        598 => Some("st_makebox"),
-        599 => Some("st_makebox2d"),
-        600 => Some("st_makebox3d"),
-        601 => Some("st_makeemptyraster"),
-        602 => Some("st_makeenvelope"),
-        603 => Some("st_makeenvelopesrid"),
-        604 => Some("st_makeline"),
-        605 => Some("st_makepoint"),
-        606 => Some("st_makepointm"),
-        607 => Some("st_makepointz"),
-        608 => Some("st_makepointzm"),
-        609 => Some("st_makepolygon"),
-        610 => Some("st_makevalid"),
-        611 => Some("st_map_algebra"),
-        612 => Some("st_map_algebra2"),
-        613 => Some("st_mapalgebra"),
-        614 => Some("st_mapalgebra2"),
-        615 => Some("st_max_distance"),
-        616 => Some("st_max_distance_3d"),
-        617 => Some("st_max_distance_threed"),
-        618 => Some("st_max_x"),
-        619 => Some("st_max_y"),
-        620 => Some("st_maxdistance"),
-        621 => Some("st_maximum_inscribed_circle"),
-        622 => Some("st_maximuminscribedcircle"),
-        623 => Some("st_mem_size"),
-        624 => Some("st_mem_union"),
-        625 => Some("st_memsize"),
-        626 => Some("st_metadata"),
-        627 => Some("st_min_convex_hull"),
-        628 => Some("st_min_x"),
-        629 => Some("st_min_y"),
-        630 => Some("st_minimum_bounding_circle"),
-        631 => Some("st_minimum_bounding_circle_segs"),
-        632 => Some("st_minimum_bounding_radius"),
-        633 => Some("st_minimum_clearance"),
-        634 => Some("st_minimum_clearance_line"),
-        635 => Some("st_minimumboundingcircle"),
-        636 => Some("st_minimumboundingradius"),
-        637 => Some("st_minimumclearance"),
-        638 => Some("st_minimumclearanceline"),
-        639 => Some("st_mline_from_text"),
-        640 => Some("st_mline_from_text_srid"),
-        641 => Some("st_mline_from_wkb"),
-        642 => Some("st_mline_from_wkb_srid"),
-        643 => Some("st_mlinefromtext"),
-        644 => Some("st_mlinefromwkb"),
-        645 => Some("st_mmax"),
-        646 => Some("st_mmin"),
-        647 => Some("st_mod_edge_heal"),
-        648 => Some("st_mod_edge_split"),
-        649 => Some("st_modedgeheal"),
-        650 => Some("st_modedgesplit"),
-        651 => Some("st_mpoint_from_text"),
-        652 => Some("st_mpoint_from_text_srid"),
-        653 => Some("st_mpoint_from_wkb"),
-        654 => Some("st_mpoint_from_wkb_srid"),
-        655 => Some("st_mpointfromtext"),
-        656 => Some("st_mpointfromwkb"),
-        657 => Some("st_mpoly_from_text"),
-        658 => Some("st_mpoly_from_text_srid"),
-        659 => Some("st_mpoly_from_wkb"),
-        660 => Some("st_mpoly_from_wkb_srid"),
-        661 => Some("st_mpolyfromtext"),
-        662 => Some("st_mpolyfromwkb"),
-        663 => Some("st_multi"),
-        664 => Some("st_multi_line_from_wkb"),
-        665 => Some("st_multi_line_from_wkb_srid"),
-        666 => Some("st_multi_line_string_from_text"),
-        667 => Some("st_multi_line_string_from_text_srid"),
-        668 => Some("st_multi_point_from_text"),
-        669 => Some("st_multi_point_from_text_srid"),
-        670 => Some("st_multi_point_from_wkb"),
-        671 => Some("st_multi_point_from_wkb_srid"),
-        672 => Some("st_multi_poly_from_wkb"),
-        673 => Some("st_multi_poly_from_wkb_srid"),
-        674 => Some("st_multi_polygon_from_text"),
-        675 => Some("st_multi_polygon_from_text_srid"),
-        676 => Some("st_n_dims"),
-        677 => Some("st_ndims"),
-        678 => Some("st_nearest_value"),
-        679 => Some("st_nearestvalue"),
-        680 => Some("st_new_edges_split"),
-        681 => Some("st_newedgessplit"),
-        682 => Some("st_node"),
-        683 => Some("st_normalize"),
-        684 => Some("st_npoints"),
-        685 => Some("st_nrings"),
-        686 => Some("st_num_bands"),
-        687 => Some("st_num_curves"),
-        688 => Some("st_num_geometries"),
-        689 => Some("st_num_interior_ring"),
-        690 => Some("st_num_interior_rings"),
-        691 => Some("st_num_points"),
-        692 => Some("st_numbands"),
-        693 => Some("st_numcurves"),
-        694 => Some("st_numgeometries"),
-        695 => Some("st_numinteriorring"),
-        696 => Some("st_numinteriorrings"),
-        697 => Some("st_numpoints"),
-        698 => Some("st_offset_curve"),
-        699 => Some("st_offsetcurve"),
-        700 => Some("st_ordering_equals"),
-        701 => Some("st_orderingequals"),
-        702 => Some("st_oriented_envelope"),
-        703 => Some("st_orientedenvelope"),
-        704 => Some("st_overlaps"),
-        705 => Some("st_perimeter"),
-        706 => Some("st_perimeter2d"),
-        707 => Some("st_perimeter_2d"),
-        708 => Some("st_perimeter_threed"),
-        709 => Some("st_perimeter_twod"),
-        710 => Some("st_perimeterthreed"),
-        711 => Some("st_pixel_as_centroid"),
-        712 => Some("st_pixel_as_centroids"),
-        713 => Some("st_pixel_as_point"),
-        714 => Some("st_pixel_as_points"),
-        715 => Some("st_pixel_as_polygon"),
-        716 => Some("st_pixel_as_polygons"),
-        717 => Some("st_pixel_height"),
-        718 => Some("st_pixel_of_value"),
-        719 => Some("st_pixel_width"),
-        720 => Some("st_pixelascentroid"),
-        721 => Some("st_pixelaspoint"),
-        722 => Some("st_pixelaspolygon"),
-        723 => Some("st_pixelaspolygons"),
-        724 => Some("st_pixelofvalue"),
-        725 => Some("st_pixels_of_values"),
-        726 => Some("st_point"),
-        727 => Some("st_point_from_geohash"),
-        728 => Some("st_point_from_text"),
-        729 => Some("st_point_from_text_srid"),
-        730 => Some("st_point_from_wkb"),
-        731 => Some("st_point_from_wkb_srid"),
-        732 => Some("st_point_inside_circle"),
-        733 => Some("st_point_m"),
-        734 => Some("st_point_m_srid"),
-        735 => Some("st_point_n"),
-        736 => Some("st_point_on_surface"),
-        737 => Some("st_point_srid"),
-        738 => Some("st_point_z"),
-        739 => Some("st_point_z_srid"),
-        740 => Some("st_point_zm"),
-        741 => Some("st_point_zm_srid"),
-        742 => Some("st_pointfromgeohash"),
-        743 => Some("st_pointfromtext"),
-        744 => Some("st_pointfromwkb"),
-        745 => Some("st_pointinsidecircle"),
-        746 => Some("st_pointm"),
-        747 => Some("st_pointn"),
-        748 => Some("st_pointonsurface"),
-        749 => Some("st_points"),
-        750 => Some("st_pointz"),
-        751 => Some("st_pointzm"),
-        752 => Some("st_polygon"),
-        753 => Some("st_polygon_from_text"),
-        754 => Some("st_polygon_from_text_srid"),
-        755 => Some("st_polygon_from_wkb"),
-        756 => Some("st_polygon_from_wkb_srid"),
-        757 => Some("st_polygonfromtext"),
-        758 => Some("st_polygonfromwkb"),
-        759 => Some("st_polygonize"),
-        760 => Some("st_polygonize_as_raster"),
-        761 => Some("st_polygonize_topology"),
-        762 => Some("st_polyhedralsurface_from_text"),
-        763 => Some("st_polyhedralsurface_from_wkb"),
-        764 => Some("st_project"),
-        765 => Some("st_quantile"),
-        766 => Some("st_quantiles"),
-        767 => Some("st_quantize_coordinates"),
-        768 => Some("st_quantizecoordinates"),
-        769 => Some("st_rastenvelope"),
-        770 => Some("st_raster_contains"),
-        771 => Some("st_raster_contains_geom"),
-        772 => Some("st_raster_convex_hull"),
-        773 => Some("st_raster_covers"),
-        774 => Some("st_raster_intersection_geom"),
-        775 => Some("st_raster_intersects"),
-        776 => Some("st_raster_intersects_geom"),
-        777 => Some("st_raster_overlaps"),
-        778 => Some("st_raster_to_world_coord_x"),
-        779 => Some("st_raster_to_world_coord_y"),
-        780 => Some("st_raster_within"),
-        781 => Some("st_rastercontains"),
-        782 => Some("st_rastercontainsgeom"),
-        783 => Some("st_rasterconvexhull"),
-        784 => Some("st_rastercovers"),
-        785 => Some("st_rasterintersects"),
-        786 => Some("st_rasterintersectsgeom"),
-        787 => Some("st_rasteroverlaps"),
-        788 => Some("st_rastertoworldcoordx"),
-        789 => Some("st_rastertoworldcoordy"),
-        790 => Some("st_rasterwithin"),
-        791 => Some("st_rastheight"),
-        792 => Some("st_rastnumbands"),
-        793 => Some("st_rastwidth"),
-        794 => Some("st_reclass"),
-        795 => Some("st_reclass_exact"),
-        796 => Some("st_reduce_precision"),
-        797 => Some("st_reduce_precision_flags"),
-        798 => Some("st_reduceprecision"),
-        799 => Some("st_relate"),
-        800 => Some("st_relate_bnr"),
-        801 => Some("st_relate_match"),
-        802 => Some("st_relate_with_pattern"),
-        803 => Some("st_relatematch"),
-        804 => Some("st_remove_point"),
-        805 => Some("st_remove_repeated_points"),
-        806 => Some("st_remove_small_parts"),
-        807 => Some("st_removepoint"),
-        808 => Some("st_removerepeatedpoints"),
-        809 => Some("st_removesmallparts"),
-        810 => Some("st_rescale"),
-        811 => Some("st_resize"),
-        812 => Some("st_retile"),
-        813 => Some("st_reverse"),
-        814 => Some("st_reverse_threed"),
-        815 => Some("st_reversethreed"),
-        816 => Some("st_rotate"),
-        817 => Some("st_rotate_around_point"),
-        818 => Some("st_rotate_around_xy"),
-        819 => Some("st_rotate_threed"),
-        820 => Some("st_rotate_threed_around_center"),
-        821 => Some("st_rotate_twod_around_center"),
-        822 => Some("st_rotatethreed"),
-        823 => Some("st_rotation"),
-        824 => Some("st_roughness"),
-        825 => Some("st_scale"),
-        826 => Some("st_scale_threed"),
-        827 => Some("st_scale_with_origin"),
-        828 => Some("st_scale_with_vector"),
-        829 => Some("st_scale_x"),
-        830 => Some("st_scale_y"),
-        831 => Some("st_scalethreed"),
-        832 => Some("st_scalex"),
-        833 => Some("st_scaley"),
-        834 => Some("st_scroll"),
-        835 => Some("st_segmentize"),
-        836 => Some("st_set_band_is_nodata"),
-        837 => Some("st_set_band_nodata_value"),
-        838 => Some("st_set_effective_area"),
-        839 => Some("st_set_geo_reference"),
-        840 => Some("st_set_geo_reference_string"),
-        841 => Some("st_set_point"),
-        842 => Some("st_set_rotation"),
-        843 => Some("st_set_scale"),
-        844 => Some("st_set_scale_xy"),
-        845 => Some("st_set_skew"),
-        846 => Some("st_set_skew_xy"),
-        847 => Some("st_set_srid"),
-        848 => Some("st_set_upper_left"),
-        849 => Some("st_set_value"),
-        850 => Some("st_set_value_at_point"),
-        851 => Some("st_set_values"),
-        852 => Some("st_set_values_rect"),
-        853 => Some("st_seteffectivearea"),
-        854 => Some("st_setendm"),
-        855 => Some("st_setendz"),
-        856 => Some("st_setm"),
-        857 => Some("st_setpoint"),
-        858 => Some("st_setsrid"),
-        859 => Some("st_setstartm"),
-        860 => Some("st_setstartz"),
-        861 => Some("st_setvalue"),
-        862 => Some("st_setx"),
-        863 => Some("st_sety"),
-        864 => Some("st_setz"),
-        865 => Some("st_shared_paths"),
-        866 => Some("st_sharedpaths"),
-        867 => Some("st_shift_longitude"),
-        868 => Some("st_shiftlongitude"),
-        869 => Some("st_shortest_line"),
-        870 => Some("st_shortest_line_3d"),
-        871 => Some("st_shortest_line_threed"),
-        872 => Some("st_shortestline"),
-        873 => Some("st_simplify"),
-        874 => Some("st_simplify_polygon_hull"),
-        875 => Some("st_simplify_preserve_collapse"),
-        876 => Some("st_simplify_preserve_topology"),
-        877 => Some("st_simplify_vw"),
-        878 => Some("st_simplify_vw_preserve_collapse"),
-        879 => Some("st_simplifypolygonhull"),
-        880 => Some("st_simplifypreservetopology"),
-        881 => Some("st_simplifyvw"),
-        882 => Some("st_skew_x"),
-        883 => Some("st_skew_y"),
-        884 => Some("st_skewx"),
-        885 => Some("st_skewy"),
-        886 => Some("st_slope"),
-        887 => Some("st_snap"),
-        888 => Some("st_snap_to_grid"),
-        889 => Some("st_snap_to_grid_fourd"),
-        890 => Some("st_snap_to_grid_origin"),
-        891 => Some("st_snap_to_grid_xy"),
-        892 => Some("st_snaptogrid"),
-        893 => Some("st_split"),
-        894 => Some("st_square"),
-        895 => Some("st_srid"),
-        896 => Some("st_start_point"),
-        897 => Some("st_startpoint"),
-        898 => Some("st_subdivide_gridsize"),
-        899 => Some("st_summary"),
-        900 => Some("st_summary_stats"),
-        901 => Some("st_summarystats"),
-        902 => Some("st_swap_ordinates"),
-        903 => Some("st_swapordinates"),
-        904 => Some("st_sym_difference"),
-        905 => Some("st_sym_difference_gridsize"),
-        906 => Some("st_sym_difference_threed"),
-        907 => Some("st_symdifference"),
-        908 => Some("st_tile"),
-        909 => Some("st_tile_envelope"),
-        910 => Some("st_tileenvelope"),
-        911 => Some("st_tin_from_text"),
-        912 => Some("st_tin_from_wkb"),
-        913 => Some("st_topology_edge_count"),
-        914 => Some("st_topology_face_count"),
-        915 => Some("st_topology_from_bytes"),
-        916 => Some("st_topology_name"),
-        917 => Some("st_topology_node_count"),
-        918 => Some("st_topology_precision"),
-        919 => Some("st_topology_srid"),
-        920 => Some("st_topology_to_bytes"),
-        921 => Some("st_topologyedgecount"),
-        922 => Some("st_topologyfacecount"),
-        923 => Some("st_topologyfrombytes"),
-        924 => Some("st_topologyname"),
-        925 => Some("st_topologynodecount"),
-        926 => Some("st_topologyprecision"),
-        927 => Some("st_topologysrid"),
-        928 => Some("st_topologytobytes"),
-        929 => Some("st_touches"),
-        930 => Some("st_tpi"),
-        931 => Some("st_transform"),
-        932 => Some("st_transform_pipeline"),
-        933 => Some("st_transform_pipeline_to_srid"),
-        934 => Some("st_transformpipeline"),
-        935 => Some("st_translate"),
-        936 => Some("st_translate_threed"),
-        937 => Some("st_translatethreed"),
-        938 => Some("st_transscale"),
-        939 => Some("st_tri"),
-        940 => Some("st_triangle_from_text"),
-        941 => Some("st_triangle_from_wkb"),
-        942 => Some("st_triangulate_polygon"),
-        943 => Some("st_triangulate_twod"),
-        944 => Some("st_triangulatepolygon"),
-        945 => Some("st_unary_union"),
-        946 => Some("st_unaryunion"),
-        947 => Some("st_union"),
-        948 => Some("st_union_gridsize"),
-        949 => Some("st_upper_left_x"),
-        950 => Some("st_upper_left_y"),
-        951 => Some("st_upperleftx"),
-        952 => Some("st_upperlefty"),
-        953 => Some("st_validate_topology"),
-        954 => Some("st_validatetopology"),
-        955 => Some("st_value"),
-        956 => Some("st_value_count"),
-        957 => Some("st_value_count_of_value"),
-        958 => Some("st_value_counts"),
-        959 => Some("st_value_percent"),
-        960 => Some("st_value_percents"),
-        961 => Some("st_valuecount"),
-        962 => Some("st_voronoi_lines"),
-        963 => Some("st_voronoi_polygons"),
-        964 => Some("st_voronoilines"),
-        965 => Some("st_voronoipolygons"),
-        966 => Some("st_width"),
-        967 => Some("st_within"),
-        968 => Some("st_wkb_to_sql"),
-        969 => Some("st_wkbtosql"),
-        970 => Some("st_wkt_to_sql"),
-        971 => Some("st_wkttosql"),
-        972 => Some("st_world_to_raster_coord"),
-        973 => Some("st_world_to_raster_coord_col"),
-        974 => Some("st_world_to_raster_coord_row"),
-        975 => Some("st_worldtorastercoord"),
-        976 => Some("st_worldtorastercoordcol"),
-        977 => Some("st_worldtorastercoordrow"),
-        978 => Some("st_wrap_x"),
-        979 => Some("st_wrapx"),
-        980 => Some("st_x"),
-        981 => Some("st_xmax"),
-        982 => Some("st_xmin"),
-        983 => Some("st_y"),
-        984 => Some("st_ymax"),
-        985 => Some("st_ymin"),
-        986 => Some("st_z"),
-        987 => Some("st_zmax"),
-        988 => Some("st_zmflag"),
-        989 => Some("st_zmin"),
-        990 => Some("to_topogeom"),
-        991 => Some("topo_element_array_append"),
-        992 => Some("topogeo_add_geometry"),
-        993 => Some("topogeo_add_linestring"),
-        994 => Some("topogeo_add_point"),
-        995 => Some("topogeo_add_polygon"),
-        996 => Some("topogeo_load_geometry"),
-        997 => Some("topology_add_edge"),
-        998 => Some("topology_add_edge_mod_face"),
-        999 => Some("topology_add_edge_new_faces"),
-        1000 => Some("topology_add_face"),
-        1001 => Some("topology_add_iso_edge"),
-        1002 => Some("topology_add_iso_node"),
-        1003 => Some("topology_add_node"),
-        1004 => Some("topology_add_topogeom_column"),
-        1005 => Some("topology_as_gml"),
-        1006 => Some("topology_as_topojson"),
-        1007 => Some("topology_as_topojson_with_edge_map"),
-        1008 => Some("topology_change_edge_geom"),
-        1009 => Some("topology_copy_topology"),
-        1010 => Some("topology_create"),
-        1011 => Some("topology_create_topo_geom"),
-        1012 => Some("topology_drop_topogeom_column"),
-        1013 => Some("topology_drop_topology"),
-        1014 => Some("topology_edge_count"),
-        1015 => Some("topology_face_count"),
-        1016 => Some("topology_from_bytes"),
-        1017 => Some("topology_get_edge_by_point"),
-        1018 => Some("topology_get_edge_geometry"),
-        1019 => Some("topology_get_face_by_point"),
-        1020 => Some("topology_get_face_containing_point"),
-        1021 => Some("topology_get_face_edges"),
-        1022 => Some("topology_get_face_geometry"),
-        1023 => Some("topology_get_node_by_point"),
-        1024 => Some("topology_get_node_edges"),
-        1025 => Some("topology_get_node_geometry"),
-        1026 => Some("topology_get_ring_edges"),
-        1027 => Some("topology_get_topology_id"),
-        1028 => Some("topology_get_topology_name"),
-        1029 => Some("topology_get_topology_srid"),
-        1030 => Some("topology_make_topology_precise"),
-        1031 => Some("topology_mod_edge_heal"),
-        1032 => Some("topology_mod_edge_split"),
-        1033 => Some("topology_move_iso_node"),
-        1034 => Some("topology_name"),
-        1035 => Some("topology_new_edge_heal"),
-        1036 => Some("topology_new_edges_split"),
-        1037 => Some("topology_node_count"),
-        1038 => Some("topology_polygonize"),
-        1039 => Some("topology_precision"),
-        1040 => Some("topology_rem_edge_mod_face"),
-        1041 => Some("topology_rem_edge_new_face"),
-        1042 => Some("topology_remove_face"),
-        1043 => Some("topology_remove_iso_edge"),
-        1044 => Some("topology_remove_iso_node"),
-        1045 => Some("topology_remove_unused_primitives"),
-        1046 => Some("topology_rename_topology"),
-        1047 => Some("topology_srid"),
-        1048 => Some("topology_summary"),
-        1049 => Some("topology_to_bytes"),
-        1050 => Some("topology_to_topogeom"),
-        1051 => Some("topology_topogeo_add_geometry"),
-        1052 => Some("topology_topogeo_add_linestring"),
-        1053 => Some("topology_topogeo_add_point"),
-        1054 => Some("topology_topogeo_add_polygon"),
-        1055 => Some("topology_topogeo_load_geometry"),
-        1056 => Some("topology_total_topology_size"),
-        1057 => Some("topology_upgrade_topology"),
-        1058 => Some("topology_validate"),
-        1059 => Some("topology_validate_topology"),
-        1060 => Some("topology_validate_topology_precision"),
-        1061 => Some("total_topology_size"),
-        1062 => Some("upgrade_topology"),
-        1063 => Some("validate_topology"),
-        1064 => Some("validate_topology_precision"),
+        14 => Some("create_index"),
+        15 => Some("create_raster"),
+        16 => Some("create_topo_geom"),
+        17 => Some("create_topology"),
+        18 => Some("destroy_index"),
+        19 => Some("drop_topogeom_column"),
+        20 => Some("drop_topology"),
+        21 => Some("from_binary"),
+        22 => Some("from_bytes"),
+        23 => Some("get_edge_by_point"),
+        24 => Some("get_edge_geometry"),
+        25 => Some("get_face_by_point"),
+        26 => Some("get_face_containing_point"),
+        27 => Some("get_face_edges"),
+        28 => Some("get_face_geometry"),
+        29 => Some("get_node_by_point"),
+        30 => Some("get_node_edges"),
+        31 => Some("get_node_geometry"),
+        32 => Some("get_ring_edges"),
+        33 => Some("get_topology_id"),
+        34 => Some("get_topology_name"),
+        35 => Some("get_topology_srid"),
+        36 => Some("insert_wkb"),
+        37 => Some("list_cast_rewrites"),
+        38 => Some("list_operator_rewrites"),
+        39 => Some("list_preprocessor_patterns"),
+        40 => Some("make_topo_element"),
+        41 => Some("make_topology_precise"),
+        42 => Some("mod_edge_heal"),
+        43 => Some("mod_edge_split"),
+        44 => Some("move_iso_node"),
+        45 => Some("nearest"),
+        46 => Some("new_edge_heal"),
+        47 => Some("new_edges_split"),
+        48 => Some("op_bbox_distance"),
+        49 => Some("op_bbox_intersects_nd"),
+        50 => Some("op_bbox_intersects_twod"),
+        51 => Some("op_equals_spatially"),
+        52 => Some("op_knn_distance"),
+        53 => Some("polygonize"),
+        54 => Some("postgis_addbbox"),
+        55 => Some("postgis_dropbbox"),
+        56 => Some("postgis_full_version"),
+        57 => Some("postgis_geos_compiled_version"),
+        58 => Some("postgis_geos_noop"),
+        59 => Some("postgis_geos_version"),
+        60 => Some("postgis_getbbox"),
+        61 => Some("postgis_hasbbox"),
+        62 => Some("postgis_lib_build_date"),
+        63 => Some("postgis_lib_revision"),
+        64 => Some("postgis_lib_version"),
+        65 => Some("postgis_libjson_version"),
+        66 => Some("postgis_liblwgeom_version"),
+        67 => Some("postgis_libprotobuf_version"),
+        68 => Some("postgis_libxml_version"),
+        69 => Some("postgis_noop"),
+        70 => Some("postgis_proj_compiled_version"),
+        71 => Some("postgis_proj_version"),
+        72 => Some("postgis_scripts_build_date"),
+        73 => Some("postgis_scripts_installed"),
+        74 => Some("postgis_scripts_released"),
+        75 => Some("postgis_svn_version"),
+        76 => Some("postgis_topology_scripts_installed"),
+        77 => Some("postgis_type_name"),
+        78 => Some("postgis_version"),
+        79 => Some("postgis_wagyu_version"),
+        80 => Some("query_envelope"),
+        81 => Some("query_knn"),
+        82 => Some("query_within_distance"),
+        83 => Some("rem_edge_mod_face"),
+        84 => Some("rem_edge_new_face"),
+        85 => Some("remove_face"),
+        86 => Some("remove_iso_edge"),
+        87 => Some("remove_iso_node"),
+        88 => Some("remove_unused_primitives"),
+        89 => Some("rename_topology"),
+        90 => Some("st_3d_closest_point"),
+        91 => Some("st_3d_contains"),
+        92 => Some("st_3d_d_within"),
+        93 => Some("st_3d_dwithin"),
+        94 => Some("st_3d_intersects"),
+        95 => Some("st_3d_line_interpolate_point"),
+        96 => Some("st_3d_longest_line"),
+        97 => Some("st_3d_make_box"),
+        98 => Some("st_3d_max_distance"),
+        99 => Some("st_3d_shortest_line"),
+        100 => Some("st_3dboundary"),
+        101 => Some("st_3dcentroid"),
+        102 => Some("st_3dclosestpoint"),
+        103 => Some("st_3dcontains"),
+        104 => Some("st_3dconvexhull"),
+        105 => Some("st_3ddifference"),
+        106 => Some("st_3ddistance"),
+        107 => Some("st_3ddwithin"),
+        108 => Some("st_3denvelope"),
+        109 => Some("st_3dintersection"),
+        110 => Some("st_3dintersects"),
+        111 => Some("st_3dlength"),
+        112 => Some("st_3dlineinterpolatepoint"),
+        113 => Some("st_3dlongestline"),
+        114 => Some("st_3dmakebox"),
+        115 => Some("st_3dmaxdistance"),
+        116 => Some("st_3dperimeter"),
+        117 => Some("st_3dreverse"),
+        118 => Some("st_3drotate"),
+        119 => Some("st_3dscale"),
+        120 => Some("st_3dshortestline"),
+        121 => Some("st_3dtranslate"),
+        122 => Some("st_3dunion"),
+        123 => Some("st_add_band"),
+        124 => Some("st_add_face"),
+        125 => Some("st_add_iso_edge"),
+        126 => Some("st_add_iso_node"),
+        127 => Some("st_add_measure"),
+        128 => Some("st_add_point"),
+        129 => Some("st_addband"),
+        130 => Some("st_addface"),
+        131 => Some("st_addisoedge"),
+        132 => Some("st_addisonode"),
+        133 => Some("st_addmeasure"),
+        134 => Some("st_addpoint"),
+        135 => Some("st_affine"),
+        136 => Some("st_angle"),
+        137 => Some("st_approx_histogram"),
+        138 => Some("st_approx_quantile"),
+        139 => Some("st_approx_quantiles"),
+        140 => Some("st_approx_summary_stats"),
+        141 => Some("st_approx_value_count"),
+        142 => Some("st_approx_value_counts"),
+        143 => Some("st_approx_value_percent"),
+        144 => Some("st_approx_value_percents"),
+        145 => Some("st_approximate_medial_axis"),
+        146 => Some("st_approximatemedialaxis"),
+        147 => Some("st_area"),
+        148 => Some("st_area_threed"),
+        149 => Some("st_area_twod"),
+        150 => Some("st_areathreed"),
+        151 => Some("st_as_binary"),
+        152 => Some("st_as_encoded_polyline"),
+        153 => Some("st_as_ewkb"),
+        154 => Some("st_as_ewkt"),
+        155 => Some("st_as_ewkt_precision"),
+        156 => Some("st_as_flatgeobuf"),
+        157 => Some("st_as_gdal_raster"),
+        158 => Some("st_as_geobuf"),
+        159 => Some("st_as_geojson"),
+        160 => Some("st_as_geojson_full"),
+        161 => Some("st_as_gml"),
+        162 => Some("st_as_gml_full"),
+        163 => Some("st_as_hexewkb"),
+        164 => Some("st_as_jpeg"),
+        165 => Some("st_as_kml"),
+        166 => Some("st_as_kml_full"),
+        167 => Some("st_as_lat_lon_text"),
+        168 => Some("st_as_marc21"),
+        169 => Some("st_as_marc21_fmt"),
+        170 => Some("st_as_mvt"),
+        171 => Some("st_as_mvt_geom"),
+        172 => Some("st_as_png"),
+        173 => Some("st_as_svg"),
+        174 => Some("st_as_svg_full"),
+        175 => Some("st_as_text"),
+        176 => Some("st_as_text_precision"),
+        177 => Some("st_as_tiff"),
+        178 => Some("st_as_topo_json"),
+        179 => Some("st_as_twkb"),
+        180 => Some("st_as_x3d"),
+        181 => Some("st_as_x3d_full"),
+        182 => Some("st_asbinary"),
+        183 => Some("st_asencodedpolyline"),
+        184 => Some("st_asewkb"),
+        185 => Some("st_asewkt"),
+        186 => Some("st_asgeojson"),
+        187 => Some("st_asgml"),
+        188 => Some("st_ashexewkb"),
+        189 => Some("st_askml"),
+        190 => Some("st_aslatlontext"),
+        191 => Some("st_asmarc21"),
+        192 => Some("st_asmvt"),
+        193 => Some("st_asmvtgeom"),
+        194 => Some("st_aspect"),
+        195 => Some("st_aspng"),
+        196 => Some("st_assvg"),
+        197 => Some("st_astext"),
+        198 => Some("st_astiff"),
+        199 => Some("st_astopojson"),
+        200 => Some("st_astwkb"),
+        201 => Some("st_asx3d"),
+        202 => Some("st_azimuth"),
+        203 => Some("st_band_count"),
+        204 => Some("st_band_max"),
+        205 => Some("st_band_mean"),
+        206 => Some("st_band_metadata"),
+        207 => Some("st_band_min"),
+        208 => Some("st_band_nodata_value"),
+        209 => Some("st_band_pixel_type"),
+        210 => Some("st_band_stddev"),
+        211 => Some("st_band_sum"),
+        212 => Some("st_bandnodatavalue"),
+        213 => Some("st_bandpixeltype"),
+        214 => Some("st_bands_metadata"),
+        215 => Some("st_bboxdistance"),
+        216 => Some("st_bboxintersects"),
+        217 => Some("st_bboxintersectsnd"),
+        218 => Some("st_bd_mpoly_from_text"),
+        219 => Some("st_bd_poly_from_text"),
+        220 => Some("st_bdmpolyfromtext"),
+        221 => Some("st_bdpolyfromtext"),
+        222 => Some("st_boundary"),
+        223 => Some("st_boundary_threed"),
+        224 => Some("st_boundarythreed"),
+        225 => Some("st_bounding_diagonal"),
+        226 => Some("st_boundingdiagonal"),
+        227 => Some("st_box2d_from_geohash"),
+        228 => Some("st_box2dfromgeohash"),
+        229 => Some("st_box_from_geohash"),
+        230 => Some("st_boxfromgeohash"),
+        231 => Some("st_buffer"),
+        232 => Some("st_buffer_quad_segs"),
+        233 => Some("st_buffer_with_style"),
+        234 => Some("st_build_area"),
+        235 => Some("st_buildarea"),
+        236 => Some("st_centroid"),
+        237 => Some("st_centroid_threed"),
+        238 => Some("st_centroidthreed"),
+        239 => Some("st_chaikin_smoothing"),
+        240 => Some("st_chaikinsmoothing"),
+        241 => Some("st_clip_by_box2d"),
+        242 => Some("st_clipbybox2d"),
+        243 => Some("st_closest_point"),
+        244 => Some("st_closest_point_3d"),
+        245 => Some("st_closest_point_of_approach"),
+        246 => Some("st_closest_point_threed"),
+        247 => Some("st_closestpoint"),
+        248 => Some("st_collect"),
+        249 => Some("st_collection_extract"),
+        250 => Some("st_collection_homogenize"),
+        251 => Some("st_collectionextract"),
+        252 => Some("st_collectionhomogenize"),
+        253 => Some("st_concave_hull"),
+        254 => Some("st_concave_hull_holes"),
+        255 => Some("st_concavehull"),
+        256 => Some("st_constrained_delaunay_triangles"),
+        257 => Some("st_constraineddelaunaytriangles"),
+        258 => Some("st_constrainedelaunaytriangles"),
+        259 => Some("st_contains"),
+        260 => Some("st_contains_3d"),
+        261 => Some("st_contains_properly"),
+        262 => Some("st_contains_threed"),
+        263 => Some("st_containsproperly"),
+        264 => Some("st_convex_hull"),
+        265 => Some("st_convexhull"),
+        266 => Some("st_coord_dim"),
+        267 => Some("st_coorddim"),
+        268 => Some("st_count"),
+        269 => Some("st_coverage_clean"),
+        270 => Some("st_coverage_invalid_edges"),
+        271 => Some("st_coverage_simplify"),
+        272 => Some("st_coverage_union"),
+        273 => Some("st_coverageclean"),
+        274 => Some("st_coverageinvalidedges"),
+        275 => Some("st_coveragesimplify"),
+        276 => Some("st_covered_by"),
+        277 => Some("st_coveredby"),
+        278 => Some("st_covers"),
+        279 => Some("st_covers_threed"),
+        280 => Some("st_cpa_within"),
+        281 => Some("st_cpawithin"),
+        282 => Some("st_create_topo_geo"),
+        283 => Some("st_create_topology"),
+        284 => Some("st_createtopology"),
+        285 => Some("st_crosses"),
+        286 => Some("st_curve_n"),
+        287 => Some("st_curve_to_line"),
+        288 => Some("st_curven"),
+        289 => Some("st_curvetoline"),
+        290 => Some("st_d_within"),
+        291 => Some("st_delaunay_triangles"),
+        292 => Some("st_delaunaytriangles"),
+        293 => Some("st_dfully_within"),
+        294 => Some("st_dfully_within_threed"),
+        295 => Some("st_dfullywithin"),
+        296 => Some("st_difference"),
+        297 => Some("st_difference_gridsize"),
+        298 => Some("st_dimension"),
+        299 => Some("st_disjoint"),
+        300 => Some("st_distance"),
+        301 => Some("st_distance_cpa"),
+        302 => Some("st_distance_sphere"),
+        303 => Some("st_distance_sphere_radius"),
+        304 => Some("st_distance_spheroid"),
+        305 => Some("st_distance_threed"),
+        306 => Some("st_distancecpa"),
+        307 => Some("st_distancesphere"),
+        308 => Some("st_distancespheroid"),
+        309 => Some("st_distancethreed"),
+        310 => Some("st_dump_as_polygons"),
+        311 => Some("st_dump_values"),
+        312 => Some("st_dump_values_multi"),
+        313 => Some("st_dumpaspolygons"),
+        314 => Some("st_dumpvalues"),
+        315 => Some("st_dwithin"),
+        316 => Some("st_dwithin_3d"),
+        317 => Some("st_dwithin_threed"),
+        318 => Some("st_end_point"),
+        319 => Some("st_endpoint"),
+        320 => Some("st_envelope"),
+        321 => Some("st_envelope_threed"),
+        322 => Some("st_envelopethreed"),
+        323 => Some("st_equals"),
+        324 => Some("st_equals_exact"),
+        325 => Some("st_equalsexact"),
+        326 => Some("st_expand"),
+        327 => Some("st_expand_xy"),
+        328 => Some("st_expand_xyz"),
+        329 => Some("st_expand_xyzm"),
+        330 => Some("st_exterior_ring"),
+        331 => Some("st_exteriorring"),
+        332 => Some("st_filter_by_m"),
+        333 => Some("st_filterbym"),
+        334 => Some("st_flip_coordinates"),
+        335 => Some("st_flipcoordinates"),
+        336 => Some("st_force2d"),
+        337 => Some("st_force3d"),
+        338 => Some("st_force3dm"),
+        339 => Some("st_force3dz"),
+        340 => Some("st_force4d"),
+        341 => Some("st_force_2d"),
+        342 => Some("st_force_3d"),
+        343 => Some("st_force_3dm"),
+        344 => Some("st_force_4d"),
+        345 => Some("st_force_collection"),
+        346 => Some("st_force_curve"),
+        347 => Some("st_force_fourd"),
+        348 => Some("st_force_polygon_ccw"),
+        349 => Some("st_force_polygon_cw"),
+        350 => Some("st_force_rhr"),
+        351 => Some("st_force_sfs"),
+        352 => Some("st_force_threed"),
+        353 => Some("st_force_threedm"),
+        354 => Some("st_force_threedz"),
+        355 => Some("st_force_twod"),
+        356 => Some("st_forcecollection"),
+        357 => Some("st_forcecurve"),
+        358 => Some("st_forcefourd"),
+        359 => Some("st_forcepolygonccw"),
+        360 => Some("st_forcepolygoncw"),
+        361 => Some("st_forcerhr"),
+        362 => Some("st_forcesfs"),
+        363 => Some("st_forcethreed"),
+        364 => Some("st_forcethreedm"),
+        365 => Some("st_forcethreedz"),
+        366 => Some("st_forcetwod"),
+        367 => Some("st_frechet_distance"),
+        368 => Some("st_frechetdistance"),
+        369 => Some("st_from_flatgeobuf"),
+        370 => Some("st_fromflatgeobuf"),
+        371 => Some("st_generate_points"),
+        372 => Some("st_generatepoints"),
+        373 => Some("st_geo_reference"),
+        374 => Some("st_geog_area"),
+        375 => Some("st_geog_azimuth"),
+        376 => Some("st_geog_buffer"),
+        377 => Some("st_geog_buffer_with_segs"),
+        378 => Some("st_geog_centroid"),
+        379 => Some("st_geog_closest_point"),
+        380 => Some("st_geog_convex_hull"),
+        381 => Some("st_geog_covered_by"),
+        382 => Some("st_geog_covers"),
+        383 => Some("st_geog_difference"),
+        384 => Some("st_geog_distance"),
+        385 => Some("st_geog_dwithin"),
+        386 => Some("st_geog_expand"),
+        387 => Some("st_geog_from_ewkt"),
+        388 => Some("st_geog_from_text"),
+        389 => Some("st_geog_from_wkb"),
+        390 => Some("st_geog_geometry_type"),
+        391 => Some("st_geog_intersection"),
+        392 => Some("st_geog_intersects"),
+        393 => Some("st_geog_is_closed"),
+        394 => Some("st_geog_is_empty"),
+        395 => Some("st_geog_is_simple"),
+        396 => Some("st_geog_length"),
+        397 => Some("st_geog_line_substring"),
+        398 => Some("st_geog_npoints"),
+        399 => Some("st_geog_perimeter"),
+        400 => Some("st_geog_point"),
+        401 => Some("st_geog_project"),
+        402 => Some("st_geog_segmentize"),
+        403 => Some("st_geog_summary"),
+        404 => Some("st_geog_sym_difference"),
+        405 => Some("st_geog_to_geom"),
+        406 => Some("st_geog_union"),
+        407 => Some("st_geogarea"),
+        408 => Some("st_geogazimuth"),
+        409 => Some("st_geogbuffer"),
+        410 => Some("st_geogbufferwithsegs"),
+        411 => Some("st_geogcentroid"),
+        412 => Some("st_geogcoveredby"),
+        413 => Some("st_geogcovers"),
+        414 => Some("st_geogdistance"),
+        415 => Some("st_geogdwithin"),
+        416 => Some("st_geogexpand"),
+        417 => Some("st_geogfromtext"),
+        418 => Some("st_geogfromwkb"),
+        419 => Some("st_geoggeometrytype"),
+        420 => Some("st_geogintersects"),
+        421 => Some("st_geogisclosed"),
+        422 => Some("st_geogisempty"),
+        423 => Some("st_geogissimple"),
+        424 => Some("st_geoglength"),
+        425 => Some("st_geognpoints"),
+        426 => Some("st_geogperimeter"),
+        427 => Some("st_geogpoint"),
+        428 => Some("st_geography_from_text"),
+        429 => Some("st_geographyfromtext"),
+        430 => Some("st_geogsummary"),
+        431 => Some("st_geohash"),
+        432 => Some("st_geom_from_ewkb"),
+        433 => Some("st_geom_from_ewkt"),
+        434 => Some("st_geom_from_geobuf"),
+        435 => Some("st_geom_from_geohash"),
+        436 => Some("st_geom_from_geojson"),
+        437 => Some("st_geom_from_gml"),
+        438 => Some("st_geom_from_gml_srid"),
+        439 => Some("st_geom_from_hexewkb"),
+        440 => Some("st_geom_from_kml"),
+        441 => Some("st_geom_from_marc21"),
+        442 => Some("st_geom_from_text"),
+        443 => Some("st_geom_from_text_srid"),
+        444 => Some("st_geom_from_twkb"),
+        445 => Some("st_geom_from_wkb"),
+        446 => Some("st_geomcoll_from_text"),
+        447 => Some("st_geomcoll_from_text_srid"),
+        448 => Some("st_geomcoll_from_wkb"),
+        449 => Some("st_geomcoll_from_wkb_srid"),
+        450 => Some("st_geomcollfromtext"),
+        451 => Some("st_geomcollfromwkb"),
+        452 => Some("st_geomequal"),
+        453 => Some("st_geometric_median"),
+        454 => Some("st_geometricmedian"),
+        455 => Some("st_geometry_from_text"),
+        456 => Some("st_geometry_n"),
+        457 => Some("st_geometry_type"),
+        458 => Some("st_geometryfromtext"),
+        459 => Some("st_geometryn"),
+        460 => Some("st_geometrytype"),
+        461 => Some("st_geomfromewkb"),
+        462 => Some("st_geomfromewkt"),
+        463 => Some("st_geomfromgeobuf"),
+        464 => Some("st_geomfromgeohash"),
+        465 => Some("st_geomfromgeojson"),
+        466 => Some("st_geomfromgml"),
+        467 => Some("st_geomfromgmlsrid"),
+        468 => Some("st_geomfromhexewkb"),
+        469 => Some("st_geomfromkml"),
+        470 => Some("st_geomfrommarc21"),
+        471 => Some("st_geomfromtext"),
+        472 => Some("st_geomfromtextsrid"),
+        473 => Some("st_geomfromtwkb"),
+        474 => Some("st_geomfromwkb"),
+        475 => Some("st_get_edge_by_point"),
+        476 => Some("st_get_edge_geometry"),
+        477 => Some("st_get_face_geometry"),
+        478 => Some("st_get_node_by_point"),
+        479 => Some("st_get_node_geometry"),
+        480 => Some("st_getedgebypoint"),
+        481 => Some("st_getedgegeometry"),
+        482 => Some("st_getfacegeometry"),
+        483 => Some("st_getnodebypoint"),
+        484 => Some("st_getnodegeometry"),
+        485 => Some("st_gml_to_sql"),
+        486 => Some("st_gmltosql"),
+        487 => Some("st_has_arc"),
+        488 => Some("st_has_m"),
+        489 => Some("st_has_no_band"),
+        490 => Some("st_has_z"),
+        491 => Some("st_hasarc"),
+        492 => Some("st_hasm"),
+        493 => Some("st_hasnoband"),
+        494 => Some("st_hasz"),
+        495 => Some("st_hausdorff_distance"),
+        496 => Some("st_hausdorffdistance"),
+        497 => Some("st_height"),
+        498 => Some("st_hexagon"),
+        499 => Some("st_hill_shade"),
+        500 => Some("st_hillshade"),
+        501 => Some("st_histogram"),
+        502 => Some("st_init_topo_geo"),
+        503 => Some("st_interior_ring_n"),
+        504 => Some("st_interiorringn"),
+        505 => Some("st_interpolate_point"),
+        506 => Some("st_intersection"),
+        507 => Some("st_intersection_gridsize"),
+        508 => Some("st_intersects"),
+        509 => Some("st_intersects_3d"),
+        510 => Some("st_intersects_threed"),
+        511 => Some("st_inverse_transform_pipeline"),
+        512 => Some("st_inversetransformpipeline"),
+        513 => Some("st_is_closed"),
+        514 => Some("st_is_collection"),
+        515 => Some("st_is_empty"),
+        516 => Some("st_is_measured"),
+        517 => Some("st_is_polygon_ccw"),
+        518 => Some("st_is_polygon_cw"),
+        519 => Some("st_is_ring"),
+        520 => Some("st_is_simple"),
+        521 => Some("st_is_valid"),
+        522 => Some("st_is_valid_detail"),
+        523 => Some("st_is_valid_detail_flags"),
+        524 => Some("st_is_valid_flags"),
+        525 => Some("st_is_valid_reason"),
+        526 => Some("st_is_valid_reason_flags"),
+        527 => Some("st_is_valid_trajectory"),
+        528 => Some("st_isclosed"),
+        529 => Some("st_iscollection"),
+        530 => Some("st_isempty"),
+        531 => Some("st_ispolygonccw"),
+        532 => Some("st_ispolygoncw"),
+        533 => Some("st_isring"),
+        534 => Some("st_issimple"),
+        535 => Some("st_isvalid"),
+        536 => Some("st_isvaliddetail"),
+        537 => Some("st_isvalidreason"),
+        538 => Some("st_isvalidtrajectory"),
+        539 => Some("st_knndistance"),
+        540 => Some("st_largest_empty_circle"),
+        541 => Some("st_largestemptycircle"),
+        542 => Some("st_length"),
+        543 => Some("st_length2d"),
+        544 => Some("st_length_2d"),
+        545 => Some("st_length_spheroid"),
+        546 => Some("st_length_threed"),
+        547 => Some("st_length_twod"),
+        548 => Some("st_length_twod_spheroid"),
+        549 => Some("st_lengthspheroid"),
+        550 => Some("st_lengththreed"),
+        551 => Some("st_letters"),
+        552 => Some("st_line_crossing_direction"),
+        553 => Some("st_line_extend"),
+        554 => Some("st_line_from_encoded_polyline"),
+        555 => Some("st_line_from_multi_point"),
+        556 => Some("st_line_from_text"),
+        557 => Some("st_line_from_text_srid"),
+        558 => Some("st_line_from_wkb"),
+        559 => Some("st_line_from_wkb_srid"),
+        560 => Some("st_line_interpolate_point"),
+        561 => Some("st_line_interpolate_point_3d"),
+        562 => Some("st_line_interpolate_point_threed"),
+        563 => Some("st_line_interpolate_points"),
+        564 => Some("st_line_locate_point"),
+        565 => Some("st_line_merge"),
+        566 => Some("st_line_merge_directed"),
+        567 => Some("st_line_to_curve"),
+        568 => Some("st_linecrossingdirection"),
+        569 => Some("st_lineextend"),
+        570 => Some("st_linefromencodedpolyline"),
+        571 => Some("st_linefrommultipoint"),
+        572 => Some("st_linefromtext"),
+        573 => Some("st_linefromwkb"),
+        574 => Some("st_lineinterpolatepoint"),
+        575 => Some("st_lineinterpolatepoints"),
+        576 => Some("st_linelocatepoint"),
+        577 => Some("st_linemerge"),
+        578 => Some("st_linetocurve"),
+        579 => Some("st_locate_along"),
+        580 => Some("st_locate_between"),
+        581 => Some("st_locate_between_elevations"),
+        582 => Some("st_locatealong"),
+        583 => Some("st_locatebetween"),
+        584 => Some("st_locatebetweenelevations"),
+        585 => Some("st_longest_line"),
+        586 => Some("st_longest_line_3d"),
+        587 => Some("st_longest_line_threed"),
+        588 => Some("st_longestline"),
+        589 => Some("st_m"),
+        590 => Some("st_make_box2d"),
+        591 => Some("st_make_box3d"),
+        592 => Some("st_make_box_threed"),
+        593 => Some("st_make_empty_coverage"),
+        594 => Some("st_make_empty_raster"),
+        595 => Some("st_make_envelope"),
+        596 => Some("st_make_envelope_srid"),
+        597 => Some("st_make_line"),
+        598 => Some("st_make_line_threed"),
+        599 => Some("st_make_line_two"),
+        600 => Some("st_make_point"),
+        601 => Some("st_make_point_m"),
+        602 => Some("st_make_point_z"),
+        603 => Some("st_make_point_zm"),
+        604 => Some("st_make_polygon"),
+        605 => Some("st_make_valid"),
+        606 => Some("st_makebox"),
+        607 => Some("st_makebox2d"),
+        608 => Some("st_makebox3d"),
+        609 => Some("st_makeemptyraster"),
+        610 => Some("st_makeenvelope"),
+        611 => Some("st_makeenvelopesrid"),
+        612 => Some("st_makeline"),
+        613 => Some("st_makepoint"),
+        614 => Some("st_makepointm"),
+        615 => Some("st_makepointz"),
+        616 => Some("st_makepointzm"),
+        617 => Some("st_makepolygon"),
+        618 => Some("st_makevalid"),
+        619 => Some("st_map_algebra"),
+        620 => Some("st_map_algebra2"),
+        621 => Some("st_mapalgebra"),
+        622 => Some("st_mapalgebra2"),
+        623 => Some("st_max_distance"),
+        624 => Some("st_max_distance_3d"),
+        625 => Some("st_max_distance_threed"),
+        626 => Some("st_max_x"),
+        627 => Some("st_max_y"),
+        628 => Some("st_maxdistance"),
+        629 => Some("st_maximum_inscribed_circle"),
+        630 => Some("st_maximuminscribedcircle"),
+        631 => Some("st_mem_size"),
+        632 => Some("st_mem_union"),
+        633 => Some("st_memsize"),
+        634 => Some("st_metadata"),
+        635 => Some("st_min_convex_hull"),
+        636 => Some("st_min_x"),
+        637 => Some("st_min_y"),
+        638 => Some("st_minimum_bounding_circle"),
+        639 => Some("st_minimum_bounding_circle_segs"),
+        640 => Some("st_minimum_bounding_radius"),
+        641 => Some("st_minimum_clearance"),
+        642 => Some("st_minimum_clearance_line"),
+        643 => Some("st_minimumboundingcircle"),
+        644 => Some("st_minimumboundingradius"),
+        645 => Some("st_minimumclearance"),
+        646 => Some("st_minimumclearanceline"),
+        647 => Some("st_mline_from_text"),
+        648 => Some("st_mline_from_text_srid"),
+        649 => Some("st_mline_from_wkb"),
+        650 => Some("st_mline_from_wkb_srid"),
+        651 => Some("st_mlinefromtext"),
+        652 => Some("st_mlinefromwkb"),
+        653 => Some("st_mmax"),
+        654 => Some("st_mmin"),
+        655 => Some("st_mod_edge_heal"),
+        656 => Some("st_mod_edge_split"),
+        657 => Some("st_modedgeheal"),
+        658 => Some("st_modedgesplit"),
+        659 => Some("st_mpoint_from_text"),
+        660 => Some("st_mpoint_from_text_srid"),
+        661 => Some("st_mpoint_from_wkb"),
+        662 => Some("st_mpoint_from_wkb_srid"),
+        663 => Some("st_mpointfromtext"),
+        664 => Some("st_mpointfromwkb"),
+        665 => Some("st_mpoly_from_text"),
+        666 => Some("st_mpoly_from_text_srid"),
+        667 => Some("st_mpoly_from_wkb"),
+        668 => Some("st_mpoly_from_wkb_srid"),
+        669 => Some("st_mpolyfromtext"),
+        670 => Some("st_mpolyfromwkb"),
+        671 => Some("st_multi"),
+        672 => Some("st_multi_line_from_wkb"),
+        673 => Some("st_multi_line_from_wkb_srid"),
+        674 => Some("st_multi_line_string_from_text"),
+        675 => Some("st_multi_line_string_from_text_srid"),
+        676 => Some("st_multi_point_from_text"),
+        677 => Some("st_multi_point_from_text_srid"),
+        678 => Some("st_multi_point_from_wkb"),
+        679 => Some("st_multi_point_from_wkb_srid"),
+        680 => Some("st_multi_poly_from_wkb"),
+        681 => Some("st_multi_poly_from_wkb_srid"),
+        682 => Some("st_multi_polygon_from_text"),
+        683 => Some("st_multi_polygon_from_text_srid"),
+        684 => Some("st_n_dims"),
+        685 => Some("st_ndims"),
+        686 => Some("st_nearest_value"),
+        687 => Some("st_nearestvalue"),
+        688 => Some("st_new_edges_split"),
+        689 => Some("st_newedgessplit"),
+        690 => Some("st_node"),
+        691 => Some("st_normalize"),
+        692 => Some("st_npoints"),
+        693 => Some("st_nrings"),
+        694 => Some("st_num_bands"),
+        695 => Some("st_num_curves"),
+        696 => Some("st_num_geometries"),
+        697 => Some("st_num_interior_ring"),
+        698 => Some("st_num_interior_rings"),
+        699 => Some("st_num_points"),
+        700 => Some("st_numbands"),
+        701 => Some("st_numcurves"),
+        702 => Some("st_numgeometries"),
+        703 => Some("st_numinteriorring"),
+        704 => Some("st_numinteriorrings"),
+        705 => Some("st_numpoints"),
+        706 => Some("st_offset_curve"),
+        707 => Some("st_offsetcurve"),
+        708 => Some("st_ordering_equals"),
+        709 => Some("st_orderingequals"),
+        710 => Some("st_oriented_envelope"),
+        711 => Some("st_orientedenvelope"),
+        712 => Some("st_overlaps"),
+        713 => Some("st_perimeter"),
+        714 => Some("st_perimeter2d"),
+        715 => Some("st_perimeter_2d"),
+        716 => Some("st_perimeter_threed"),
+        717 => Some("st_perimeter_twod"),
+        718 => Some("st_perimeterthreed"),
+        719 => Some("st_pixel_as_centroid"),
+        720 => Some("st_pixel_as_centroids"),
+        721 => Some("st_pixel_as_point"),
+        722 => Some("st_pixel_as_points"),
+        723 => Some("st_pixel_as_polygon"),
+        724 => Some("st_pixel_as_polygons"),
+        725 => Some("st_pixel_height"),
+        726 => Some("st_pixel_of_value"),
+        727 => Some("st_pixel_width"),
+        728 => Some("st_pixelascentroid"),
+        729 => Some("st_pixelaspoint"),
+        730 => Some("st_pixelaspolygon"),
+        731 => Some("st_pixelaspolygons"),
+        732 => Some("st_pixelofvalue"),
+        733 => Some("st_pixels_of_values"),
+        734 => Some("st_point"),
+        735 => Some("st_point_from_geohash"),
+        736 => Some("st_point_from_text"),
+        737 => Some("st_point_from_text_srid"),
+        738 => Some("st_point_from_wkb"),
+        739 => Some("st_point_from_wkb_srid"),
+        740 => Some("st_point_inside_circle"),
+        741 => Some("st_point_m"),
+        742 => Some("st_point_m_srid"),
+        743 => Some("st_point_n"),
+        744 => Some("st_point_on_surface"),
+        745 => Some("st_point_srid"),
+        746 => Some("st_point_z"),
+        747 => Some("st_point_z_srid"),
+        748 => Some("st_point_zm"),
+        749 => Some("st_point_zm_srid"),
+        750 => Some("st_pointfromgeohash"),
+        751 => Some("st_pointfromtext"),
+        752 => Some("st_pointfromwkb"),
+        753 => Some("st_pointinsidecircle"),
+        754 => Some("st_pointm"),
+        755 => Some("st_pointn"),
+        756 => Some("st_pointonsurface"),
+        757 => Some("st_points"),
+        758 => Some("st_pointz"),
+        759 => Some("st_pointzm"),
+        760 => Some("st_polygon"),
+        761 => Some("st_polygon_from_text"),
+        762 => Some("st_polygon_from_text_srid"),
+        763 => Some("st_polygon_from_wkb"),
+        764 => Some("st_polygon_from_wkb_srid"),
+        765 => Some("st_polygonfromtext"),
+        766 => Some("st_polygonfromwkb"),
+        767 => Some("st_polygonize"),
+        768 => Some("st_polygonize_as_raster"),
+        769 => Some("st_polygonize_topology"),
+        770 => Some("st_polyhedralsurface_from_text"),
+        771 => Some("st_polyhedralsurface_from_wkb"),
+        772 => Some("st_project"),
+        773 => Some("st_quantile"),
+        774 => Some("st_quantiles"),
+        775 => Some("st_quantize_coordinates"),
+        776 => Some("st_quantizecoordinates"),
+        777 => Some("st_rastenvelope"),
+        778 => Some("st_raster_contains"),
+        779 => Some("st_raster_contains_geom"),
+        780 => Some("st_raster_convex_hull"),
+        781 => Some("st_raster_covers"),
+        782 => Some("st_raster_intersection_geom"),
+        783 => Some("st_raster_intersects"),
+        784 => Some("st_raster_intersects_geom"),
+        785 => Some("st_raster_overlaps"),
+        786 => Some("st_raster_to_world_coord_x"),
+        787 => Some("st_raster_to_world_coord_y"),
+        788 => Some("st_raster_within"),
+        789 => Some("st_rastercontains"),
+        790 => Some("st_rastercontainsgeom"),
+        791 => Some("st_rasterconvexhull"),
+        792 => Some("st_rastercovers"),
+        793 => Some("st_rasterintersects"),
+        794 => Some("st_rasterintersectsgeom"),
+        795 => Some("st_rasteroverlaps"),
+        796 => Some("st_rastertoworldcoordx"),
+        797 => Some("st_rastertoworldcoordy"),
+        798 => Some("st_rasterwithin"),
+        799 => Some("st_rastheight"),
+        800 => Some("st_rastnumbands"),
+        801 => Some("st_rastwidth"),
+        802 => Some("st_reclass"),
+        803 => Some("st_reclass_exact"),
+        804 => Some("st_reduce_precision"),
+        805 => Some("st_reduce_precision_flags"),
+        806 => Some("st_reduceprecision"),
+        807 => Some("st_relate"),
+        808 => Some("st_relate_bnr"),
+        809 => Some("st_relate_match"),
+        810 => Some("st_relate_with_pattern"),
+        811 => Some("st_relatematch"),
+        812 => Some("st_remove_point"),
+        813 => Some("st_remove_repeated_points"),
+        814 => Some("st_remove_small_parts"),
+        815 => Some("st_removepoint"),
+        816 => Some("st_removerepeatedpoints"),
+        817 => Some("st_removesmallparts"),
+        818 => Some("st_rescale"),
+        819 => Some("st_resize"),
+        820 => Some("st_retile"),
+        821 => Some("st_reverse"),
+        822 => Some("st_reverse_threed"),
+        823 => Some("st_reversethreed"),
+        824 => Some("st_rotate"),
+        825 => Some("st_rotate_around_point"),
+        826 => Some("st_rotate_around_xy"),
+        827 => Some("st_rotate_threed"),
+        828 => Some("st_rotate_threed_around_center"),
+        829 => Some("st_rotate_twod_around_center"),
+        830 => Some("st_rotatethreed"),
+        831 => Some("st_rotation"),
+        832 => Some("st_roughness"),
+        833 => Some("st_scale"),
+        834 => Some("st_scale_threed"),
+        835 => Some("st_scale_with_origin"),
+        836 => Some("st_scale_with_vector"),
+        837 => Some("st_scale_x"),
+        838 => Some("st_scale_y"),
+        839 => Some("st_scalethreed"),
+        840 => Some("st_scalex"),
+        841 => Some("st_scaley"),
+        842 => Some("st_scroll"),
+        843 => Some("st_segmentize"),
+        844 => Some("st_set_band_is_nodata"),
+        845 => Some("st_set_band_nodata_value"),
+        846 => Some("st_set_effective_area"),
+        847 => Some("st_set_geo_reference"),
+        848 => Some("st_set_geo_reference_string"),
+        849 => Some("st_set_point"),
+        850 => Some("st_set_rotation"),
+        851 => Some("st_set_scale"),
+        852 => Some("st_set_scale_xy"),
+        853 => Some("st_set_skew"),
+        854 => Some("st_set_skew_xy"),
+        855 => Some("st_set_srid"),
+        856 => Some("st_set_upper_left"),
+        857 => Some("st_set_value"),
+        858 => Some("st_set_value_at_point"),
+        859 => Some("st_set_values"),
+        860 => Some("st_set_values_rect"),
+        861 => Some("st_seteffectivearea"),
+        862 => Some("st_setendm"),
+        863 => Some("st_setendz"),
+        864 => Some("st_setm"),
+        865 => Some("st_setpoint"),
+        866 => Some("st_setsrid"),
+        867 => Some("st_setstartm"),
+        868 => Some("st_setstartz"),
+        869 => Some("st_setvalue"),
+        870 => Some("st_setx"),
+        871 => Some("st_sety"),
+        872 => Some("st_setz"),
+        873 => Some("st_shared_paths"),
+        874 => Some("st_sharedpaths"),
+        875 => Some("st_shift_longitude"),
+        876 => Some("st_shiftlongitude"),
+        877 => Some("st_shortest_line"),
+        878 => Some("st_shortest_line_3d"),
+        879 => Some("st_shortest_line_threed"),
+        880 => Some("st_shortestline"),
+        881 => Some("st_simplify"),
+        882 => Some("st_simplify_polygon_hull"),
+        883 => Some("st_simplify_preserve_collapse"),
+        884 => Some("st_simplify_preserve_topology"),
+        885 => Some("st_simplify_vw"),
+        886 => Some("st_simplify_vw_preserve_collapse"),
+        887 => Some("st_simplifypolygonhull"),
+        888 => Some("st_simplifypreservetopology"),
+        889 => Some("st_simplifyvw"),
+        890 => Some("st_skew_x"),
+        891 => Some("st_skew_y"),
+        892 => Some("st_skewx"),
+        893 => Some("st_skewy"),
+        894 => Some("st_slope"),
+        895 => Some("st_snap"),
+        896 => Some("st_snap_to_grid"),
+        897 => Some("st_snap_to_grid_4d"),
+        898 => Some("st_snap_to_grid_origin"),
+        899 => Some("st_snap_to_grid_xy"),
+        900 => Some("st_snaptogrid"),
+        901 => Some("st_split"),
+        902 => Some("st_square"),
+        903 => Some("st_srid"),
+        904 => Some("st_start_point"),
+        905 => Some("st_startpoint"),
+        906 => Some("st_subdivide_gridsize"),
+        907 => Some("st_summary"),
+        908 => Some("st_summary_stats"),
+        909 => Some("st_summarystats"),
+        910 => Some("st_swap_ordinates"),
+        911 => Some("st_swapordinates"),
+        912 => Some("st_sym_difference"),
+        913 => Some("st_sym_difference_gridsize"),
+        914 => Some("st_sym_difference_threed"),
+        915 => Some("st_symdifference"),
+        916 => Some("st_tile"),
+        917 => Some("st_tile_envelope"),
+        918 => Some("st_tileenvelope"),
+        919 => Some("st_tin_from_text"),
+        920 => Some("st_tin_from_wkb"),
+        921 => Some("st_topology_edge_count"),
+        922 => Some("st_topology_face_count"),
+        923 => Some("st_topology_from_bytes"),
+        924 => Some("st_topology_name"),
+        925 => Some("st_topology_node_count"),
+        926 => Some("st_topology_precision"),
+        927 => Some("st_topology_srid"),
+        928 => Some("st_topology_to_bytes"),
+        929 => Some("st_topologyedgecount"),
+        930 => Some("st_topologyfacecount"),
+        931 => Some("st_topologyfrombytes"),
+        932 => Some("st_topologyname"),
+        933 => Some("st_topologynodecount"),
+        934 => Some("st_topologyprecision"),
+        935 => Some("st_topologysrid"),
+        936 => Some("st_topologytobytes"),
+        937 => Some("st_touches"),
+        938 => Some("st_tpi"),
+        939 => Some("st_transform"),
+        940 => Some("st_transform_pipeline"),
+        941 => Some("st_transform_pipeline_to_srid"),
+        942 => Some("st_transformpipeline"),
+        943 => Some("st_translate"),
+        944 => Some("st_translate_threed"),
+        945 => Some("st_translatethreed"),
+        946 => Some("st_transscale"),
+        947 => Some("st_tri"),
+        948 => Some("st_triangle_from_text"),
+        949 => Some("st_triangle_from_wkb"),
+        950 => Some("st_triangulate_polygon"),
+        951 => Some("st_triangulate_twod"),
+        952 => Some("st_triangulatepolygon"),
+        953 => Some("st_unary_union"),
+        954 => Some("st_unaryunion"),
+        955 => Some("st_union"),
+        956 => Some("st_union_gridsize"),
+        957 => Some("st_upper_left_x"),
+        958 => Some("st_upper_left_y"),
+        959 => Some("st_upperleftx"),
+        960 => Some("st_upperlefty"),
+        961 => Some("st_validate_topology"),
+        962 => Some("st_validatetopology"),
+        963 => Some("st_value"),
+        964 => Some("st_value_count"),
+        965 => Some("st_value_count_of_value"),
+        966 => Some("st_value_counts"),
+        967 => Some("st_value_percent"),
+        968 => Some("st_value_percents"),
+        969 => Some("st_valuecount"),
+        970 => Some("st_voronoi_lines"),
+        971 => Some("st_voronoi_polygons"),
+        972 => Some("st_voronoilines"),
+        973 => Some("st_voronoipolygons"),
+        974 => Some("st_width"),
+        975 => Some("st_within"),
+        976 => Some("st_wkb_to_sql"),
+        977 => Some("st_wkbtosql"),
+        978 => Some("st_wkt_to_sql"),
+        979 => Some("st_wkttosql"),
+        980 => Some("st_world_to_raster_coord"),
+        981 => Some("st_world_to_raster_coord_col"),
+        982 => Some("st_world_to_raster_coord_row"),
+        983 => Some("st_worldtorastercoord"),
+        984 => Some("st_worldtorastercoordcol"),
+        985 => Some("st_worldtorastercoordrow"),
+        986 => Some("st_wrap_x"),
+        987 => Some("st_wrapx"),
+        988 => Some("st_x"),
+        989 => Some("st_xmax"),
+        990 => Some("st_xmin"),
+        991 => Some("st_y"),
+        992 => Some("st_ymax"),
+        993 => Some("st_ymin"),
+        994 => Some("st_z"),
+        995 => Some("st_zmax"),
+        996 => Some("st_zmflag"),
+        997 => Some("st_zmin"),
+        998 => Some("to_topogeom"),
+        999 => Some("topo_element_array_append"),
+        1000 => Some("topogeo_add_geometry"),
+        1001 => Some("topogeo_add_linestring"),
+        1002 => Some("topogeo_add_point"),
+        1003 => Some("topogeo_add_polygon"),
+        1004 => Some("topogeo_load_geometry"),
+        1005 => Some("topology_add_edge"),
+        1006 => Some("topology_add_edge_mod_face"),
+        1007 => Some("topology_add_edge_new_faces"),
+        1008 => Some("topology_add_face"),
+        1009 => Some("topology_add_iso_edge"),
+        1010 => Some("topology_add_iso_node"),
+        1011 => Some("topology_add_node"),
+        1012 => Some("topology_add_topogeom_column"),
+        1013 => Some("topology_as_gml"),
+        1014 => Some("topology_as_topojson"),
+        1015 => Some("topology_as_topojson_with_edge_map"),
+        1016 => Some("topology_change_edge_geom"),
+        1017 => Some("topology_copy_topology"),
+        1018 => Some("topology_create"),
+        1019 => Some("topology_create_topo_geom"),
+        1020 => Some("topology_drop_topogeom_column"),
+        1021 => Some("topology_drop_topology"),
+        1022 => Some("topology_edge_count"),
+        1023 => Some("topology_face_count"),
+        1024 => Some("topology_from_bytes"),
+        1025 => Some("topology_get_edge_by_point"),
+        1026 => Some("topology_get_edge_geometry"),
+        1027 => Some("topology_get_face_by_point"),
+        1028 => Some("topology_get_face_containing_point"),
+        1029 => Some("topology_get_face_edges"),
+        1030 => Some("topology_get_face_geometry"),
+        1031 => Some("topology_get_node_by_point"),
+        1032 => Some("topology_get_node_edges"),
+        1033 => Some("topology_get_node_geometry"),
+        1034 => Some("topology_get_ring_edges"),
+        1035 => Some("topology_get_topology_id"),
+        1036 => Some("topology_get_topology_name"),
+        1037 => Some("topology_get_topology_srid"),
+        1038 => Some("topology_make_topology_precise"),
+        1039 => Some("topology_mod_edge_heal"),
+        1040 => Some("topology_mod_edge_split"),
+        1041 => Some("topology_move_iso_node"),
+        1042 => Some("topology_name"),
+        1043 => Some("topology_new_edge_heal"),
+        1044 => Some("topology_new_edges_split"),
+        1045 => Some("topology_node_count"),
+        1046 => Some("topology_polygonize"),
+        1047 => Some("topology_precision"),
+        1048 => Some("topology_rem_edge_mod_face"),
+        1049 => Some("topology_rem_edge_new_face"),
+        1050 => Some("topology_remove_face"),
+        1051 => Some("topology_remove_iso_edge"),
+        1052 => Some("topology_remove_iso_node"),
+        1053 => Some("topology_remove_unused_primitives"),
+        1054 => Some("topology_rename_topology"),
+        1055 => Some("topology_srid"),
+        1056 => Some("topology_summary"),
+        1057 => Some("topology_to_bytes"),
+        1058 => Some("topology_to_topogeom"),
+        1059 => Some("topology_topogeo_add_geometry"),
+        1060 => Some("topology_topogeo_add_linestring"),
+        1061 => Some("topology_topogeo_add_point"),
+        1062 => Some("topology_topogeo_add_polygon"),
+        1063 => Some("topology_topogeo_load_geometry"),
+        1064 => Some("topology_total_topology_size"),
+        1065 => Some("topology_upgrade_topology"),
+        1066 => Some("topology_validate"),
+        1067 => Some("topology_validate_topology"),
+        1068 => Some("topology_validate_topology_precision"),
+        1069 => Some("total_topology_size"),
+        1070 => Some("upgrade_topology"),
+        1071 => Some("validate_topology"),
+        1072 => Some("validate_topology_precision"),
         _ => None,
     }
 }
@@ -2432,6 +2440,29 @@ fn register_scalars() -> Result<(), Duckerror> {
             .insert(handle, 14usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
+                runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Int64 },
+            ];
+        let opts = runtime::Funcopts {
+            description: Some("create_index (sqlink-shim-codegen --dynlink)".into()),
+            tags: vec!["create_index".into()],
+            attributes: Funcflags::DETERMINISTIC | Funcflags::STATELESS,
+        };
+        registry.register(
+            "create_index",
+            &args,
+            &Logicaltype::Int64,
+            callback,
+            Some(&opts),
+        )?;
+    }
+    {
+        let handle = NEXT_HANDLE.fetch_add(1, core::sync::atomic::Ordering::Relaxed);
+        handle_table()
+            .lock()
+            .expect("scalar handle mutex poisoned")
+            .insert(handle, 15usize);
+        let callback = runtime::ScalarCallback::new(handle);
+        let args: Vec<runtime::Funcarg> = vec![
             ];
         let opts = runtime::Funcopts {
             description: Some("create_raster (sqlink-shim-codegen --dynlink)".into()),
@@ -2451,7 +2482,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 15usize);
+            .insert(handle, 16usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -2476,7 +2507,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 16usize);
+            .insert(handle, 17usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -2501,7 +2532,30 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 17usize);
+            .insert(handle, 18usize);
+        let callback = runtime::ScalarCallback::new(handle);
+        let args: Vec<runtime::Funcarg> = vec![
+                runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Int64 },
+            ];
+        let opts = runtime::Funcopts {
+            description: Some("destroy_index (sqlink-shim-codegen --dynlink)".into()),
+            tags: vec!["destroy_index".into()],
+            attributes: Funcflags::DETERMINISTIC | Funcflags::STATELESS,
+        };
+        registry.register(
+            "destroy_index",
+            &args,
+            &Logicaltype::Blob,
+            callback,
+            Some(&opts),
+        )?;
+    }
+    {
+        let handle = NEXT_HANDLE.fetch_add(1, core::sync::atomic::Ordering::Relaxed);
+        handle_table()
+            .lock()
+            .expect("scalar handle mutex poisoned")
+            .insert(handle, 19usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -2526,7 +2580,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 18usize);
+            .insert(handle, 20usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -2549,7 +2603,30 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 19usize);
+            .insert(handle, 21usize);
+        let callback = runtime::ScalarCallback::new(handle);
+        let args: Vec<runtime::Funcarg> = vec![
+                runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
+            ];
+        let opts = runtime::Funcopts {
+            description: Some("from_binary (sqlink-shim-codegen --dynlink)".into()),
+            tags: vec!["from_binary".into()],
+            attributes: Funcflags::DETERMINISTIC | Funcflags::STATELESS,
+        };
+        registry.register(
+            "from_binary",
+            &args,
+            &Logicaltype::Blob,
+            callback,
+            Some(&opts),
+        )?;
+    }
+    {
+        let handle = NEXT_HANDLE.fetch_add(1, core::sync::atomic::Ordering::Relaxed);
+        handle_table()
+            .lock()
+            .expect("scalar handle mutex poisoned")
+            .insert(handle, 22usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -2572,7 +2649,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 20usize);
+            .insert(handle, 23usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -2597,7 +2674,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 21usize);
+            .insert(handle, 24usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -2621,7 +2698,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 22usize);
+            .insert(handle, 25usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -2646,7 +2723,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 23usize);
+            .insert(handle, 26usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -2670,7 +2747,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 24usize);
+            .insert(handle, 27usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -2694,7 +2771,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 25usize);
+            .insert(handle, 28usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -2718,7 +2795,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 26usize);
+            .insert(handle, 29usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -2743,7 +2820,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 27usize);
+            .insert(handle, 30usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -2767,7 +2844,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 28usize);
+            .insert(handle, 31usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -2791,7 +2868,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 29usize);
+            .insert(handle, 32usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -2815,7 +2892,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 30usize);
+            .insert(handle, 33usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -2838,7 +2915,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 31usize);
+            .insert(handle, 34usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -2861,7 +2938,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 32usize);
+            .insert(handle, 35usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -2884,7 +2961,32 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 33usize);
+            .insert(handle, 36usize);
+        let callback = runtime::ScalarCallback::new(handle);
+        let args: Vec<runtime::Funcarg> = vec![
+                runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Int64 },
+                runtime::Funcarg { name: Some("arg1".into()), logical: Logicaltype::Blob },
+                runtime::Funcarg { name: Some("arg2".into()), logical: Logicaltype::Int64 },
+            ];
+        let opts = runtime::Funcopts {
+            description: Some("insert_wkb (sqlink-shim-codegen --dynlink)".into()),
+            tags: vec!["insert_wkb".into()],
+            attributes: Funcflags::DETERMINISTIC | Funcflags::STATELESS,
+        };
+        registry.register(
+            "insert_wkb",
+            &args,
+            &Logicaltype::Boolean,
+            callback,
+            Some(&opts),
+        )?;
+    }
+    {
+        let handle = NEXT_HANDLE.fetch_add(1, core::sync::atomic::Ordering::Relaxed);
+        handle_table()
+            .lock()
+            .expect("scalar handle mutex poisoned")
+            .insert(handle, 37usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             ];
@@ -2906,7 +3008,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 34usize);
+            .insert(handle, 38usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             ];
@@ -2928,7 +3030,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 35usize);
+            .insert(handle, 39usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             ];
@@ -2950,7 +3052,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 36usize);
+            .insert(handle, 40usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Int64 },
@@ -2974,7 +3076,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 37usize);
+            .insert(handle, 41usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -2998,7 +3100,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 38usize);
+            .insert(handle, 42usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -3023,7 +3125,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 39usize);
+            .insert(handle, 43usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -3048,7 +3150,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 40usize);
+            .insert(handle, 44usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -3073,7 +3175,31 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 41usize);
+            .insert(handle, 45usize);
+        let callback = runtime::ScalarCallback::new(handle);
+        let args: Vec<runtime::Funcarg> = vec![
+                runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Int64 },
+                runtime::Funcarg { name: Some("arg1".into()), logical: Logicaltype::Blob },
+            ];
+        let opts = runtime::Funcopts {
+            description: Some("nearest (sqlink-shim-codegen --dynlink)".into()),
+            tags: vec!["nearest".into()],
+            attributes: Funcflags::DETERMINISTIC | Funcflags::STATELESS,
+        };
+        registry.register(
+            "nearest",
+            &args,
+            &Logicaltype::Int64,
+            callback,
+            Some(&opts),
+        )?;
+    }
+    {
+        let handle = NEXT_HANDLE.fetch_add(1, core::sync::atomic::Ordering::Relaxed);
+        handle_table()
+            .lock()
+            .expect("scalar handle mutex poisoned")
+            .insert(handle, 46usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -3098,7 +3224,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 42usize);
+            .insert(handle, 47usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -3123,7 +3249,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 43usize);
+            .insert(handle, 48usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -3147,7 +3273,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 44usize);
+            .insert(handle, 49usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -3171,7 +3297,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 45usize);
+            .insert(handle, 50usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -3195,7 +3321,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 46usize);
+            .insert(handle, 51usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -3219,7 +3345,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 47usize);
+            .insert(handle, 52usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -3243,7 +3369,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 48usize);
+            .insert(handle, 53usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -3266,7 +3392,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 49usize);
+            .insert(handle, 54usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -3289,7 +3415,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 50usize);
+            .insert(handle, 55usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -3312,7 +3438,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 51usize);
+            .insert(handle, 56usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             ];
@@ -3334,7 +3460,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 52usize);
+            .insert(handle, 57usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             ];
@@ -3356,7 +3482,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 53usize);
+            .insert(handle, 58usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -3379,7 +3505,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 54usize);
+            .insert(handle, 59usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             ];
@@ -3401,7 +3527,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 55usize);
+            .insert(handle, 60usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -3424,7 +3550,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 56usize);
+            .insert(handle, 61usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -3447,7 +3573,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 57usize);
+            .insert(handle, 62usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             ];
@@ -3469,7 +3595,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 58usize);
+            .insert(handle, 63usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             ];
@@ -3491,7 +3617,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 59usize);
+            .insert(handle, 64usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             ];
@@ -3513,7 +3639,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 60usize);
+            .insert(handle, 65usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             ];
@@ -3535,7 +3661,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 61usize);
+            .insert(handle, 66usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             ];
@@ -3557,7 +3683,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 62usize);
+            .insert(handle, 67usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             ];
@@ -3579,7 +3705,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 63usize);
+            .insert(handle, 68usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             ];
@@ -3601,7 +3727,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 64usize);
+            .insert(handle, 69usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -3624,7 +3750,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 65usize);
+            .insert(handle, 70usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             ];
@@ -3646,7 +3772,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 66usize);
+            .insert(handle, 71usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             ];
@@ -3668,7 +3794,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 67usize);
+            .insert(handle, 72usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             ];
@@ -3690,7 +3816,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 68usize);
+            .insert(handle, 73usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             ];
@@ -3712,7 +3838,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 69usize);
+            .insert(handle, 74usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             ];
@@ -3734,7 +3860,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 70usize);
+            .insert(handle, 75usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             ];
@@ -3756,7 +3882,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 71usize);
+            .insert(handle, 76usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             ];
@@ -3778,7 +3904,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 72usize);
+            .insert(handle, 77usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Int64 },
@@ -3803,7 +3929,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 73usize);
+            .insert(handle, 78usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             ];
@@ -3825,7 +3951,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 74usize);
+            .insert(handle, 79usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
             ];
@@ -3847,7 +3973,84 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 75usize);
+            .insert(handle, 80usize);
+        let callback = runtime::ScalarCallback::new(handle);
+        let args: Vec<runtime::Funcarg> = vec![
+                runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Int64 },
+                runtime::Funcarg { name: Some("arg1".into()), logical: Logicaltype::Float64 },
+                runtime::Funcarg { name: Some("arg2".into()), logical: Logicaltype::Float64 },
+                runtime::Funcarg { name: Some("arg3".into()), logical: Logicaltype::Float64 },
+                runtime::Funcarg { name: Some("arg4".into()), logical: Logicaltype::Float64 },
+            ];
+        let opts = runtime::Funcopts {
+            description: Some("query_envelope (sqlink-shim-codegen --dynlink)".into()),
+            tags: vec!["query_envelope".into()],
+            attributes: Funcflags::DETERMINISTIC | Funcflags::STATELESS,
+        };
+        registry.register(
+            "query_envelope",
+            &args,
+            &Logicaltype::Int64,
+            callback,
+            Some(&opts),
+        )?;
+    }
+    {
+        let handle = NEXT_HANDLE.fetch_add(1, core::sync::atomic::Ordering::Relaxed);
+        handle_table()
+            .lock()
+            .expect("scalar handle mutex poisoned")
+            .insert(handle, 81usize);
+        let callback = runtime::ScalarCallback::new(handle);
+        let args: Vec<runtime::Funcarg> = vec![
+                runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Int64 },
+                runtime::Funcarg { name: Some("arg1".into()), logical: Logicaltype::Blob },
+                runtime::Funcarg { name: Some("arg2".into()), logical: Logicaltype::Int64 },
+            ];
+        let opts = runtime::Funcopts {
+            description: Some("query_knn (sqlink-shim-codegen --dynlink)".into()),
+            tags: vec!["query_knn".into()],
+            attributes: Funcflags::DETERMINISTIC | Funcflags::STATELESS,
+        };
+        registry.register(
+            "query_knn",
+            &args,
+            &Logicaltype::Int64,
+            callback,
+            Some(&opts),
+        )?;
+    }
+    {
+        let handle = NEXT_HANDLE.fetch_add(1, core::sync::atomic::Ordering::Relaxed);
+        handle_table()
+            .lock()
+            .expect("scalar handle mutex poisoned")
+            .insert(handle, 82usize);
+        let callback = runtime::ScalarCallback::new(handle);
+        let args: Vec<runtime::Funcarg> = vec![
+                runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Int64 },
+                runtime::Funcarg { name: Some("arg1".into()), logical: Logicaltype::Blob },
+                runtime::Funcarg { name: Some("arg2".into()), logical: Logicaltype::Float64 },
+            ];
+        let opts = runtime::Funcopts {
+            description: Some("query_within_distance (sqlink-shim-codegen --dynlink)".into()),
+            tags: vec!["query_within_distance".into()],
+            attributes: Funcflags::DETERMINISTIC | Funcflags::STATELESS,
+        };
+        registry.register(
+            "query_within_distance",
+            &args,
+            &Logicaltype::Int64,
+            callback,
+            Some(&opts),
+        )?;
+    }
+    {
+        let handle = NEXT_HANDLE.fetch_add(1, core::sync::atomic::Ordering::Relaxed);
+        handle_table()
+            .lock()
+            .expect("scalar handle mutex poisoned")
+            .insert(handle, 83usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -3871,7 +4074,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 76usize);
+            .insert(handle, 84usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -3895,7 +4098,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 77usize);
+            .insert(handle, 85usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -3919,7 +4122,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 78usize);
+            .insert(handle, 86usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -3943,7 +4146,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 79usize);
+            .insert(handle, 87usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -3967,7 +4170,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 80usize);
+            .insert(handle, 88usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -3990,7 +4193,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 81usize);
+            .insert(handle, 89usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -4014,7 +4217,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 82usize);
+            .insert(handle, 90usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -4038,7 +4241,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 83usize);
+            .insert(handle, 91usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -4062,7 +4265,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 84usize);
+            .insert(handle, 92usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -4087,7 +4290,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 85usize);
+            .insert(handle, 93usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -4112,7 +4315,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 86usize);
+            .insert(handle, 94usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -4136,7 +4339,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 87usize);
+            .insert(handle, 95usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -4160,7 +4363,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 88usize);
+            .insert(handle, 96usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -4184,7 +4387,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 89usize);
+            .insert(handle, 97usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -4208,7 +4411,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 90usize);
+            .insert(handle, 98usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -4232,7 +4435,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 91usize);
+            .insert(handle, 99usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -4256,7 +4459,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 92usize);
+            .insert(handle, 100usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -4279,7 +4482,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 93usize);
+            .insert(handle, 101usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -4302,7 +4505,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 94usize);
+            .insert(handle, 102usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -4326,7 +4529,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 95usize);
+            .insert(handle, 103usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -4350,7 +4553,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 96usize);
+            .insert(handle, 104usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -4373,7 +4576,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 97usize);
+            .insert(handle, 105usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -4397,7 +4600,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 98usize);
+            .insert(handle, 106usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -4421,7 +4624,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 99usize);
+            .insert(handle, 107usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -4446,7 +4649,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 100usize);
+            .insert(handle, 108usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -4469,7 +4672,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 101usize);
+            .insert(handle, 109usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -4493,7 +4696,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 102usize);
+            .insert(handle, 110usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -4517,7 +4720,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 103usize);
+            .insert(handle, 111usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -4540,7 +4743,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 104usize);
+            .insert(handle, 112usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -4564,7 +4767,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 105usize);
+            .insert(handle, 113usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -4588,7 +4791,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 106usize);
+            .insert(handle, 114usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -4612,7 +4815,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 107usize);
+            .insert(handle, 115usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -4636,7 +4839,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 108usize);
+            .insert(handle, 116usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -4659,7 +4862,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 109usize);
+            .insert(handle, 117usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -4682,7 +4885,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 110usize);
+            .insert(handle, 118usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -4709,7 +4912,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 111usize);
+            .insert(handle, 119usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -4735,7 +4938,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 112usize);
+            .insert(handle, 120usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -4759,7 +4962,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 113usize);
+            .insert(handle, 121usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -4785,7 +4988,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 114usize);
+            .insert(handle, 122usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -4809,7 +5012,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 115usize);
+            .insert(handle, 123usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -4835,7 +5038,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 116usize);
+            .insert(handle, 124usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -4860,7 +5063,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 117usize);
+            .insert(handle, 125usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -4886,7 +5089,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 118usize);
+            .insert(handle, 126usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -4911,7 +5114,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 119usize);
+            .insert(handle, 127usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -4936,7 +5139,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 120usize);
+            .insert(handle, 128usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -4961,7 +5164,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 121usize);
+            .insert(handle, 129usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -4987,7 +5190,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 122usize);
+            .insert(handle, 130usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -5012,7 +5215,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 123usize);
+            .insert(handle, 131usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -5038,7 +5241,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 124usize);
+            .insert(handle, 132usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -5063,7 +5266,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 125usize);
+            .insert(handle, 133usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -5088,7 +5291,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 126usize);
+            .insert(handle, 134usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -5113,7 +5316,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 127usize);
+            .insert(handle, 135usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -5142,7 +5345,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 128usize);
+            .insert(handle, 136usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -5167,7 +5370,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 129usize);
+            .insert(handle, 137usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -5193,7 +5396,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 130usize);
+            .insert(handle, 138usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -5219,7 +5422,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 131usize);
+            .insert(handle, 139usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -5245,7 +5448,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 132usize);
+            .insert(handle, 140usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -5270,7 +5473,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 133usize);
+            .insert(handle, 141usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -5296,7 +5499,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 134usize);
+            .insert(handle, 142usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -5323,7 +5526,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 135usize);
+            .insert(handle, 143usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -5349,7 +5552,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 136usize);
+            .insert(handle, 144usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -5376,7 +5579,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 137usize);
+            .insert(handle, 145usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -5399,7 +5602,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 138usize);
+            .insert(handle, 146usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -5422,7 +5625,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 139usize);
+            .insert(handle, 147usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -5445,7 +5648,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 140usize);
+            .insert(handle, 148usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -5468,7 +5671,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 141usize);
+            .insert(handle, 149usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -5491,7 +5694,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 142usize);
+            .insert(handle, 150usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -5514,7 +5717,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 143usize);
+            .insert(handle, 151usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -5537,7 +5740,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 144usize);
+            .insert(handle, 152usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -5561,7 +5764,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 145usize);
+            .insert(handle, 153usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -5584,7 +5787,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 146usize);
+            .insert(handle, 154usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -5607,7 +5810,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 147usize);
+            .insert(handle, 155usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -5631,7 +5834,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 148usize);
+            .insert(handle, 156usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -5655,7 +5858,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 149usize);
+            .insert(handle, 157usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -5679,7 +5882,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 150usize);
+            .insert(handle, 158usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -5703,7 +5906,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 151usize);
+            .insert(handle, 159usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -5726,7 +5929,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 152usize);
+            .insert(handle, 160usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -5751,7 +5954,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 153usize);
+            .insert(handle, 161usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -5776,7 +5979,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 154usize);
+            .insert(handle, 162usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Int64 },
@@ -5804,7 +6007,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 155usize);
+            .insert(handle, 163usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -5827,7 +6030,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 156usize);
+            .insert(handle, 164usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -5851,7 +6054,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 157usize);
+            .insert(handle, 165usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -5874,7 +6077,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 158usize);
+            .insert(handle, 166usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -5899,7 +6102,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 159usize);
+            .insert(handle, 167usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -5923,7 +6126,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 160usize);
+            .insert(handle, 168usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -5946,7 +6149,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 161usize);
+            .insert(handle, 169usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -5970,7 +6173,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 162usize);
+            .insert(handle, 170usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -5995,7 +6198,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 163usize);
+            .insert(handle, 171usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -6025,7 +6228,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 164usize);
+            .insert(handle, 172usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -6049,7 +6252,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 165usize);
+            .insert(handle, 173usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -6072,7 +6275,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 166usize);
+            .insert(handle, 174usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -6097,7 +6300,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 167usize);
+            .insert(handle, 175usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -6120,7 +6323,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 168usize);
+            .insert(handle, 176usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -6144,7 +6347,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 169usize);
+            .insert(handle, 177usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -6167,7 +6370,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 170usize);
+            .insert(handle, 178usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -6190,7 +6393,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 171usize);
+            .insert(handle, 179usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -6214,7 +6417,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 172usize);
+            .insert(handle, 180usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -6237,7 +6440,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 173usize);
+            .insert(handle, 181usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -6262,7 +6465,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 174usize);
+            .insert(handle, 182usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -6285,7 +6488,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 175usize);
+            .insert(handle, 183usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -6309,7 +6512,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 176usize);
+            .insert(handle, 184usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -6332,7 +6535,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 177usize);
+            .insert(handle, 185usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -6355,7 +6558,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 178usize);
+            .insert(handle, 186usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -6378,7 +6581,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 179usize);
+            .insert(handle, 187usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -6403,7 +6606,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 180usize);
+            .insert(handle, 188usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -6426,7 +6629,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 181usize);
+            .insert(handle, 189usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -6449,7 +6652,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 182usize);
+            .insert(handle, 190usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -6473,7 +6676,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 183usize);
+            .insert(handle, 191usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -6496,7 +6699,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 184usize);
+            .insert(handle, 192usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -6521,7 +6724,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 185usize);
+            .insert(handle, 193usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -6551,7 +6754,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 186usize);
+            .insert(handle, 194usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -6575,7 +6778,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 187usize);
+            .insert(handle, 195usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -6599,7 +6802,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 188usize);
+            .insert(handle, 196usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -6622,7 +6825,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 189usize);
+            .insert(handle, 197usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -6645,7 +6848,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 190usize);
+            .insert(handle, 198usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -6668,7 +6871,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 191usize);
+            .insert(handle, 199usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -6691,7 +6894,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 192usize);
+            .insert(handle, 200usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -6715,7 +6918,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 193usize);
+            .insert(handle, 201usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -6738,7 +6941,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 194usize);
+            .insert(handle, 202usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -6762,7 +6965,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 195usize);
+            .insert(handle, 203usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -6786,7 +6989,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 196usize);
+            .insert(handle, 204usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -6810,7 +7013,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 197usize);
+            .insert(handle, 205usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -6834,7 +7037,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 198usize);
+            .insert(handle, 206usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -6858,7 +7061,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 199usize);
+            .insert(handle, 207usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -6882,7 +7085,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 200usize);
+            .insert(handle, 208usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -6906,7 +7109,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 201usize);
+            .insert(handle, 209usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -6930,7 +7133,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 202usize);
+            .insert(handle, 210usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -6954,7 +7157,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 203usize);
+            .insert(handle, 211usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -6978,7 +7181,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 204usize);
+            .insert(handle, 212usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -7002,7 +7205,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 205usize);
+            .insert(handle, 213usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -7026,7 +7229,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 206usize);
+            .insert(handle, 214usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -7050,7 +7253,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 207usize);
+            .insert(handle, 215usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -7074,7 +7277,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 208usize);
+            .insert(handle, 216usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -7098,7 +7301,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 209usize);
+            .insert(handle, 217usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -7122,7 +7325,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 210usize);
+            .insert(handle, 218usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -7145,7 +7348,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 211usize);
+            .insert(handle, 219usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -7168,7 +7371,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 212usize);
+            .insert(handle, 220usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -7191,7 +7394,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 213usize);
+            .insert(handle, 221usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -7214,7 +7417,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 214usize);
+            .insert(handle, 222usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -7237,7 +7440,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 215usize);
+            .insert(handle, 223usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -7260,7 +7463,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 216usize);
+            .insert(handle, 224usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -7283,7 +7486,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 217usize);
+            .insert(handle, 225usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -7306,7 +7509,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 218usize);
+            .insert(handle, 226usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -7329,7 +7532,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 219usize);
+            .insert(handle, 227usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -7353,7 +7556,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 220usize);
+            .insert(handle, 228usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -7377,7 +7580,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 221usize);
+            .insert(handle, 229usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -7401,7 +7604,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 222usize);
+            .insert(handle, 230usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -7425,7 +7628,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 223usize);
+            .insert(handle, 231usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -7449,7 +7652,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 224usize);
+            .insert(handle, 232usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -7474,7 +7677,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 225usize);
+            .insert(handle, 233usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -7499,7 +7702,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 226usize);
+            .insert(handle, 234usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -7522,7 +7725,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 227usize);
+            .insert(handle, 235usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -7545,7 +7748,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 228usize);
+            .insert(handle, 236usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -7568,7 +7771,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 229usize);
+            .insert(handle, 237usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -7591,7 +7794,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 230usize);
+            .insert(handle, 238usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -7614,7 +7817,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 231usize);
+            .insert(handle, 239usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -7638,7 +7841,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 232usize);
+            .insert(handle, 240usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -7662,7 +7865,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 233usize);
+            .insert(handle, 241usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -7689,7 +7892,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 234usize);
+            .insert(handle, 242usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -7716,7 +7919,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 235usize);
+            .insert(handle, 243usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -7740,7 +7943,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 236usize);
+            .insert(handle, 244usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -7764,7 +7967,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 237usize);
+            .insert(handle, 245usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -7788,7 +7991,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 238usize);
+            .insert(handle, 246usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -7812,7 +8015,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 239usize);
+            .insert(handle, 247usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -7836,7 +8039,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 240usize);
+            .insert(handle, 248usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -7859,7 +8062,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 241usize);
+            .insert(handle, 249usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -7883,7 +8086,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 242usize);
+            .insert(handle, 250usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -7906,7 +8109,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 243usize);
+            .insert(handle, 251usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -7930,7 +8133,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 244usize);
+            .insert(handle, 252usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -7953,7 +8156,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 245usize);
+            .insert(handle, 253usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -7977,7 +8180,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 246usize);
+            .insert(handle, 254usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -8002,7 +8205,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 247usize);
+            .insert(handle, 255usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -8026,7 +8229,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 248usize);
+            .insert(handle, 256usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -8049,7 +8252,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 249usize);
+            .insert(handle, 257usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -8072,7 +8275,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 250usize);
+            .insert(handle, 258usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -8095,7 +8298,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 251usize);
+            .insert(handle, 259usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -8119,7 +8322,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 252usize);
+            .insert(handle, 260usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -8143,7 +8346,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 253usize);
+            .insert(handle, 261usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -8167,7 +8370,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 254usize);
+            .insert(handle, 262usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -8191,7 +8394,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 255usize);
+            .insert(handle, 263usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -8215,7 +8418,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 256usize);
+            .insert(handle, 264usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -8238,7 +8441,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 257usize);
+            .insert(handle, 265usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -8261,7 +8464,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 258usize);
+            .insert(handle, 266usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -8284,7 +8487,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 259usize);
+            .insert(handle, 267usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -8307,7 +8510,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 260usize);
+            .insert(handle, 268usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -8331,7 +8534,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 261usize);
+            .insert(handle, 269usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -8356,7 +8559,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 262usize);
+            .insert(handle, 270usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -8380,7 +8583,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 263usize);
+            .insert(handle, 271usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -8405,7 +8608,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 264usize);
+            .insert(handle, 272usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -8428,7 +8631,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 265usize);
+            .insert(handle, 273usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -8453,7 +8656,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 266usize);
+            .insert(handle, 274usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -8477,7 +8680,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 267usize);
+            .insert(handle, 275usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -8502,7 +8705,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 268usize);
+            .insert(handle, 276usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -8526,7 +8729,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 269usize);
+            .insert(handle, 277usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -8550,7 +8753,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 270usize);
+            .insert(handle, 278usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -8574,7 +8777,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 271usize);
+            .insert(handle, 279usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -8598,7 +8801,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 272usize);
+            .insert(handle, 280usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -8623,7 +8826,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 273usize);
+            .insert(handle, 281usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -8648,7 +8851,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 274usize);
+            .insert(handle, 282usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -8672,7 +8875,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 275usize);
+            .insert(handle, 283usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -8697,7 +8900,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 276usize);
+            .insert(handle, 284usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -8722,7 +8925,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 277usize);
+            .insert(handle, 285usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -8746,7 +8949,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 278usize);
+            .insert(handle, 286usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -8770,7 +8973,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 279usize);
+            .insert(handle, 287usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -8796,7 +8999,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 280usize);
+            .insert(handle, 288usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -8820,7 +9023,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 281usize);
+            .insert(handle, 289usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -8846,7 +9049,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 282usize);
+            .insert(handle, 290usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -8871,7 +9074,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 283usize);
+            .insert(handle, 291usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -8895,7 +9098,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 284usize);
+            .insert(handle, 292usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -8919,7 +9122,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 285usize);
+            .insert(handle, 293usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -8944,7 +9147,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 286usize);
+            .insert(handle, 294usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -8969,7 +9172,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 287usize);
+            .insert(handle, 295usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -8994,7 +9197,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 288usize);
+            .insert(handle, 296usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -9018,7 +9221,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 289usize);
+            .insert(handle, 297usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -9043,7 +9246,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 290usize);
+            .insert(handle, 298usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -9066,7 +9269,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 291usize);
+            .insert(handle, 299usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -9090,7 +9293,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 292usize);
+            .insert(handle, 300usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -9114,7 +9317,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 293usize);
+            .insert(handle, 301usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -9138,7 +9341,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 294usize);
+            .insert(handle, 302usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -9162,7 +9365,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 295usize);
+            .insert(handle, 303usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -9187,7 +9390,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 296usize);
+            .insert(handle, 304usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -9211,7 +9414,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 297usize);
+            .insert(handle, 305usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -9235,7 +9438,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 298usize);
+            .insert(handle, 306usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -9259,7 +9462,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 299usize);
+            .insert(handle, 307usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -9283,7 +9486,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 300usize);
+            .insert(handle, 308usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -9307,7 +9510,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 301usize);
+            .insert(handle, 309usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -9331,7 +9534,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 302usize);
+            .insert(handle, 310usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -9355,7 +9558,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 303usize);
+            .insert(handle, 311usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -9379,7 +9582,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 304usize);
+            .insert(handle, 312usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -9403,7 +9606,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 305usize);
+            .insert(handle, 313usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -9427,7 +9630,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 306usize);
+            .insert(handle, 314usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -9451,7 +9654,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 307usize);
+            .insert(handle, 315usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -9476,7 +9679,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 308usize);
+            .insert(handle, 316usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -9501,7 +9704,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 309usize);
+            .insert(handle, 317usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -9526,7 +9729,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 310usize);
+            .insert(handle, 318usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -9549,7 +9752,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 311usize);
+            .insert(handle, 319usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -9572,7 +9775,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 312usize);
+            .insert(handle, 320usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -9595,7 +9798,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 313usize);
+            .insert(handle, 321usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -9618,7 +9821,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 314usize);
+            .insert(handle, 322usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -9641,7 +9844,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 315usize);
+            .insert(handle, 323usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -9665,7 +9868,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 316usize);
+            .insert(handle, 324usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -9690,7 +9893,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 317usize);
+            .insert(handle, 325usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -9715,7 +9918,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 318usize);
+            .insert(handle, 326usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -9739,7 +9942,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 319usize);
+            .insert(handle, 327usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -9764,7 +9967,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 320usize);
+            .insert(handle, 328usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -9790,7 +9993,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 321usize);
+            .insert(handle, 329usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -9817,7 +10020,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 322usize);
+            .insert(handle, 330usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -9840,7 +10043,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 323usize);
+            .insert(handle, 331usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -9863,7 +10066,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 324usize);
+            .insert(handle, 332usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -9888,7 +10091,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 325usize);
+            .insert(handle, 333usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -9913,7 +10116,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 326usize);
+            .insert(handle, 334usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -9936,7 +10139,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 327usize);
+            .insert(handle, 335usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -9959,7 +10162,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 328usize);
+            .insert(handle, 336usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -9982,7 +10185,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 329usize);
+            .insert(handle, 337usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -10005,7 +10208,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 330usize);
+            .insert(handle, 338usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -10028,7 +10231,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 331usize);
+            .insert(handle, 339usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -10051,7 +10254,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 332usize);
+            .insert(handle, 340usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -10074,7 +10277,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 333usize);
+            .insert(handle, 341usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -10097,7 +10300,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 334usize);
+            .insert(handle, 342usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -10120,7 +10323,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 335usize);
+            .insert(handle, 343usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -10143,7 +10346,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 336usize);
+            .insert(handle, 344usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -10166,7 +10369,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 337usize);
+            .insert(handle, 345usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -10189,7 +10392,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 338usize);
+            .insert(handle, 346usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -10212,7 +10415,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 339usize);
+            .insert(handle, 347usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -10235,7 +10438,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 340usize);
+            .insert(handle, 348usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -10258,7 +10461,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 341usize);
+            .insert(handle, 349usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -10281,7 +10484,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 342usize);
+            .insert(handle, 350usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -10304,7 +10507,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 343usize);
+            .insert(handle, 351usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -10327,7 +10530,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 344usize);
+            .insert(handle, 352usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -10350,7 +10553,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 345usize);
+            .insert(handle, 353usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -10373,7 +10576,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 346usize);
+            .insert(handle, 354usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -10396,7 +10599,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 347usize);
+            .insert(handle, 355usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -10419,7 +10622,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 348usize);
+            .insert(handle, 356usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -10442,7 +10645,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 349usize);
+            .insert(handle, 357usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -10465,7 +10668,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 350usize);
+            .insert(handle, 358usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -10488,7 +10691,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 351usize);
+            .insert(handle, 359usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -10511,7 +10714,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 352usize);
+            .insert(handle, 360usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -10534,7 +10737,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 353usize);
+            .insert(handle, 361usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -10557,7 +10760,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 354usize);
+            .insert(handle, 362usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -10580,7 +10783,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 355usize);
+            .insert(handle, 363usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -10603,7 +10806,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 356usize);
+            .insert(handle, 364usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -10626,7 +10829,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 357usize);
+            .insert(handle, 365usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -10649,7 +10852,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 358usize);
+            .insert(handle, 366usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -10672,7 +10875,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 359usize);
+            .insert(handle, 367usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -10696,7 +10899,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 360usize);
+            .insert(handle, 368usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -10720,7 +10923,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 361usize);
+            .insert(handle, 369usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -10743,7 +10946,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 362usize);
+            .insert(handle, 370usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -10766,7 +10969,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 363usize);
+            .insert(handle, 371usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -10790,7 +10993,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 364usize);
+            .insert(handle, 372usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -10814,7 +11017,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 365usize);
+            .insert(handle, 373usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -10838,7 +11041,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 366usize);
+            .insert(handle, 374usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -10861,7 +11064,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 367usize);
+            .insert(handle, 375usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -10885,7 +11088,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 368usize);
+            .insert(handle, 376usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -10909,7 +11112,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 369usize);
+            .insert(handle, 377usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -10934,7 +11137,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 370usize);
+            .insert(handle, 378usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -10957,7 +11160,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 371usize);
+            .insert(handle, 379usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -10981,7 +11184,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 372usize);
+            .insert(handle, 380usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -11004,7 +11207,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 373usize);
+            .insert(handle, 381usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -11028,7 +11231,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 374usize);
+            .insert(handle, 382usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -11052,7 +11255,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 375usize);
+            .insert(handle, 383usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -11076,7 +11279,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 376usize);
+            .insert(handle, 384usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -11100,7 +11303,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 377usize);
+            .insert(handle, 385usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -11125,7 +11328,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 378usize);
+            .insert(handle, 386usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -11149,7 +11352,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 379usize);
+            .insert(handle, 387usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -11172,7 +11375,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 380usize);
+            .insert(handle, 388usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -11195,7 +11398,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 381usize);
+            .insert(handle, 389usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -11218,7 +11421,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 382usize);
+            .insert(handle, 390usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -11241,7 +11444,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 383usize);
+            .insert(handle, 391usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -11265,7 +11468,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 384usize);
+            .insert(handle, 392usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -11289,7 +11492,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 385usize);
+            .insert(handle, 393usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -11312,7 +11515,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 386usize);
+            .insert(handle, 394usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -11335,7 +11538,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 387usize);
+            .insert(handle, 395usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -11358,7 +11561,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 388usize);
+            .insert(handle, 396usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -11381,7 +11584,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 389usize);
+            .insert(handle, 397usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -11406,7 +11609,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 390usize);
+            .insert(handle, 398usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -11429,7 +11632,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 391usize);
+            .insert(handle, 399usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -11452,7 +11655,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 392usize);
+            .insert(handle, 400usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Float64 },
@@ -11476,7 +11679,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 393usize);
+            .insert(handle, 401usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -11501,7 +11704,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 394usize);
+            .insert(handle, 402usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -11525,7 +11728,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 395usize);
+            .insert(handle, 403usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -11548,7 +11751,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 396usize);
+            .insert(handle, 404usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -11572,7 +11775,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 397usize);
+            .insert(handle, 405usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -11595,7 +11798,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 398usize);
+            .insert(handle, 406usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -11619,7 +11822,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 399usize);
+            .insert(handle, 407usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -11642,7 +11845,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 400usize);
+            .insert(handle, 408usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -11666,7 +11869,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 401usize);
+            .insert(handle, 409usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -11690,7 +11893,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 402usize);
+            .insert(handle, 410usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -11715,7 +11918,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 403usize);
+            .insert(handle, 411usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -11738,7 +11941,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 404usize);
+            .insert(handle, 412usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -11762,7 +11965,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 405usize);
+            .insert(handle, 413usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -11786,7 +11989,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 406usize);
+            .insert(handle, 414usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -11810,7 +12013,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 407usize);
+            .insert(handle, 415usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -11835,7 +12038,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 408usize);
+            .insert(handle, 416usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -11859,7 +12062,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 409usize);
+            .insert(handle, 417usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -11882,7 +12085,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 410usize);
+            .insert(handle, 418usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -11905,7 +12108,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 411usize);
+            .insert(handle, 419usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -11928,7 +12131,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 412usize);
+            .insert(handle, 420usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -11952,7 +12155,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 413usize);
+            .insert(handle, 421usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -11975,7 +12178,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 414usize);
+            .insert(handle, 422usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -11998,7 +12201,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 415usize);
+            .insert(handle, 423usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -12021,7 +12224,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 416usize);
+            .insert(handle, 424usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -12044,7 +12247,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 417usize);
+            .insert(handle, 425usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -12067,7 +12270,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 418usize);
+            .insert(handle, 426usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -12090,7 +12293,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 419usize);
+            .insert(handle, 427usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Float64 },
@@ -12114,7 +12317,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 420usize);
+            .insert(handle, 428usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -12137,7 +12340,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 421usize);
+            .insert(handle, 429usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -12160,7 +12363,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 422usize);
+            .insert(handle, 430usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -12183,7 +12386,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 423usize);
+            .insert(handle, 431usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -12207,7 +12410,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 424usize);
+            .insert(handle, 432usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -12230,7 +12433,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 425usize);
+            .insert(handle, 433usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -12253,7 +12456,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 426usize);
+            .insert(handle, 434usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -12276,7 +12479,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 427usize);
+            .insert(handle, 435usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -12300,7 +12503,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 428usize);
+            .insert(handle, 436usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -12323,7 +12526,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 429usize);
+            .insert(handle, 437usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -12346,7 +12549,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 430usize);
+            .insert(handle, 438usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -12370,7 +12573,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 431usize);
+            .insert(handle, 439usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -12393,7 +12596,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 432usize);
+            .insert(handle, 440usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -12416,7 +12619,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 433usize);
+            .insert(handle, 441usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -12439,7 +12642,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 434usize);
+            .insert(handle, 442usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -12462,7 +12665,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 435usize);
+            .insert(handle, 443usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -12486,7 +12689,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 436usize);
+            .insert(handle, 444usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -12509,7 +12712,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 437usize);
+            .insert(handle, 445usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -12532,7 +12735,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 438usize);
+            .insert(handle, 446usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -12555,7 +12758,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 439usize);
+            .insert(handle, 447usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -12579,7 +12782,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 440usize);
+            .insert(handle, 448usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -12602,7 +12805,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 441usize);
+            .insert(handle, 449usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -12626,7 +12829,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 442usize);
+            .insert(handle, 450usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -12649,7 +12852,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 443usize);
+            .insert(handle, 451usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -12672,7 +12875,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 444usize);
+            .insert(handle, 452usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -12696,7 +12899,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 445usize);
+            .insert(handle, 453usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -12719,7 +12922,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 446usize);
+            .insert(handle, 454usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -12742,7 +12945,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 447usize);
+            .insert(handle, 455usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -12765,7 +12968,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 448usize);
+            .insert(handle, 456usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -12789,7 +12992,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 449usize);
+            .insert(handle, 457usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -12812,7 +13015,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 450usize);
+            .insert(handle, 458usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -12835,7 +13038,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 451usize);
+            .insert(handle, 459usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -12859,7 +13062,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 452usize);
+            .insert(handle, 460usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -12882,7 +13085,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 453usize);
+            .insert(handle, 461usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -12905,7 +13108,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 454usize);
+            .insert(handle, 462usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -12928,7 +13131,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 455usize);
+            .insert(handle, 463usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -12951,7 +13154,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 456usize);
+            .insert(handle, 464usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -12975,7 +13178,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 457usize);
+            .insert(handle, 465usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -12998,7 +13201,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 458usize);
+            .insert(handle, 466usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -13021,7 +13224,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 459usize);
+            .insert(handle, 467usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -13045,7 +13248,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 460usize);
+            .insert(handle, 468usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -13068,7 +13271,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 461usize);
+            .insert(handle, 469usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -13091,7 +13294,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 462usize);
+            .insert(handle, 470usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -13114,7 +13317,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 463usize);
+            .insert(handle, 471usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -13137,7 +13340,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 464usize);
+            .insert(handle, 472usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -13161,7 +13364,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 465usize);
+            .insert(handle, 473usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -13184,7 +13387,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 466usize);
+            .insert(handle, 474usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -13207,7 +13410,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 467usize);
+            .insert(handle, 475usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -13232,7 +13435,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 468usize);
+            .insert(handle, 476usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -13256,7 +13459,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 469usize);
+            .insert(handle, 477usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -13280,7 +13483,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 470usize);
+            .insert(handle, 478usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -13305,7 +13508,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 471usize);
+            .insert(handle, 479usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -13329,7 +13532,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 472usize);
+            .insert(handle, 480usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -13354,7 +13557,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 473usize);
+            .insert(handle, 481usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -13378,7 +13581,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 474usize);
+            .insert(handle, 482usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -13402,7 +13605,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 475usize);
+            .insert(handle, 483usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -13427,7 +13630,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 476usize);
+            .insert(handle, 484usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -13451,7 +13654,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 477usize);
+            .insert(handle, 485usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -13474,7 +13677,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 478usize);
+            .insert(handle, 486usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -13497,7 +13700,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 479usize);
+            .insert(handle, 487usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -13520,7 +13723,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 480usize);
+            .insert(handle, 488usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -13543,7 +13746,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 481usize);
+            .insert(handle, 489usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -13567,7 +13770,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 482usize);
+            .insert(handle, 490usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -13590,7 +13793,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 483usize);
+            .insert(handle, 491usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -13613,7 +13816,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 484usize);
+            .insert(handle, 492usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -13636,7 +13839,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 485usize);
+            .insert(handle, 493usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -13660,7 +13863,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 486usize);
+            .insert(handle, 494usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -13683,7 +13886,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 487usize);
+            .insert(handle, 495usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -13707,7 +13910,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 488usize);
+            .insert(handle, 496usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -13731,7 +13934,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 489usize);
+            .insert(handle, 497usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -13754,7 +13957,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 490usize);
+            .insert(handle, 498usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Float64 },
@@ -13781,7 +13984,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 491usize);
+            .insert(handle, 499usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -13807,7 +14010,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 492usize);
+            .insert(handle, 500usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -13833,7 +14036,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 493usize);
+            .insert(handle, 501usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -13858,7 +14061,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 494usize);
+            .insert(handle, 502usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -13881,7 +14084,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 495usize);
+            .insert(handle, 503usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -13905,7 +14108,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 496usize);
+            .insert(handle, 504usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -13929,7 +14132,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 497usize);
+            .insert(handle, 505usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -13953,7 +14156,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 498usize);
+            .insert(handle, 506usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -13977,7 +14180,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 499usize);
+            .insert(handle, 507usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -14002,7 +14205,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 500usize);
+            .insert(handle, 508usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -14026,7 +14229,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 501usize);
+            .insert(handle, 509usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -14050,7 +14253,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 502usize);
+            .insert(handle, 510usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -14074,7 +14277,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 503usize);
+            .insert(handle, 511usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -14098,7 +14301,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 504usize);
+            .insert(handle, 512usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -14122,7 +14325,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 505usize);
+            .insert(handle, 513usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -14145,7 +14348,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 506usize);
+            .insert(handle, 514usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -14168,7 +14371,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 507usize);
+            .insert(handle, 515usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -14191,7 +14394,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 508usize);
+            .insert(handle, 516usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -14214,7 +14417,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 509usize);
+            .insert(handle, 517usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -14237,7 +14440,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 510usize);
+            .insert(handle, 518usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -14260,7 +14463,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 511usize);
+            .insert(handle, 519usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -14283,7 +14486,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 512usize);
+            .insert(handle, 520usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -14306,7 +14509,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 513usize);
+            .insert(handle, 521usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -14329,7 +14532,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 514usize);
+            .insert(handle, 522usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -14352,7 +14555,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 515usize);
+            .insert(handle, 523usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -14376,7 +14579,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 516usize);
+            .insert(handle, 524usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -14400,7 +14603,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 517usize);
+            .insert(handle, 525usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -14423,7 +14626,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 518usize);
+            .insert(handle, 526usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -14447,7 +14650,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 519usize);
+            .insert(handle, 527usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -14470,7 +14673,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 520usize);
+            .insert(handle, 528usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -14493,7 +14696,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 521usize);
+            .insert(handle, 529usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -14516,7 +14719,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 522usize);
+            .insert(handle, 530usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -14539,7 +14742,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 523usize);
+            .insert(handle, 531usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -14562,7 +14765,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 524usize);
+            .insert(handle, 532usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -14585,7 +14788,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 525usize);
+            .insert(handle, 533usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -14608,7 +14811,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 526usize);
+            .insert(handle, 534usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -14631,7 +14834,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 527usize);
+            .insert(handle, 535usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -14654,7 +14857,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 528usize);
+            .insert(handle, 536usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -14677,7 +14880,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 529usize);
+            .insert(handle, 537usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -14700,7 +14903,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 530usize);
+            .insert(handle, 538usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -14723,7 +14926,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 531usize);
+            .insert(handle, 539usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -14747,7 +14950,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 532usize);
+            .insert(handle, 540usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -14771,7 +14974,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 533usize);
+            .insert(handle, 541usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -14795,7 +14998,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 534usize);
+            .insert(handle, 542usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -14818,7 +15021,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 535usize);
+            .insert(handle, 543usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -14841,7 +15044,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 536usize);
+            .insert(handle, 544usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -14864,7 +15067,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 537usize);
+            .insert(handle, 545usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -14887,7 +15090,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 538usize);
+            .insert(handle, 546usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -14910,7 +15113,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 539usize);
+            .insert(handle, 547usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -14933,7 +15136,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 540usize);
+            .insert(handle, 548usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -14956,7 +15159,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 541usize);
+            .insert(handle, 549usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -14979,7 +15182,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 542usize);
+            .insert(handle, 550usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -15002,7 +15205,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 543usize);
+            .insert(handle, 551usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -15026,7 +15229,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 544usize);
+            .insert(handle, 552usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -15050,7 +15253,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 545usize);
+            .insert(handle, 553usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -15075,7 +15278,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 546usize);
+            .insert(handle, 554usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -15099,7 +15302,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 547usize);
+            .insert(handle, 555usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -15122,7 +15325,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 548usize);
+            .insert(handle, 556usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -15145,7 +15348,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 549usize);
+            .insert(handle, 557usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -15169,7 +15372,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 550usize);
+            .insert(handle, 558usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -15192,7 +15395,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 551usize);
+            .insert(handle, 559usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -15216,7 +15419,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 552usize);
+            .insert(handle, 560usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -15240,7 +15443,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 553usize);
+            .insert(handle, 561usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -15264,7 +15467,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 554usize);
+            .insert(handle, 562usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -15288,7 +15491,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 555usize);
+            .insert(handle, 563usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -15313,7 +15516,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 556usize);
+            .insert(handle, 564usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -15337,7 +15540,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 557usize);
+            .insert(handle, 565usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -15360,7 +15563,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 558usize);
+            .insert(handle, 566usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -15384,7 +15587,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 559usize);
+            .insert(handle, 567usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -15407,7 +15610,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 560usize);
+            .insert(handle, 568usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -15431,7 +15634,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 561usize);
+            .insert(handle, 569usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -15456,7 +15659,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 562usize);
+            .insert(handle, 570usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -15480,7 +15683,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 563usize);
+            .insert(handle, 571usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -15503,7 +15706,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 564usize);
+            .insert(handle, 572usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -15526,7 +15729,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 565usize);
+            .insert(handle, 573usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -15549,7 +15752,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 566usize);
+            .insert(handle, 574usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -15573,7 +15776,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 567usize);
+            .insert(handle, 575usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -15598,7 +15801,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 568usize);
+            .insert(handle, 576usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -15622,7 +15825,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 569usize);
+            .insert(handle, 577usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -15645,7 +15848,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 570usize);
+            .insert(handle, 578usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -15668,7 +15871,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 571usize);
+            .insert(handle, 579usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -15692,7 +15895,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 572usize);
+            .insert(handle, 580usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -15717,7 +15920,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 573usize);
+            .insert(handle, 581usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -15742,7 +15945,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 574usize);
+            .insert(handle, 582usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -15766,7 +15969,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 575usize);
+            .insert(handle, 583usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -15791,7 +15994,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 576usize);
+            .insert(handle, 584usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -15816,7 +16019,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 577usize);
+            .insert(handle, 585usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -15840,7 +16043,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 578usize);
+            .insert(handle, 586usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -15864,7 +16067,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 579usize);
+            .insert(handle, 587usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -15888,7 +16091,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 580usize);
+            .insert(handle, 588usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -15912,7 +16115,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 581usize);
+            .insert(handle, 589usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -15935,7 +16138,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 582usize);
+            .insert(handle, 590usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -15959,7 +16162,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 583usize);
+            .insert(handle, 591usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -15983,7 +16186,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 584usize);
+            .insert(handle, 592usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -16007,7 +16210,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 585usize);
+            .insert(handle, 593usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Int64 },
@@ -16040,7 +16243,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 586usize);
+            .insert(handle, 594usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Int64 },
@@ -16071,7 +16274,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 587usize);
+            .insert(handle, 595usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Float64 },
@@ -16097,7 +16300,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 588usize);
+            .insert(handle, 596usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Float64 },
@@ -16124,7 +16327,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 589usize);
+            .insert(handle, 597usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -16147,7 +16350,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 590usize);
+            .insert(handle, 598usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -16170,7 +16373,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 591usize);
+            .insert(handle, 599usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -16194,7 +16397,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 592usize);
+            .insert(handle, 600usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Float64 },
@@ -16218,7 +16421,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 593usize);
+            .insert(handle, 601usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Float64 },
@@ -16243,7 +16446,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 594usize);
+            .insert(handle, 602usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Float64 },
@@ -16268,7 +16471,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 595usize);
+            .insert(handle, 603usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Float64 },
@@ -16294,7 +16497,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 596usize);
+            .insert(handle, 604usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -16318,7 +16521,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 597usize);
+            .insert(handle, 605usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -16341,7 +16544,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 598usize);
+            .insert(handle, 606usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -16365,7 +16568,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 599usize);
+            .insert(handle, 607usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -16389,7 +16592,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 600usize);
+            .insert(handle, 608usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -16413,7 +16616,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 601usize);
+            .insert(handle, 609usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Int64 },
@@ -16444,7 +16647,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 602usize);
+            .insert(handle, 610usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Float64 },
@@ -16470,7 +16673,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 603usize);
+            .insert(handle, 611usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Float64 },
@@ -16497,7 +16700,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 604usize);
+            .insert(handle, 612usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -16520,7 +16723,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 605usize);
+            .insert(handle, 613usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Float64 },
@@ -16544,7 +16747,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 606usize);
+            .insert(handle, 614usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Float64 },
@@ -16569,7 +16772,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 607usize);
+            .insert(handle, 615usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Float64 },
@@ -16594,7 +16797,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 608usize);
+            .insert(handle, 616usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Float64 },
@@ -16620,7 +16823,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 609usize);
+            .insert(handle, 617usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -16644,7 +16847,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 610usize);
+            .insert(handle, 618usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -16667,7 +16870,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 611usize);
+            .insert(handle, 619usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -16693,7 +16896,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 612usize);
+            .insert(handle, 620usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -16721,7 +16924,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 613usize);
+            .insert(handle, 621usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -16747,7 +16950,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 614usize);
+            .insert(handle, 622usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -16775,7 +16978,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 615usize);
+            .insert(handle, 623usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -16799,7 +17002,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 616usize);
+            .insert(handle, 624usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -16823,7 +17026,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 617usize);
+            .insert(handle, 625usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -16847,7 +17050,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 618usize);
+            .insert(handle, 626usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -16870,7 +17073,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 619usize);
+            .insert(handle, 627usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -16893,7 +17096,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 620usize);
+            .insert(handle, 628usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -16917,7 +17120,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 621usize);
+            .insert(handle, 629usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -16940,7 +17143,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 622usize);
+            .insert(handle, 630usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -16963,7 +17166,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 623usize);
+            .insert(handle, 631usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -16986,7 +17189,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 624usize);
+            .insert(handle, 632usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -17009,7 +17212,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 625usize);
+            .insert(handle, 633usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -17032,7 +17235,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 626usize);
+            .insert(handle, 634usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -17055,7 +17258,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 627usize);
+            .insert(handle, 635usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -17079,7 +17282,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 628usize);
+            .insert(handle, 636usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -17102,7 +17305,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 629usize);
+            .insert(handle, 637usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -17125,7 +17328,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 630usize);
+            .insert(handle, 638usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -17148,7 +17351,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 631usize);
+            .insert(handle, 639usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -17172,7 +17375,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 632usize);
+            .insert(handle, 640usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -17195,7 +17398,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 633usize);
+            .insert(handle, 641usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -17218,7 +17421,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 634usize);
+            .insert(handle, 642usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -17241,7 +17444,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 635usize);
+            .insert(handle, 643usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -17264,7 +17467,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 636usize);
+            .insert(handle, 644usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -17287,7 +17490,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 637usize);
+            .insert(handle, 645usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -17310,7 +17513,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 638usize);
+            .insert(handle, 646usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -17333,7 +17536,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 639usize);
+            .insert(handle, 647usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -17356,7 +17559,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 640usize);
+            .insert(handle, 648usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -17380,7 +17583,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 641usize);
+            .insert(handle, 649usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -17403,7 +17606,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 642usize);
+            .insert(handle, 650usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -17427,7 +17630,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 643usize);
+            .insert(handle, 651usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -17450,7 +17653,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 644usize);
+            .insert(handle, 652usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -17473,7 +17676,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 645usize);
+            .insert(handle, 653usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -17496,7 +17699,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 646usize);
+            .insert(handle, 654usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -17519,7 +17722,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 647usize);
+            .insert(handle, 655usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -17544,7 +17747,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 648usize);
+            .insert(handle, 656usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -17569,7 +17772,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 649usize);
+            .insert(handle, 657usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -17594,7 +17797,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 650usize);
+            .insert(handle, 658usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -17619,7 +17822,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 651usize);
+            .insert(handle, 659usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -17642,7 +17845,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 652usize);
+            .insert(handle, 660usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -17666,7 +17869,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 653usize);
+            .insert(handle, 661usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -17689,7 +17892,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 654usize);
+            .insert(handle, 662usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -17713,7 +17916,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 655usize);
+            .insert(handle, 663usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -17736,7 +17939,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 656usize);
+            .insert(handle, 664usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -17759,7 +17962,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 657usize);
+            .insert(handle, 665usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -17782,7 +17985,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 658usize);
+            .insert(handle, 666usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -17806,7 +18009,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 659usize);
+            .insert(handle, 667usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -17829,7 +18032,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 660usize);
+            .insert(handle, 668usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -17853,7 +18056,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 661usize);
+            .insert(handle, 669usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -17876,7 +18079,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 662usize);
+            .insert(handle, 670usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -17899,7 +18102,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 663usize);
+            .insert(handle, 671usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -17922,7 +18125,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 664usize);
+            .insert(handle, 672usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -17945,7 +18148,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 665usize);
+            .insert(handle, 673usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -17969,7 +18172,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 666usize);
+            .insert(handle, 674usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -17992,7 +18195,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 667usize);
+            .insert(handle, 675usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -18016,7 +18219,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 668usize);
+            .insert(handle, 676usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -18039,7 +18242,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 669usize);
+            .insert(handle, 677usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -18063,7 +18266,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 670usize);
+            .insert(handle, 678usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -18086,7 +18289,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 671usize);
+            .insert(handle, 679usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -18110,7 +18313,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 672usize);
+            .insert(handle, 680usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -18133,7 +18336,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 673usize);
+            .insert(handle, 681usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -18157,7 +18360,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 674usize);
+            .insert(handle, 682usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -18180,7 +18383,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 675usize);
+            .insert(handle, 683usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -18204,7 +18407,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 676usize);
+            .insert(handle, 684usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -18227,7 +18430,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 677usize);
+            .insert(handle, 685usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -18250,7 +18453,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 678usize);
+            .insert(handle, 686usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -18276,7 +18479,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 679usize);
+            .insert(handle, 687usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -18302,7 +18505,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 680usize);
+            .insert(handle, 688usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -18327,7 +18530,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 681usize);
+            .insert(handle, 689usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -18352,7 +18555,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 682usize);
+            .insert(handle, 690usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -18375,7 +18578,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 683usize);
+            .insert(handle, 691usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -18398,7 +18601,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 684usize);
+            .insert(handle, 692usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -18421,7 +18624,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 685usize);
+            .insert(handle, 693usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -18444,7 +18647,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 686usize);
+            .insert(handle, 694usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -18467,7 +18670,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 687usize);
+            .insert(handle, 695usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -18490,7 +18693,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 688usize);
+            .insert(handle, 696usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -18513,7 +18716,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 689usize);
+            .insert(handle, 697usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -18536,7 +18739,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 690usize);
+            .insert(handle, 698usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -18559,7 +18762,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 691usize);
+            .insert(handle, 699usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -18582,7 +18785,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 692usize);
+            .insert(handle, 700usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -18605,7 +18808,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 693usize);
+            .insert(handle, 701usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -18628,7 +18831,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 694usize);
+            .insert(handle, 702usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -18651,7 +18854,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 695usize);
+            .insert(handle, 703usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -18674,7 +18877,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 696usize);
+            .insert(handle, 704usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -18697,7 +18900,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 697usize);
+            .insert(handle, 705usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -18720,7 +18923,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 698usize);
+            .insert(handle, 706usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -18744,7 +18947,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 699usize);
+            .insert(handle, 707usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -18768,7 +18971,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 700usize);
+            .insert(handle, 708usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -18792,7 +18995,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 701usize);
+            .insert(handle, 709usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -18816,7 +19019,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 702usize);
+            .insert(handle, 710usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -18839,7 +19042,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 703usize);
+            .insert(handle, 711usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -18862,7 +19065,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 704usize);
+            .insert(handle, 712usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -18886,7 +19089,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 705usize);
+            .insert(handle, 713usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -18909,7 +19112,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 706usize);
+            .insert(handle, 714usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -18932,7 +19135,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 707usize);
+            .insert(handle, 715usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -18955,7 +19158,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 708usize);
+            .insert(handle, 716usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -18978,7 +19181,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 709usize);
+            .insert(handle, 717usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -19001,7 +19204,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 710usize);
+            .insert(handle, 718usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -19024,7 +19227,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 711usize);
+            .insert(handle, 719usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -19049,7 +19252,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 712usize);
+            .insert(handle, 720usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -19073,7 +19276,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 713usize);
+            .insert(handle, 721usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -19098,7 +19301,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 714usize);
+            .insert(handle, 722usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -19122,7 +19325,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 715usize);
+            .insert(handle, 723usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -19147,7 +19350,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 716usize);
+            .insert(handle, 724usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -19171,7 +19374,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 717usize);
+            .insert(handle, 725usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -19194,7 +19397,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 718usize);
+            .insert(handle, 726usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -19219,7 +19422,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 719usize);
+            .insert(handle, 727usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -19242,7 +19445,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 720usize);
+            .insert(handle, 728usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -19267,7 +19470,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 721usize);
+            .insert(handle, 729usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -19292,7 +19495,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 722usize);
+            .insert(handle, 730usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -19317,7 +19520,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 723usize);
+            .insert(handle, 731usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -19341,7 +19544,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 724usize);
+            .insert(handle, 732usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -19366,7 +19569,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 725usize);
+            .insert(handle, 733usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -19391,7 +19594,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 726usize);
+            .insert(handle, 734usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Float64 },
@@ -19415,7 +19618,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 727usize);
+            .insert(handle, 735usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -19439,7 +19642,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 728usize);
+            .insert(handle, 736usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -19462,7 +19665,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 729usize);
+            .insert(handle, 737usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -19486,7 +19689,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 730usize);
+            .insert(handle, 738usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -19509,7 +19712,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 731usize);
+            .insert(handle, 739usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -19533,7 +19736,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 732usize);
+            .insert(handle, 740usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -19559,7 +19762,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 733usize);
+            .insert(handle, 741usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Float64 },
@@ -19584,7 +19787,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 734usize);
+            .insert(handle, 742usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Float64 },
@@ -19610,7 +19813,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 735usize);
+            .insert(handle, 743usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -19634,7 +19837,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 736usize);
+            .insert(handle, 744usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -19657,7 +19860,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 737usize);
+            .insert(handle, 745usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Float64 },
@@ -19682,7 +19885,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 738usize);
+            .insert(handle, 746usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Float64 },
@@ -19707,7 +19910,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 739usize);
+            .insert(handle, 747usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Float64 },
@@ -19733,7 +19936,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 740usize);
+            .insert(handle, 748usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Float64 },
@@ -19759,7 +19962,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 741usize);
+            .insert(handle, 749usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Float64 },
@@ -19786,7 +19989,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 742usize);
+            .insert(handle, 750usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -19810,7 +20013,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 743usize);
+            .insert(handle, 751usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -19833,7 +20036,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 744usize);
+            .insert(handle, 752usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -19856,7 +20059,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 745usize);
+            .insert(handle, 753usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -19882,7 +20085,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 746usize);
+            .insert(handle, 754usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Float64 },
@@ -19907,7 +20110,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 747usize);
+            .insert(handle, 755usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -19931,7 +20134,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 748usize);
+            .insert(handle, 756usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -19954,7 +20157,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 749usize);
+            .insert(handle, 757usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -19977,7 +20180,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 750usize);
+            .insert(handle, 758usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Float64 },
@@ -20002,7 +20205,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 751usize);
+            .insert(handle, 759usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Float64 },
@@ -20028,7 +20231,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 752usize);
+            .insert(handle, 760usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -20052,7 +20255,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 753usize);
+            .insert(handle, 761usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -20075,7 +20278,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 754usize);
+            .insert(handle, 762usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -20099,7 +20302,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 755usize);
+            .insert(handle, 763usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -20122,7 +20325,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 756usize);
+            .insert(handle, 764usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -20146,7 +20349,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 757usize);
+            .insert(handle, 765usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -20169,7 +20372,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 758usize);
+            .insert(handle, 766usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -20192,7 +20395,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 759usize);
+            .insert(handle, 767usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -20215,7 +20418,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 760usize);
+            .insert(handle, 768usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -20238,7 +20441,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 761usize);
+            .insert(handle, 769usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -20261,7 +20464,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 762usize);
+            .insert(handle, 770usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -20284,7 +20487,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 763usize);
+            .insert(handle, 771usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -20307,7 +20510,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 764usize);
+            .insert(handle, 772usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -20332,7 +20535,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 765usize);
+            .insert(handle, 773usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -20357,7 +20560,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 766usize);
+            .insert(handle, 774usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -20382,7 +20585,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 767usize);
+            .insert(handle, 775usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -20407,7 +20610,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 768usize);
+            .insert(handle, 776usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -20432,7 +20635,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 769usize);
+            .insert(handle, 777usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -20455,7 +20658,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 770usize);
+            .insert(handle, 778usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -20479,7 +20682,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 771usize);
+            .insert(handle, 779usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -20503,7 +20706,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 772usize);
+            .insert(handle, 780usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -20526,7 +20729,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 773usize);
+            .insert(handle, 781usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -20550,7 +20753,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 774usize);
+            .insert(handle, 782usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -20575,7 +20778,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 775usize);
+            .insert(handle, 783usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -20599,7 +20802,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 776usize);
+            .insert(handle, 784usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -20623,7 +20826,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 777usize);
+            .insert(handle, 785usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -20647,7 +20850,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 778usize);
+            .insert(handle, 786usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -20672,7 +20875,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 779usize);
+            .insert(handle, 787usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -20697,7 +20900,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 780usize);
+            .insert(handle, 788usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -20721,7 +20924,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 781usize);
+            .insert(handle, 789usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -20745,7 +20948,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 782usize);
+            .insert(handle, 790usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -20769,7 +20972,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 783usize);
+            .insert(handle, 791usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -20792,7 +20995,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 784usize);
+            .insert(handle, 792usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -20816,7 +21019,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 785usize);
+            .insert(handle, 793usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -20840,7 +21043,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 786usize);
+            .insert(handle, 794usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -20864,7 +21067,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 787usize);
+            .insert(handle, 795usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -20888,7 +21091,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 788usize);
+            .insert(handle, 796usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -20913,7 +21116,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 789usize);
+            .insert(handle, 797usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -20938,7 +21141,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 790usize);
+            .insert(handle, 798usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -20962,7 +21165,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 791usize);
+            .insert(handle, 799usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -20985,7 +21188,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 792usize);
+            .insert(handle, 800usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -21008,7 +21211,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 793usize);
+            .insert(handle, 801usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -21031,7 +21234,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 794usize);
+            .insert(handle, 802usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -21057,7 +21260,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 795usize);
+            .insert(handle, 803usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -21083,7 +21286,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 796usize);
+            .insert(handle, 804usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -21107,7 +21310,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 797usize);
+            .insert(handle, 805usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -21132,7 +21335,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 798usize);
+            .insert(handle, 806usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -21156,7 +21359,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 799usize);
+            .insert(handle, 807usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -21180,7 +21383,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 800usize);
+            .insert(handle, 808usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -21205,7 +21408,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 801usize);
+            .insert(handle, 809usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -21230,7 +21433,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 802usize);
+            .insert(handle, 810usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -21255,7 +21458,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 803usize);
+            .insert(handle, 811usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -21280,7 +21483,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 804usize);
+            .insert(handle, 812usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -21304,7 +21507,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 805usize);
+            .insert(handle, 813usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -21328,7 +21531,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 806usize);
+            .insert(handle, 814usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -21353,7 +21556,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 807usize);
+            .insert(handle, 815usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -21377,7 +21580,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 808usize);
+            .insert(handle, 816usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -21401,7 +21604,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 809usize);
+            .insert(handle, 817usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -21426,7 +21629,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 810usize);
+            .insert(handle, 818usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -21452,7 +21655,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 811usize);
+            .insert(handle, 819usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -21478,7 +21681,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 812usize);
+            .insert(handle, 820usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -21504,7 +21707,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 813usize);
+            .insert(handle, 821usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -21527,7 +21730,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 814usize);
+            .insert(handle, 822usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -21550,7 +21753,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 815usize);
+            .insert(handle, 823usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -21573,7 +21776,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 816usize);
+            .insert(handle, 824usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -21597,7 +21800,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 817usize);
+            .insert(handle, 825usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -21622,7 +21825,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 818usize);
+            .insert(handle, 826usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -21648,7 +21851,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 819usize);
+            .insert(handle, 827usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -21675,7 +21878,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 820usize);
+            .insert(handle, 828usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -21705,7 +21908,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 821usize);
+            .insert(handle, 829usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -21731,7 +21934,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 822usize);
+            .insert(handle, 830usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -21758,7 +21961,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 823usize);
+            .insert(handle, 831usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -21781,7 +21984,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 824usize);
+            .insert(handle, 832usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -21805,7 +22008,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 825usize);
+            .insert(handle, 833usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -21830,7 +22033,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 826usize);
+            .insert(handle, 834usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -21856,7 +22059,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 827usize);
+            .insert(handle, 835usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -21881,7 +22084,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 828usize);
+            .insert(handle, 836usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -21905,7 +22108,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 829usize);
+            .insert(handle, 837usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -21928,7 +22131,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 830usize);
+            .insert(handle, 838usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -21951,7 +22154,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 831usize);
+            .insert(handle, 839usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -21977,7 +22180,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 832usize);
+            .insert(handle, 840usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -22000,7 +22203,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 833usize);
+            .insert(handle, 841usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -22023,7 +22226,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 834usize);
+            .insert(handle, 842usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -22047,7 +22250,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 835usize);
+            .insert(handle, 843usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -22071,7 +22274,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 836usize);
+            .insert(handle, 844usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -22095,7 +22298,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 837usize);
+            .insert(handle, 845usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -22120,7 +22323,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 838usize);
+            .insert(handle, 846usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -22144,7 +22347,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 839usize);
+            .insert(handle, 847usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -22173,7 +22376,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 840usize);
+            .insert(handle, 848usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -22198,7 +22401,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 841usize);
+            .insert(handle, 849usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -22223,7 +22426,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 842usize);
+            .insert(handle, 850usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -22247,7 +22450,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 843usize);
+            .insert(handle, 851usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -22272,7 +22475,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 844usize);
+            .insert(handle, 852usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -22296,7 +22499,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 845usize);
+            .insert(handle, 853usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -22321,7 +22524,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 846usize);
+            .insert(handle, 854usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -22345,7 +22548,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 847usize);
+            .insert(handle, 855usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -22369,7 +22572,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 848usize);
+            .insert(handle, 856usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -22394,7 +22597,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 849usize);
+            .insert(handle, 857usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -22421,7 +22624,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 850usize);
+            .insert(handle, 858usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -22447,7 +22650,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 851usize);
+            .insert(handle, 859usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -22474,7 +22677,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 852usize);
+            .insert(handle, 860usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -22503,7 +22706,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 853usize);
+            .insert(handle, 861usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -22527,7 +22730,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 854usize);
+            .insert(handle, 862usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -22551,7 +22754,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 855usize);
+            .insert(handle, 863usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -22575,7 +22778,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 856usize);
+            .insert(handle, 864usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -22599,7 +22802,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 857usize);
+            .insert(handle, 865usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -22624,7 +22827,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 858usize);
+            .insert(handle, 866usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -22648,7 +22851,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 859usize);
+            .insert(handle, 867usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -22672,7 +22875,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 860usize);
+            .insert(handle, 868usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -22696,7 +22899,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 861usize);
+            .insert(handle, 869usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -22723,7 +22926,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 862usize);
+            .insert(handle, 870usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -22747,7 +22950,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 863usize);
+            .insert(handle, 871usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -22771,7 +22974,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 864usize);
+            .insert(handle, 872usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -22795,7 +22998,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 865usize);
+            .insert(handle, 873usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -22819,7 +23022,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 866usize);
+            .insert(handle, 874usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -22843,7 +23046,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 867usize);
+            .insert(handle, 875usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -22866,7 +23069,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 868usize);
+            .insert(handle, 876usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -22889,7 +23092,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 869usize);
+            .insert(handle, 877usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -22913,7 +23116,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 870usize);
+            .insert(handle, 878usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -22937,7 +23140,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 871usize);
+            .insert(handle, 879usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -22961,7 +23164,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 872usize);
+            .insert(handle, 880usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -22985,7 +23188,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 873usize);
+            .insert(handle, 881usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -23009,7 +23212,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 874usize);
+            .insert(handle, 882usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -23034,7 +23237,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 875usize);
+            .insert(handle, 883usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -23059,7 +23262,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 876usize);
+            .insert(handle, 884usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -23083,7 +23286,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 877usize);
+            .insert(handle, 885usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -23107,7 +23310,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 878usize);
+            .insert(handle, 886usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -23132,7 +23335,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 879usize);
+            .insert(handle, 887usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -23157,7 +23360,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 880usize);
+            .insert(handle, 888usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -23181,7 +23384,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 881usize);
+            .insert(handle, 889usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -23205,7 +23408,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 882usize);
+            .insert(handle, 890usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -23228,7 +23431,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 883usize);
+            .insert(handle, 891usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -23251,7 +23454,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 884usize);
+            .insert(handle, 892usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -23274,7 +23477,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 885usize);
+            .insert(handle, 893usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -23297,7 +23500,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 886usize);
+            .insert(handle, 894usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -23321,7 +23524,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 887usize);
+            .insert(handle, 895usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -23346,7 +23549,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 888usize);
+            .insert(handle, 896usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -23370,7 +23573,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 889usize);
+            .insert(handle, 897usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -23382,12 +23585,12 @@ fn register_scalars() -> Result<(), Duckerror> {
                 runtime::Funcarg { name: Some("arg6".into()), logical: Logicaltype::Float64 },
             ];
         let opts = runtime::Funcopts {
-            description: Some("st_snap_to_grid_fourd (sqlink-shim-codegen --dynlink)".into()),
-            tags: vec!["st_snap_to_grid_fourd".into()],
+            description: Some("st_snap_to_grid_4d (sqlink-shim-codegen --dynlink)".into()),
+            tags: vec!["st_snap_to_grid_4d".into()],
             attributes: Funcflags::DETERMINISTIC | Funcflags::STATELESS,
         };
         registry.register(
-            "st_snap_to_grid_fourd",
+            "st_snap_to_grid_4d",
             &args,
             &Logicaltype::Blob,
             callback,
@@ -23399,7 +23602,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 890usize);
+            .insert(handle, 898usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -23426,7 +23629,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 891usize);
+            .insert(handle, 899usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -23451,7 +23654,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 892usize);
+            .insert(handle, 900usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -23475,7 +23678,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 893usize);
+            .insert(handle, 901usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -23499,7 +23702,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 894usize);
+            .insert(handle, 902usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Float64 },
@@ -23526,7 +23729,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 895usize);
+            .insert(handle, 903usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -23549,7 +23752,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 896usize);
+            .insert(handle, 904usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -23572,7 +23775,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 897usize);
+            .insert(handle, 905usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -23595,7 +23798,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 898usize);
+            .insert(handle, 906usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -23620,7 +23823,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 899usize);
+            .insert(handle, 907usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -23643,7 +23846,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 900usize);
+            .insert(handle, 908usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -23667,7 +23870,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 901usize);
+            .insert(handle, 909usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -23691,7 +23894,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 902usize);
+            .insert(handle, 910usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -23715,7 +23918,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 903usize);
+            .insert(handle, 911usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -23739,7 +23942,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 904usize);
+            .insert(handle, 912usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -23763,7 +23966,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 905usize);
+            .insert(handle, 913usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -23788,7 +23991,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 906usize);
+            .insert(handle, 914usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -23812,7 +24015,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 907usize);
+            .insert(handle, 915usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -23836,7 +24039,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 908usize);
+            .insert(handle, 916usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -23861,7 +24064,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 909usize);
+            .insert(handle, 917usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Int64 },
@@ -23888,7 +24091,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 910usize);
+            .insert(handle, 918usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Int64 },
@@ -23915,7 +24118,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 911usize);
+            .insert(handle, 919usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -23938,7 +24141,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 912usize);
+            .insert(handle, 920usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -23961,7 +24164,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 913usize);
+            .insert(handle, 921usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -23984,7 +24187,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 914usize);
+            .insert(handle, 922usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -24007,7 +24210,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 915usize);
+            .insert(handle, 923usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -24030,7 +24233,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 916usize);
+            .insert(handle, 924usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -24053,7 +24256,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 917usize);
+            .insert(handle, 925usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -24076,7 +24279,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 918usize);
+            .insert(handle, 926usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -24099,7 +24302,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 919usize);
+            .insert(handle, 927usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -24122,7 +24325,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 920usize);
+            .insert(handle, 928usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -24145,7 +24348,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 921usize);
+            .insert(handle, 929usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -24168,7 +24371,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 922usize);
+            .insert(handle, 930usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -24191,7 +24394,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 923usize);
+            .insert(handle, 931usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -24214,7 +24417,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 924usize);
+            .insert(handle, 932usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -24237,7 +24440,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 925usize);
+            .insert(handle, 933usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -24260,7 +24463,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 926usize);
+            .insert(handle, 934usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -24283,7 +24486,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 927usize);
+            .insert(handle, 935usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -24306,7 +24509,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 928usize);
+            .insert(handle, 936usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -24329,7 +24532,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 929usize);
+            .insert(handle, 937usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -24353,7 +24556,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 930usize);
+            .insert(handle, 938usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -24377,7 +24580,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 931usize);
+            .insert(handle, 939usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -24401,7 +24604,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 932usize);
+            .insert(handle, 940usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -24425,7 +24628,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 933usize);
+            .insert(handle, 941usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -24450,7 +24653,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 934usize);
+            .insert(handle, 942usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -24474,7 +24677,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 935usize);
+            .insert(handle, 943usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -24499,7 +24702,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 936usize);
+            .insert(handle, 944usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -24525,7 +24728,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 937usize);
+            .insert(handle, 945usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -24551,7 +24754,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 938usize);
+            .insert(handle, 946usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -24578,7 +24781,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 939usize);
+            .insert(handle, 947usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -24602,7 +24805,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 940usize);
+            .insert(handle, 948usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -24625,7 +24828,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 941usize);
+            .insert(handle, 949usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -24648,7 +24851,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 942usize);
+            .insert(handle, 950usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -24671,7 +24874,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 943usize);
+            .insert(handle, 951usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -24694,7 +24897,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 944usize);
+            .insert(handle, 952usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -24717,7 +24920,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 945usize);
+            .insert(handle, 953usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -24740,7 +24943,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 946usize);
+            .insert(handle, 954usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -24763,7 +24966,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 947usize);
+            .insert(handle, 955usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -24787,7 +24990,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 948usize);
+            .insert(handle, 956usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -24812,7 +25015,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 949usize);
+            .insert(handle, 957usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -24835,7 +25038,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 950usize);
+            .insert(handle, 958usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -24858,7 +25061,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 951usize);
+            .insert(handle, 959usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -24881,7 +25084,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 952usize);
+            .insert(handle, 960usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -24904,7 +25107,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 953usize);
+            .insert(handle, 961usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -24927,7 +25130,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 954usize);
+            .insert(handle, 962usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -24950,7 +25153,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 955usize);
+            .insert(handle, 963usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -24976,7 +25179,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 956usize);
+            .insert(handle, 964usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -25000,7 +25203,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 957usize);
+            .insert(handle, 965usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -25025,7 +25228,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 958usize);
+            .insert(handle, 966usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -25051,7 +25254,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 959usize);
+            .insert(handle, 967usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -25076,7 +25279,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 960usize);
+            .insert(handle, 968usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -25102,7 +25305,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 961usize);
+            .insert(handle, 969usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -25126,7 +25329,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 962usize);
+            .insert(handle, 970usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -25150,7 +25353,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 963usize);
+            .insert(handle, 971usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -25174,7 +25377,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 964usize);
+            .insert(handle, 972usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -25198,7 +25401,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 965usize);
+            .insert(handle, 973usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -25222,7 +25425,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 966usize);
+            .insert(handle, 974usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -25245,7 +25448,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 967usize);
+            .insert(handle, 975usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -25269,7 +25472,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 968usize);
+            .insert(handle, 976usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -25292,7 +25495,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 969usize);
+            .insert(handle, 977usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -25315,7 +25518,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 970usize);
+            .insert(handle, 978usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -25338,7 +25541,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 971usize);
+            .insert(handle, 979usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -25361,7 +25564,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 972usize);
+            .insert(handle, 980usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -25386,7 +25589,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 973usize);
+            .insert(handle, 981usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -25411,7 +25614,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 974usize);
+            .insert(handle, 982usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -25436,7 +25639,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 975usize);
+            .insert(handle, 983usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -25461,7 +25664,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 976usize);
+            .insert(handle, 984usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -25486,7 +25689,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 977usize);
+            .insert(handle, 985usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -25511,7 +25714,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 978usize);
+            .insert(handle, 986usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -25536,7 +25739,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 979usize);
+            .insert(handle, 987usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -25561,7 +25764,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 980usize);
+            .insert(handle, 988usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -25584,7 +25787,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 981usize);
+            .insert(handle, 989usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -25607,7 +25810,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 982usize);
+            .insert(handle, 990usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -25630,7 +25833,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 983usize);
+            .insert(handle, 991usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -25653,7 +25856,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 984usize);
+            .insert(handle, 992usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -25676,7 +25879,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 985usize);
+            .insert(handle, 993usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -25699,7 +25902,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 986usize);
+            .insert(handle, 994usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -25722,7 +25925,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 987usize);
+            .insert(handle, 995usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -25745,7 +25948,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 988usize);
+            .insert(handle, 996usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -25768,7 +25971,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 989usize);
+            .insert(handle, 997usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -25791,7 +25994,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 990usize);
+            .insert(handle, 998usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -25816,7 +26019,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 991usize);
+            .insert(handle, 999usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -25840,7 +26043,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 992usize);
+            .insert(handle, 1000usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -25865,7 +26068,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 993usize);
+            .insert(handle, 1001usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -25890,7 +26093,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 994usize);
+            .insert(handle, 1002usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -25915,7 +26118,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 995usize);
+            .insert(handle, 1003usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -25940,7 +26143,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 996usize);
+            .insert(handle, 1004usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -25965,7 +26168,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 997usize);
+            .insert(handle, 1005usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -25989,7 +26192,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 998usize);
+            .insert(handle, 1006usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -26015,7 +26218,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 999usize);
+            .insert(handle, 1007usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -26041,7 +26244,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1000usize);
+            .insert(handle, 1008usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -26066,7 +26269,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1001usize);
+            .insert(handle, 1009usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -26092,7 +26295,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1002usize);
+            .insert(handle, 1010usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -26117,7 +26320,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1003usize);
+            .insert(handle, 1011usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -26142,7 +26345,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1004usize);
+            .insert(handle, 1012usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -26168,7 +26371,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1005usize);
+            .insert(handle, 1013usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -26193,7 +26396,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1006usize);
+            .insert(handle, 1014usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -26216,7 +26419,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1007usize);
+            .insert(handle, 1015usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -26240,7 +26443,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1008usize);
+            .insert(handle, 1016usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -26265,7 +26468,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1009usize);
+            .insert(handle, 1017usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -26289,7 +26492,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1010usize);
+            .insert(handle, 1018usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Text },
@@ -26314,7 +26517,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1011usize);
+            .insert(handle, 1019usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -26339,7 +26542,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1012usize);
+            .insert(handle, 1020usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -26364,7 +26567,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1013usize);
+            .insert(handle, 1021usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -26387,7 +26590,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1014usize);
+            .insert(handle, 1022usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -26410,7 +26613,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1015usize);
+            .insert(handle, 1023usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -26433,7 +26636,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1016usize);
+            .insert(handle, 1024usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -26456,7 +26659,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1017usize);
+            .insert(handle, 1025usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -26481,7 +26684,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1018usize);
+            .insert(handle, 1026usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -26505,7 +26708,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1019usize);
+            .insert(handle, 1027usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -26530,7 +26733,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1020usize);
+            .insert(handle, 1028usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -26554,7 +26757,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1021usize);
+            .insert(handle, 1029usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -26578,7 +26781,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1022usize);
+            .insert(handle, 1030usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -26602,7 +26805,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1023usize);
+            .insert(handle, 1031usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -26627,7 +26830,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1024usize);
+            .insert(handle, 1032usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -26651,7 +26854,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1025usize);
+            .insert(handle, 1033usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -26675,7 +26878,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1026usize);
+            .insert(handle, 1034usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -26699,7 +26902,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1027usize);
+            .insert(handle, 1035usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -26722,7 +26925,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1028usize);
+            .insert(handle, 1036usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -26745,7 +26948,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1029usize);
+            .insert(handle, 1037usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -26768,7 +26971,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1030usize);
+            .insert(handle, 1038usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -26792,7 +26995,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1031usize);
+            .insert(handle, 1039usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -26817,7 +27020,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1032usize);
+            .insert(handle, 1040usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -26842,7 +27045,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1033usize);
+            .insert(handle, 1041usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -26867,7 +27070,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1034usize);
+            .insert(handle, 1042usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -26890,7 +27093,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1035usize);
+            .insert(handle, 1043usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -26915,7 +27118,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1036usize);
+            .insert(handle, 1044usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -26940,7 +27143,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1037usize);
+            .insert(handle, 1045usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -26963,7 +27166,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1038usize);
+            .insert(handle, 1046usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -26986,7 +27189,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1039usize);
+            .insert(handle, 1047usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -27009,7 +27212,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1040usize);
+            .insert(handle, 1048usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -27033,7 +27236,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1041usize);
+            .insert(handle, 1049usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -27057,7 +27260,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1042usize);
+            .insert(handle, 1050usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -27081,7 +27284,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1043usize);
+            .insert(handle, 1051usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -27105,7 +27308,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1044usize);
+            .insert(handle, 1052usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -27129,7 +27332,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1045usize);
+            .insert(handle, 1053usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -27152,7 +27355,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1046usize);
+            .insert(handle, 1054usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -27176,7 +27379,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1047usize);
+            .insert(handle, 1055usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -27199,7 +27402,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1048usize);
+            .insert(handle, 1056usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -27222,7 +27425,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1049usize);
+            .insert(handle, 1057usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -27245,7 +27448,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1050usize);
+            .insert(handle, 1058usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -27270,7 +27473,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1051usize);
+            .insert(handle, 1059usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -27295,7 +27498,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1052usize);
+            .insert(handle, 1060usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -27320,7 +27523,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1053usize);
+            .insert(handle, 1061usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -27345,7 +27548,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1054usize);
+            .insert(handle, 1062usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -27370,7 +27573,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1055usize);
+            .insert(handle, 1063usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -27395,7 +27598,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1056usize);
+            .insert(handle, 1064usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -27418,7 +27621,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1057usize);
+            .insert(handle, 1065usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -27441,7 +27644,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1058usize);
+            .insert(handle, 1066usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -27464,7 +27667,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1059usize);
+            .insert(handle, 1067usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -27487,7 +27690,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1060usize);
+            .insert(handle, 1068usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -27511,7 +27714,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1061usize);
+            .insert(handle, 1069usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -27534,7 +27737,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1062usize);
+            .insert(handle, 1070usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -27557,7 +27760,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1063usize);
+            .insert(handle, 1071usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -27580,7 +27783,7 @@ fn register_scalars() -> Result<(), Duckerror> {
         handle_table()
             .lock()
             .expect("scalar handle mutex poisoned")
-            .insert(handle, 1064usize);
+            .insert(handle, 1072usize);
         let callback = runtime::ScalarCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -27609,7 +27812,7 @@ fn register_aggregates() -> Result<(), Duckerror> {
     // shapes.
     let Some(capability) = runtime::get_capability(Capabilitykind::Aggregate) else {
         if true {
-            eprintln!("[dynlink-emit] host did not expose aggregate capability; skipping 29 aggregate(s)");
+            eprintln!("[dynlink-emit] host did not expose aggregate capability; skipping 30 aggregate(s)");
         }
         return Ok(());
     };
@@ -27627,6 +27830,30 @@ fn register_aggregates() -> Result<(), Duckerror> {
             .lock()
             .expect("aggregate handle mutex poisoned")
             .insert(handle, 0usize);
+        let callback = runtime::AggregateCallback::new(handle);
+        let args: Vec<runtime::Funcarg> = vec![
+                runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Int64 },
+                runtime::Funcarg { name: Some("arg1".into()), logical: Logicaltype::Blob },
+            ];
+        let opts = runtime::Funcopts {
+            description: Some("postgis_spatial_index_build (sqlink-shim-codegen --dynlink)".into()),
+            tags: vec!["postgis_spatial_index_build".into()],
+            attributes: Funcflags::DETERMINISTIC | Funcflags::STATELESS,
+        };
+        registry.register(
+            "postgis_spatial_index_build",
+            &args,
+            &Logicaltype::Blob,
+            callback,
+            Some(&opts),
+        )?;
+    }
+    {
+        let handle = NEXT_HANDLE.fetch_add(1, core::sync::atomic::Ordering::Relaxed);
+        aggregate_handle_table()
+            .lock()
+            .expect("aggregate handle mutex poisoned")
+            .insert(handle, 1usize);
         let callback = runtime::AggregateCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -27649,7 +27876,7 @@ fn register_aggregates() -> Result<(), Duckerror> {
         aggregate_handle_table()
             .lock()
             .expect("aggregate handle mutex poisoned")
-            .insert(handle, 1usize);
+            .insert(handle, 2usize);
         let callback = runtime::AggregateCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -27672,7 +27899,7 @@ fn register_aggregates() -> Result<(), Duckerror> {
         aggregate_handle_table()
             .lock()
             .expect("aggregate handle mutex poisoned")
-            .insert(handle, 2usize);
+            .insert(handle, 3usize);
         let callback = runtime::AggregateCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -27697,7 +27924,7 @@ fn register_aggregates() -> Result<(), Duckerror> {
         aggregate_handle_table()
             .lock()
             .expect("aggregate handle mutex poisoned")
-            .insert(handle, 3usize);
+            .insert(handle, 4usize);
         let callback = runtime::AggregateCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -27720,7 +27947,7 @@ fn register_aggregates() -> Result<(), Duckerror> {
         aggregate_handle_table()
             .lock()
             .expect("aggregate handle mutex poisoned")
-            .insert(handle, 4usize);
+            .insert(handle, 5usize);
         let callback = runtime::AggregateCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -27743,7 +27970,7 @@ fn register_aggregates() -> Result<(), Duckerror> {
         aggregate_handle_table()
             .lock()
             .expect("aggregate handle mutex poisoned")
-            .insert(handle, 5usize);
+            .insert(handle, 6usize);
         let callback = runtime::AggregateCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -27767,7 +27994,7 @@ fn register_aggregates() -> Result<(), Duckerror> {
         aggregate_handle_table()
             .lock()
             .expect("aggregate handle mutex poisoned")
-            .insert(handle, 6usize);
+            .insert(handle, 7usize);
         let callback = runtime::AggregateCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -27791,7 +28018,7 @@ fn register_aggregates() -> Result<(), Duckerror> {
         aggregate_handle_table()
             .lock()
             .expect("aggregate handle mutex poisoned")
-            .insert(handle, 7usize);
+            .insert(handle, 8usize);
         let callback = runtime::AggregateCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -27814,7 +28041,7 @@ fn register_aggregates() -> Result<(), Duckerror> {
         aggregate_handle_table()
             .lock()
             .expect("aggregate handle mutex poisoned")
-            .insert(handle, 8usize);
+            .insert(handle, 9usize);
         let callback = runtime::AggregateCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -27838,7 +28065,7 @@ fn register_aggregates() -> Result<(), Duckerror> {
         aggregate_handle_table()
             .lock()
             .expect("aggregate handle mutex poisoned")
-            .insert(handle, 9usize);
+            .insert(handle, 10usize);
         let callback = runtime::AggregateCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -27861,7 +28088,7 @@ fn register_aggregates() -> Result<(), Duckerror> {
         aggregate_handle_table()
             .lock()
             .expect("aggregate handle mutex poisoned")
-            .insert(handle, 10usize);
+            .insert(handle, 11usize);
         let callback = runtime::AggregateCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -27884,7 +28111,7 @@ fn register_aggregates() -> Result<(), Duckerror> {
         aggregate_handle_table()
             .lock()
             .expect("aggregate handle mutex poisoned")
-            .insert(handle, 11usize);
+            .insert(handle, 12usize);
         let callback = runtime::AggregateCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -27907,7 +28134,7 @@ fn register_aggregates() -> Result<(), Duckerror> {
         aggregate_handle_table()
             .lock()
             .expect("aggregate handle mutex poisoned")
-            .insert(handle, 12usize);
+            .insert(handle, 13usize);
         let callback = runtime::AggregateCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -27930,7 +28157,7 @@ fn register_aggregates() -> Result<(), Duckerror> {
         aggregate_handle_table()
             .lock()
             .expect("aggregate handle mutex poisoned")
-            .insert(handle, 13usize);
+            .insert(handle, 14usize);
         let callback = runtime::AggregateCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -27953,7 +28180,7 @@ fn register_aggregates() -> Result<(), Duckerror> {
         aggregate_handle_table()
             .lock()
             .expect("aggregate handle mutex poisoned")
-            .insert(handle, 15usize);
+            .insert(handle, 16usize);
         let callback = runtime::AggregateCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -27976,7 +28203,7 @@ fn register_aggregates() -> Result<(), Duckerror> {
         aggregate_handle_table()
             .lock()
             .expect("aggregate handle mutex poisoned")
-            .insert(handle, 16usize);
+            .insert(handle, 17usize);
         let callback = runtime::AggregateCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -27999,7 +28226,7 @@ fn register_aggregates() -> Result<(), Duckerror> {
         aggregate_handle_table()
             .lock()
             .expect("aggregate handle mutex poisoned")
-            .insert(handle, 17usize);
+            .insert(handle, 18usize);
         let callback = runtime::AggregateCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -28022,7 +28249,7 @@ fn register_aggregates() -> Result<(), Duckerror> {
         aggregate_handle_table()
             .lock()
             .expect("aggregate handle mutex poisoned")
-            .insert(handle, 18usize);
+            .insert(handle, 19usize);
         let callback = runtime::AggregateCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -28045,7 +28272,7 @@ fn register_aggregates() -> Result<(), Duckerror> {
         aggregate_handle_table()
             .lock()
             .expect("aggregate handle mutex poisoned")
-            .insert(handle, 19usize);
+            .insert(handle, 20usize);
         let callback = runtime::AggregateCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -28068,7 +28295,7 @@ fn register_aggregates() -> Result<(), Duckerror> {
         aggregate_handle_table()
             .lock()
             .expect("aggregate handle mutex poisoned")
-            .insert(handle, 20usize);
+            .insert(handle, 21usize);
         let callback = runtime::AggregateCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -28091,7 +28318,7 @@ fn register_aggregates() -> Result<(), Duckerror> {
         aggregate_handle_table()
             .lock()
             .expect("aggregate handle mutex poisoned")
-            .insert(handle, 21usize);
+            .insert(handle, 22usize);
         let callback = runtime::AggregateCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -28114,7 +28341,7 @@ fn register_aggregates() -> Result<(), Duckerror> {
         aggregate_handle_table()
             .lock()
             .expect("aggregate handle mutex poisoned")
-            .insert(handle, 22usize);
+            .insert(handle, 23usize);
         let callback = runtime::AggregateCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -28137,7 +28364,7 @@ fn register_aggregates() -> Result<(), Duckerror> {
         aggregate_handle_table()
             .lock()
             .expect("aggregate handle mutex poisoned")
-            .insert(handle, 23usize);
+            .insert(handle, 24usize);
         let callback = runtime::AggregateCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -28160,7 +28387,7 @@ fn register_aggregates() -> Result<(), Duckerror> {
         aggregate_handle_table()
             .lock()
             .expect("aggregate handle mutex poisoned")
-            .insert(handle, 24usize);
+            .insert(handle, 25usize);
         let callback = runtime::AggregateCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -28183,7 +28410,7 @@ fn register_aggregates() -> Result<(), Duckerror> {
         aggregate_handle_table()
             .lock()
             .expect("aggregate handle mutex poisoned")
-            .insert(handle, 25usize);
+            .insert(handle, 26usize);
         let callback = runtime::AggregateCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -28207,7 +28434,7 @@ fn register_aggregates() -> Result<(), Duckerror> {
         aggregate_handle_table()
             .lock()
             .expect("aggregate handle mutex poisoned")
-            .insert(handle, 26usize);
+            .insert(handle, 27usize);
         let callback = runtime::AggregateCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -28230,7 +28457,7 @@ fn register_aggregates() -> Result<(), Duckerror> {
         aggregate_handle_table()
             .lock()
             .expect("aggregate handle mutex poisoned")
-            .insert(handle, 27usize);
+            .insert(handle, 28usize);
         let callback = runtime::AggregateCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -28253,7 +28480,7 @@ fn register_aggregates() -> Result<(), Duckerror> {
         aggregate_handle_table()
             .lock()
             .expect("aggregate handle mutex poisoned")
-            .insert(handle, 28usize);
+            .insert(handle, 29usize);
         let callback = runtime::AggregateCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
@@ -28277,7 +28504,7 @@ fn register_aggregates() -> Result<(), Duckerror> {
 fn register_tables() -> Result<(), Duckerror> {
     let Some(capability) = runtime::get_capability(Capabilitykind::Table) else {
         if true {
-            eprintln!("[dynlink-emit] host did not expose table capability; skipping 12 table-function(s)");
+            eprintln!("[dynlink-emit] host did not expose table capability; skipping 13 table-function(s)");
         }
         return Ok(());
     };
@@ -28298,13 +28525,16 @@ fn register_tables() -> Result<(), Duckerror> {
         let callback = runtime::TableCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
+                runtime::Funcarg { name: Some("arg1".into()), logical: Logicaltype::Float64 },
+                runtime::Funcarg { name: Some("arg2".into()), logical: Logicaltype::Float64 },
+                runtime::Funcarg { name: Some("arg3".into()), logical: Logicaltype::Float64 },
+                runtime::Funcarg { name: Some("arg4".into()), logical: Logicaltype::Float64 },
             ];
-        let columns: Vec<runtime::Columndef> = vec![runtime::Columndef {
-            name: "result".into(),
-            logical: Logicaltype::Blob,
-        }];
+        let columns: Vec<runtime::Columndef> = vec![
+                runtime::Columndef { name: "item_id".into(), logical: Logicaltype::Int64 },
+            ];
         registry.register(
-            "st_dump",
+            "postgis_spatial_index_query_envelope",
             &args,
             &columns,
             callback,
@@ -28321,12 +28551,11 @@ fn register_tables() -> Result<(), Duckerror> {
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
             ];
-        let columns: Vec<runtime::Columndef> = vec![runtime::Columndef {
-            name: "result".into(),
-            logical: Logicaltype::Blob,
-        }];
+        let columns: Vec<runtime::Columndef> = vec![
+                runtime::Columndef { name: "geom".into(), logical: Logicaltype::Blob },
+            ];
         registry.register(
-            "st_dump_points",
+            "st_dump",
             &args,
             &columns,
             callback,
@@ -28343,12 +28572,11 @@ fn register_tables() -> Result<(), Duckerror> {
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
             ];
-        let columns: Vec<runtime::Columndef> = vec![runtime::Columndef {
-            name: "result".into(),
-            logical: Logicaltype::Blob,
-        }];
+        let columns: Vec<runtime::Columndef> = vec![
+                runtime::Columndef { name: "geom".into(), logical: Logicaltype::Blob },
+            ];
         registry.register(
-            "st_dump_rings",
+            "st_dump_points",
             &args,
             &columns,
             callback,
@@ -28365,12 +28593,11 @@ fn register_tables() -> Result<(), Duckerror> {
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
             ];
-        let columns: Vec<runtime::Columndef> = vec![runtime::Columndef {
-            name: "result".into(),
-            logical: Logicaltype::Blob,
-        }];
+        let columns: Vec<runtime::Columndef> = vec![
+                runtime::Columndef { name: "geom".into(), logical: Logicaltype::Blob },
+            ];
         registry.register(
-            "st_dump_segments",
+            "st_dump_rings",
             &args,
             &columns,
             callback,
@@ -28387,12 +28614,11 @@ fn register_tables() -> Result<(), Duckerror> {
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
             ];
-        let columns: Vec<runtime::Columndef> = vec![runtime::Columndef {
-            name: "result".into(),
-            logical: Logicaltype::Blob,
-        }];
+        let columns: Vec<runtime::Columndef> = vec![
+                runtime::Columndef { name: "geom".into(), logical: Logicaltype::Blob },
+            ];
         registry.register(
-            "st_dumppoints",
+            "st_dump_segments",
             &args,
             &columns,
             callback,
@@ -28409,12 +28635,11 @@ fn register_tables() -> Result<(), Duckerror> {
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
             ];
-        let columns: Vec<runtime::Columndef> = vec![runtime::Columndef {
-            name: "result".into(),
-            logical: Logicaltype::Blob,
-        }];
+        let columns: Vec<runtime::Columndef> = vec![
+                runtime::Columndef { name: "point".into(), logical: Logicaltype::Blob },
+            ];
         registry.register(
-            "st_dumprings",
+            "st_dumppoints",
             &args,
             &columns,
             callback,
@@ -28431,12 +28656,11 @@ fn register_tables() -> Result<(), Duckerror> {
         let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
             ];
-        let columns: Vec<runtime::Columndef> = vec![runtime::Columndef {
-            name: "result".into(),
-            logical: Logicaltype::Blob,
-        }];
+        let columns: Vec<runtime::Columndef> = vec![
+                runtime::Columndef { name: "geom".into(), logical: Logicaltype::Blob },
+            ];
         registry.register(
-            "st_dumpsegments",
+            "st_dumprings",
             &args,
             &columns,
             callback,
@@ -28451,15 +28675,13 @@ fn register_tables() -> Result<(), Duckerror> {
             .insert(handle, 7usize);
         let callback = runtime::TableCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
-                runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Float64 },
-                runtime::Funcarg { name: Some("arg1".into()), logical: Logicaltype::Blob },
+                runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
             ];
-        let columns: Vec<runtime::Columndef> = vec![runtime::Columndef {
-            name: "result".into(),
-            logical: Logicaltype::Blob,
-        }];
+        let columns: Vec<runtime::Columndef> = vec![
+                runtime::Columndef { name: "geom".into(), logical: Logicaltype::Blob },
+            ];
         registry.register(
-            "st_hexagon_grid",
+            "st_dumpsegments",
             &args,
             &columns,
             callback,
@@ -28477,12 +28699,11 @@ fn register_tables() -> Result<(), Duckerror> {
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Float64 },
                 runtime::Funcarg { name: Some("arg1".into()), logical: Logicaltype::Blob },
             ];
-        let columns: Vec<runtime::Columndef> = vec![runtime::Columndef {
-            name: "result".into(),
-            logical: Logicaltype::Blob,
-        }];
+        let columns: Vec<runtime::Columndef> = vec![
+                runtime::Columndef { name: "geom".into(), logical: Logicaltype::Blob },
+            ];
         registry.register(
-            "st_hexagongrid",
+            "st_hexagon_grid",
             &args,
             &columns,
             callback,
@@ -28500,12 +28721,11 @@ fn register_tables() -> Result<(), Duckerror> {
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Float64 },
                 runtime::Funcarg { name: Some("arg1".into()), logical: Logicaltype::Blob },
             ];
-        let columns: Vec<runtime::Columndef> = vec![runtime::Columndef {
-            name: "result".into(),
-            logical: Logicaltype::Blob,
-        }];
+        let columns: Vec<runtime::Columndef> = vec![
+                runtime::Columndef { name: "geom".into(), logical: Logicaltype::Blob },
+            ];
         registry.register(
-            "st_square_grid",
+            "st_hexagongrid",
             &args,
             &columns,
             callback,
@@ -28523,12 +28743,11 @@ fn register_tables() -> Result<(), Duckerror> {
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Float64 },
                 runtime::Funcarg { name: Some("arg1".into()), logical: Logicaltype::Blob },
             ];
-        let columns: Vec<runtime::Columndef> = vec![runtime::Columndef {
-            name: "result".into(),
-            logical: Logicaltype::Blob,
-        }];
+        let columns: Vec<runtime::Columndef> = vec![
+                runtime::Columndef { name: "geom".into(), logical: Logicaltype::Blob },
+            ];
         registry.register(
-            "st_squaregrid",
+            "st_square_grid",
             &args,
             &columns,
             callback,
@@ -28543,13 +28762,34 @@ fn register_tables() -> Result<(), Duckerror> {
             .insert(handle, 11usize);
         let callback = runtime::TableCallback::new(handle);
         let args: Vec<runtime::Funcarg> = vec![
+                runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Float64 },
+                runtime::Funcarg { name: Some("arg1".into()), logical: Logicaltype::Blob },
+            ];
+        let columns: Vec<runtime::Columndef> = vec![
+                runtime::Columndef { name: "geom".into(), logical: Logicaltype::Blob },
+            ];
+        registry.register(
+            "st_squaregrid",
+            &args,
+            &columns,
+            callback,
+            None,
+        )?;
+    }
+    {
+        let handle = NEXT_HANDLE.fetch_add(1, core::sync::atomic::Ordering::Relaxed);
+        table_handle_table()
+            .lock()
+            .expect("table handle mutex poisoned")
+            .insert(handle, 12usize);
+        let callback = runtime::TableCallback::new(handle);
+        let args: Vec<runtime::Funcarg> = vec![
                 runtime::Funcarg { name: Some("arg0".into()), logical: Logicaltype::Blob },
                 runtime::Funcarg { name: Some("arg1".into()), logical: Logicaltype::Int64 },
             ];
-        let columns: Vec<runtime::Columndef> = vec![runtime::Columndef {
-            name: "result".into(),
-            logical: Logicaltype::Blob,
-        }];
+        let columns: Vec<runtime::Columndef> = vec![
+                runtime::Columndef { name: "geom".into(), logical: Logicaltype::Blob },
+            ];
         registry.register(
             "st_subdivide",
             &args,
@@ -28616,53 +28856,55 @@ fn dispatch_call_scalar(
 
 fn aggregate_name_by_arm_idx(arm: usize) -> Option<&'static str> {
     match arm as u32 {
-        0 => Some("st_3d_extent"),
-        1 => Some("st_3dextent"),
-        2 => Some("st_approx_count_agg"),
-        3 => Some("st_clusterintersecting"),
-        4 => Some("st_clusterintersectingaggregate"),
-        5 => Some("st_clusterwithin"),
-        6 => Some("st_clusterwithinaggregate"),
-        7 => Some("st_collect_aggregate"),
-        8 => Some("st_count_agg"),
-        9 => Some("st_coverage_union_aggregate"),
-        10 => Some("st_envelope_aggregate"),
-        11 => Some("st_extent"),
-        12 => Some("st_extent_threed"),
-        13 => Some("st_make_line_aggregate"),
-        14 => Some("st_makeline"),
-        15 => Some("st_makelineagg"),
-        16 => Some("st_makelineaggregate"),
-        17 => Some("st_mem_union_aggregate"),
-        18 => Some("st_memunion"),
-        19 => Some("st_polygonize_aggregate"),
-        20 => Some("st_polygonizeagg"),
-        21 => Some("st_polygonizeaggregate"),
-        22 => Some("st_rast_union"),
-        23 => Some("st_rast_union_aggregate"),
-        24 => Some("st_raster_union"),
-        25 => Some("st_summary_stats_agg"),
-        26 => Some("st_union_aggregate"),
-        27 => Some("st_unionagg"),
-        28 => Some("st_unionaggregate"),
+        0 => Some("postgis_spatial_index_build"),
+        1 => Some("st_3d_extent"),
+        2 => Some("st_3dextent"),
+        3 => Some("st_approx_count_agg"),
+        4 => Some("st_clusterintersecting"),
+        5 => Some("st_clusterintersectingaggregate"),
+        6 => Some("st_clusterwithin"),
+        7 => Some("st_clusterwithinaggregate"),
+        8 => Some("st_collect_aggregate"),
+        9 => Some("st_count_agg"),
+        10 => Some("st_coverage_union_aggregate"),
+        11 => Some("st_envelope_aggregate"),
+        12 => Some("st_extent"),
+        13 => Some("st_extent_threed"),
+        14 => Some("st_make_line_aggregate"),
+        15 => Some("st_makeline"),
+        16 => Some("st_makelineagg"),
+        17 => Some("st_makelineaggregate"),
+        18 => Some("st_mem_union_aggregate"),
+        19 => Some("st_memunion"),
+        20 => Some("st_polygonize_aggregate"),
+        21 => Some("st_polygonizeagg"),
+        22 => Some("st_polygonizeaggregate"),
+        23 => Some("st_rast_union"),
+        24 => Some("st_rast_union_aggregate"),
+        25 => Some("st_raster_union"),
+        26 => Some("st_summary_stats_agg"),
+        27 => Some("st_union_aggregate"),
+        28 => Some("st_unionagg"),
+        29 => Some("st_unionaggregate"),
         _ => None,
     }
 }
 
 fn table_name_by_arm_idx(arm: usize) -> Option<&'static str> {
     match arm as u32 {
-        0 => Some("st_dump"),
-        1 => Some("st_dump_points"),
-        2 => Some("st_dump_rings"),
-        3 => Some("st_dump_segments"),
-        4 => Some("st_dumppoints"),
-        5 => Some("st_dumprings"),
-        6 => Some("st_dumpsegments"),
-        7 => Some("st_hexagon_grid"),
-        8 => Some("st_hexagongrid"),
-        9 => Some("st_square_grid"),
-        10 => Some("st_squaregrid"),
-        11 => Some("st_subdivide"),
+        0 => Some("postgis_spatial_index_query_envelope"),
+        1 => Some("st_dump"),
+        2 => Some("st_dump_points"),
+        3 => Some("st_dump_rings"),
+        4 => Some("st_dump_segments"),
+        5 => Some("st_dumppoints"),
+        6 => Some("st_dumprings"),
+        7 => Some("st_dumpsegments"),
+        8 => Some("st_hexagon_grid"),
+        9 => Some("st_hexagongrid"),
+        10 => Some("st_square_grid"),
+        11 => Some("st_squaregrid"),
+        12 => Some("st_subdivide"),
         _ => None,
     }
 }
